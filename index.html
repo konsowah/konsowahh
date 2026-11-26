@@ -58,6 +58,12 @@ button {
   transition: all 0.2s ease;
 }
 
+button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -244,6 +250,29 @@ header {
   color: var(--burgundy);
 }
 
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.adm-tab-btn {
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.adm-tab-btn.active {
+  background: var(--burgundy);
+  color: #fff;
+  border-color: var(--burgundy);
+}
+
 .admin-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -340,6 +369,90 @@ header {
   height: 42px;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 460px;
+  overflow-y: auto;
+}
+
+.order-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.order-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.status-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.status-pill.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-pill.confirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.order-items-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 11px;
+  font-size: 12.5px;
+  margin: 8px 0;
+}
+
+.order-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.btn-confirm-order {
+  background: #15803d;
+  color: #fff;
+  border: 0;
+  border-radius: 9px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.btn-cancel-order {
+  background: #fff;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  border-radius: 9px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 /* Bento Hero */
@@ -582,6 +695,18 @@ header {
   font-weight: 800;
 }
 
+.out-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 20, 22, 0.58);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 14px;
+  z-index: 2;
+}
+
 .img-step {
   position: absolute;
   bottom: 10px;
@@ -627,14 +752,41 @@ header {
   flex: 1;
 }
 
+.card-meta-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
 .card-cat {
   font-size: 11px;
   font-weight: 800;
   color: var(--burgundy);
 }
 
+.stock-pill {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.stock-pill.low {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.stock-pill.out {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .card-title {
-  margin: 3px 0 6px;
+  margin: 0 0 6px;
   font-size: 17px;
   font-weight: 900;
 }
@@ -671,7 +823,7 @@ header {
   border: 0;
 }
 
-.btn-add:hover {
+.btn-add:hover:not(:disabled) {
   background: var(--burgundy-deep);
 }
 
@@ -856,21 +1008,6 @@ footer p {
   margin: 5px 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
-}
-
-.admin-link-btn {
-  margin-top: 10px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.55);
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 11px;
-}
-
-.admin-link-btn:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.45);
 }
 
 /* Floating Bottom Dock */
@@ -1061,7 +1198,8 @@ footer p {
 }
 
 .inp-group input,
-.inp-group textarea {
+.inp-group textarea,
+.inp-group select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--line);
@@ -1072,24 +1210,129 @@ footer p {
 }
 
 .inp-group input:focus,
-.inp-group textarea:focus {
+.inp-group textarea:focus,
+.inp-group select:focus {
   border-color: var(--burgundy);
   background: #fff;
 }
 
+.pay-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pay-opt {
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 9px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.pay-opt.active {
+  border-color: var(--burgundy);
+  background: var(--burgundy-soft);
+  color: var(--burgundy);
+}
+
+.instapay-box {
+  display: none;
+  background: var(--burgundy-soft);
+  border: 1px solid rgba(74, 21, 37, 0.22);
+  border-radius: 12px;
+  padding: 11px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.instapay-box.show {
+  display: block;
+}
+
+.instapay-link-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.instapay-open-btn {
+  background: var(--burgundy);
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+}
+
+.instapay-copy-btn {
+  background: #fff;
+  color: var(--burgundy);
+  border: 1px solid var(--burgundy);
+  padding: 6px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.confirm-box {
+  display: none;
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  font-size: 12.5px;
+}
+
+.confirm-box.show {
+  display: block;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 .wa-btn {
   width: 100%;
-  padding: 13px;
+  padding: 12px;
   border: 0;
   border-radius: 12px;
   background: var(--wa);
   color: #fff;
   font-weight: 900;
-  font-size: 15px;
+  font-size: 14.5px;
 }
 
 .wa-btn:hover {
   background: var(--wa-hover);
+}
+
+.confirm-trigger-btn {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--burgundy);
+  color: #fff;
+  font-weight: 900;
+  font-size: 14.5px;
+}
+
+.confirm-trigger-btn:hover {
+  background: var(--burgundy-deep);
 }
 
 .note-txt {
@@ -1279,9 +1522,10 @@ footer p {
 
 <!-- Admin Status Bar -->
 <div class="admin-strip" id="adminStrip">
-  <span>🔐 وضع الإدارة مفعّل — يمكنك إضافة منتجات أو حذف تقييمات</span>
+  <span>🔐 وضع الإدارة مفعّل — إدارة الأوردرات، الاستوك، والمنتجات</span>
   <div class="admin-strip-actions">
-    <button class="admin-mini-btn" onclick="scrollToAdmin()">لوحة الإدارة</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('orders');scrollToAdmin()">الأوردرات (<span id="stripPendingCount">0</span>)</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">المنتجات</button>
     <button class="admin-mini-btn" onclick="copyExportCode()">نسخ كود المنتجات</button>
     <button class="admin-mini-btn out" onclick="logoutAdmin()">تسجيل الخروج</button>
   </div>
@@ -1289,7 +1533,7 @@ footer p {
 
 <header>
   <div class="nav">
-    <a class="brand" href="#" ondblclick="openAdminLogin()">
+    <a class="brand" href="#" onclick="handleBrandTripleClick(event)">
       <span class="brand-mark">NS</span>
       <span class="brand-name">متجر NS</span>
       <span class="brand-pill">إصدار مختلف</span>
@@ -1317,48 +1561,63 @@ footer p {
       </div>
     </div>
 
-    <div class="admin-grid">
-      <!-- Add New Product Form -->
-      <div class="admin-card">
-        <h3>+ إضافة منتج جديد</h3>
-        <div class="admin-row-2">
-          <div>
-            <label>اسم المنتج *</label>
-            <input id="admName" placeholder="مثال: ساعة ذكية">
+    <div class="admin-tabs">
+      <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 الأوردرات (<span id="admOrdersTotal">0</span>)</button>
+      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ إضافة وإدارة المنتجات</button>
+    </div>
+
+    <!-- Orders Tab -->
+    <div id="adminTabOrders">
+      <div class="orders-list" id="admOrdersList"></div>
+    </div>
+
+    <!-- Products Tab -->
+    <div id="adminTabProducts" style="display:none">
+      <div class="admin-grid">
+        <!-- Add New Product Form -->
+        <div class="admin-card">
+          <h3>+ إضافة منتج جديد</h3>
+          <div class="admin-row-2">
+            <div>
+              <label>اسم المنتج *</label>
+              <input id="admName" placeholder="مثال: ساعة ذكية">
+            </div>
+            <div>
+              <label>القسم *</label>
+              <input id="admCat" placeholder="إلكترونيات / موضة / إكسسوارات">
+            </div>
           </div>
-          <div>
-            <label>القسم *</label>
-            <input id="admCat" placeholder="إلكترونيات / موضة / إكسسوارات">
+          <div class="admin-row-2">
+            <div>
+              <label>السعر (ج.م) *</label>
+              <input id="admPrice" type="number" min="1" placeholder="550">
+            </div>
+            <div>
+              <label>الاستوك / الكمية المتاحة *</label>
+              <input id="admStock" type="number" min="0" value="10" placeholder="مثال: 10">
+            </div>
           </div>
+          <label>شارة اختيارية (Tag)</label>
+          <input id="admTag" placeholder="جديد / الأكثر طلباً">
+          <label>وصف المنتج *</label>
+          <textarea id="admDesc" rows="2" placeholder="اكتب مميزات المنتج باختصار..."></textarea>
+
+          <label>صور المنتج (اختار حتى 4 صور من جهازك)</label>
+          <input id="admFiles" type="file" accept="image/*" multiple onchange="handleAdminImages(event)">
+          <div class="preview-strip" id="admPreview"></div>
+
+          <label>أو ضع روابط صور مباشرة (رابط في كل سطر - اختياري)</label>
+          <textarea id="admUrls" rows="2" placeholder="https://example.com/img1.jpg"></textarea>
+
+          <button class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminAddProduct()">حفظ ونشر المنتج</button>
         </div>
-        <div class="admin-row-2">
-          <div>
-            <label>السعر (ج.م) *</label>
-            <input id="admPrice" type="number" placeholder="550">
-          </div>
-          <div>
-            <label>شارة اختيارية (Tag)</label>
-            <input id="admTag" placeholder="جديد / الأكثر طلباً">
-          </div>
+
+        <!-- Manage Existing Products -->
+        <div class="admin-card">
+          <h3>إدارة المنتجات الحالية (<span id="admProdCount">0</span>)</h3>
+          <div class="admin-manage-list" id="admProdList"></div>
+          <p class="note-txt" style="margin-top:10px">لحذف أي ريفيو: انزل لقسم "آراء العملاء" واضغط على زر <b>حذف</b> الأحمر داخل الكارت.</p>
         </div>
-        <label>وصف المنتج *</label>
-        <textarea id="admDesc" rows="2" placeholder="اكتب مميزات المنتج باختصار..."></textarea>
-
-        <label>صور المنتج (اختار حتى 4 صور من جهازك)</label>
-        <input id="admFiles" type="file" accept="image/*" multiple onchange="handleAdminImages(event)">
-        <div class="preview-strip" id="admPreview"></div>
-
-        <label>أو ضع روابط صور مباشرة (رابط في كل سطر - اختياري)</label>
-        <textarea id="admUrls" rows="2" placeholder="https://example.com/img1.jpg"></textarea>
-
-        <button class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminAddProduct()">حفظ ونشر المنتج</button>
-      </div>
-
-      <!-- Manage Existing Products -->
-      <div class="admin-card">
-        <h3>إدارة المنتجات الحالية (<span id="admProdCount">0</span>)</h3>
-        <div class="admin-manage-list" id="admProdList"></div>
-        <p class="note-txt" style="margin-top:10px">لحذف أي ريفيو: انزل لقسم "آراء العملاء" واضغط على زر <b>حذف</b> الأحمر داخل الكارت.</p>
       </div>
     </div>
   </section>
@@ -1443,7 +1702,6 @@ footer p {
   <div style="font-weight:900;font-size:22px">NS STORE</div>
   <p>تصميم عصري وتجربة طلب مباشرة.</p>
   <p>© <span id="year"></span> NS. جميع الحقوق محفوظة.</p>
-  <button class="admin-link-btn" onclick="openAdminLogin()">دخول الإدارة</button>
 </footer>
 
 <div class="dock" aria-label="تنقل سريع">
@@ -1469,21 +1727,47 @@ footer p {
     <span id="cartTotal">0 ج.م</span>
   </div>
   <div class="order-box">
-    <h3>إرسال الطلب</h3>
+    <h3>بيانات الطلب والدفع</h3>
     <div class="inp-group">
       <label for="customerName">الاسم بالكامل *</label>
-      <input id="customerName" placeholder="اسمك بالكامل" autocomplete="name">
+      <input id="customerName" placeholder="اسمك بالكامل" autocomplete="name" oninput="resetOrderConfirmation()">
     </div>
     <div class="inp-group">
       <label for="customerPhone">رقم الموبايل *</label>
-      <input id="customerPhone" type="tel" placeholder="01xxxxxxxxx" autocomplete="tel">
+      <input id="customerPhone" type="tel" placeholder="01xxxxxxxxx" autocomplete="tel" oninput="resetOrderConfirmation()">
     </div>
     <div class="inp-group">
       <label for="customerAddress">العنوان بالتفصيل *</label>
-      <textarea id="customerAddress" rows="2" placeholder="المحافظة، المنطقة، الشارع، رقم العمارة والشقة"></textarea>
+      <textarea id="customerAddress" rows="2" placeholder="المحافظة، المنطقة، الشارع، رقم العمارة والشقة" oninput="resetOrderConfirmation()"></textarea>
     </div>
-    <button class="wa-btn" onclick="sendOrder()">إرسال الطلب عبر WhatsApp</button>
-    <p class="note-txt">يتم فتح واتساب برسالة منظمة بالطلب؛ اضغط إرسال داخل واتساب لتأكيد الطلب.</p>
+
+    <label style="display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:5px">اختر طريقة الدفع *</label>
+    <div class="pay-methods" role="group" aria-label="اختيارات الدفع">
+      <button type="button" class="pay-opt active" id="pay-cod" onclick="selectPayment('cod')">💵 عند الاستلام</button>
+      <button type="button" class="pay-opt" id="pay-instapay" onclick="selectPayment('instapay')">⚡ رابط InstaPay الثابت</button>
+    </div>
+
+    <div class="instapay-box" id="instapayBox">
+      <div style="font-size:12.5px;font-weight:900;color:var(--burgundy);margin-bottom:4px">حوّل عبر رابط InstaPay الثابت التالي:</div>
+      <div style="font-size:12px;color:var(--ink);font-weight:800;word-break:break-all;background:#fff;padding:7px 9px;border-radius:8px;border:1px solid var(--line)" id="instapayLinkText"></div>
+      <div class="instapay-link-row">
+        <a class="instapay-open-btn" id="instapayOpenLink" href="#" target="_blank" rel="noopener">فتح رابط InstaPay</a>
+        <button type="button" class="instapay-copy-btn" onclick="copyInstaPayLink()">نسخ الرابط</button>
+      </div>
+      <p class="note-txt">بعد التحويل أو مراجعة البيانات، أكّد الأوردر لإرساله برقم الطلب على واتساب.</p>
+    </div>
+
+    <div class="confirm-box" id="confirmBox">
+      <div style="font-weight:900;color:#92400e;margin-bottom:4px">✅ تأكيد تفاصيل الأوردر قبل واتساب</div>
+      <div id="confirmSummary"></div>
+      <div class="confirm-actions">
+        <button type="button" class="wa-btn" onclick="finalizeAndSendWhatsApp()">تأكيد وإرسال إلى WhatsApp</button>
+        <button type="button" class="btn-info" style="padding:10px 12px;border-radius:12px" onclick="resetOrderConfirmation()">تعديل</button>
+      </div>
+    </div>
+
+    <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">تأكيد الأوردر وترقيمه</button>
+    <p class="note-txt">يتم تسجيل الأوردر وتأكيده قبل واتساب، ويُخصم الاستوك بعد تأكيدك للأوردر من لوحة الإدارة.</p>
   </div>
 </aside>
 
@@ -1510,34 +1794,22 @@ footer p {
 <div class="toast" id="toast">تمت الإضافة للسلة ✓</div>
 
 <script>
-// عدّل رقم الواتساب وكلمة مرور الأدمن هنا
-const WHATSAPP_NUMBER = "201018218102";
-const ADMIN_PASS = "12123456";
+// عدّل رقم الواتساب وكلمة مرور الأدمن ورابط InstaPay الثابت هنا
+const WHATSAPP_NUMBER = "201000000000";
+const ADMIN_PASS = "admin123";
 const CURRENCY = "ج.م";
-
+const INSTAPAY_LINK = "https://ipn.eg/S/your_handle/instapay/your_code";
 
 const defaultProducts = [
   {
-    "id": 9,
-    "name": "fff",
-    "category": "ff",
-    "price": 6000000,
-    "tag": "fff",
-    "desc": "jetta",
-    "images": [
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971273886564433/temp_image_FAF9E848-0A02-4AF5-9460-12AECDA97C27.webp?ex=6b097678&is=6b0824f8&hm=7bb5c079e0b28fd4c834dab1c63fdc0dcaf3d875e3e77ef9fd5cd51e9191a2d8&format=webp&width=768&height=1024",
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971274461323284/temp_image_B179754C-C3CD-405D-B3FD-4AB636CAD2CF.webp?ex=6b097678&is=6b0824f8&hm=e1a080c934083542fce483ac04abafcc6247bff61b2b2dc6932fd9d4aa300ee7&format=webp&width=768&height=1024",
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971275132403773/temp_image_29534273-26CA-4690-AC81-345552E2338E.webp?ex=6b097678&is=6b0824f8&hm=7a813f8f9d7e780b8c1c41fa0aa878fd3633c239cd9dda6ab61d327725f5b179&format=webp&width=768&height=1024"
-    ]
-  },
-  {
-    "id": 1,
-    "name": "سماعة لاسلكية",
-    "category": "إلكترونيات",
-    "price": 650,
-    "tag": "الأكثر طلباً",
-    "desc": "صوت واضح وتصميم مريح للاستخدام اليومي والمكالمات.",
-    "images": [
+    id: 1,
+    name: "سماعة لاسلكية",
+    category: "إلكترونيات",
+    price: 650,
+    stock: 12,
+    tag: "الأكثر طلباً",
+    desc: "صوت واضح وتصميم مريح للاستخدام اليومي والمكالمات.",
+    images: [
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=700&q=75",
@@ -1545,13 +1817,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 2,
-    "name": "ساعة أنيقة",
-    "category": "إكسسوارات",
-    "price": 850,
-    "tag": "جديد",
-    "desc": "تصميم بسيط يناسب كل الأوقات والإطلالات.",
-    "images": [
+    id: 2,
+    name: "ساعة أنيقة",
+    category: "إكسسوارات",
+    price: 850,
+    stock: 6,
+    tag: "جديد",
+    desc: "تصميم بسيط يناسب كل الأوقات والإطلالات.",
+    images: [
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=700&q=75",
@@ -1559,13 +1832,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 3,
-    "name": "شنطة يومية",
-    "category": "موضة",
-    "price": 520,
-    "tag": "",
-    "desc": "عملية وخفيفة ومناسبة للخروجات والعمل.",
-    "images": [
+    id: 3,
+    name: "شنطة يومية",
+    category: "موضة",
+    price: 520,
+    stock: 3,
+    tag: "",
+    desc: "عملية وخفيفة ومناسبة للخروجات والعمل.",
+    images: [
       "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=75",
@@ -1573,13 +1847,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 4,
-    "name": "كوب حراري",
-    "category": "المنزل",
-    "price": 280,
-    "tag": "",
-    "desc": "يحافظ على حرارة مشروبك لفترة أطول أثناء التنقل.",
-    "images": [
+    id: 4,
+    name: "كوب حراري",
+    category: "المنزل",
+    price: 280,
+    stock: 15,
+    tag: "",
+    desc: "يحافظ على حرارة مشروبك لفترة أطول أثناء التنقل.",
+    images: [
       "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=700&q=75",
@@ -1587,13 +1862,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 5,
-    "name": "نظارة شمس",
-    "category": "موضة",
-    "price": 390,
-    "tag": "",
-    "desc": "ستايل عصري وعدسات مريحة لإطلالة مميزة.",
-    "images": [
+    id: 5,
+    name: "نظارة شمس",
+    category: "موضة",
+    price: 390,
+    stock: 8,
+    tag: "",
+    desc: "ستايل عصري وعدسات مريحة لإطلالة مميزة.",
+    images: [
       "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=700&q=75",
@@ -1601,13 +1877,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 6,
-    "name": "باور بانك",
-    "category": "إلكترونيات",
-    "price": 720,
-    "tag": "",
-    "desc": "طاقة إضافية وسريعة لأجهزتك أثناء التنقل والسفر.",
-    "images": [
+    id: 6,
+    name: "باور بانك",
+    category: "إلكترونيات",
+    price: 720,
+    stock: 0,
+    tag: "",
+    desc: "طاقة إضافية وسريعة لأجهزتك أثناء التنقل والسفر.",
+    images: [
       "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=700&q=75",
@@ -1615,13 +1892,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 7,
-    "name": "محفظة",
-    "category": "إكسسوارات",
-    "price": 300,
-    "tag": "",
-    "desc": "حجم مناسب وتنظيم عملي للبطاقات والنقدية.",
-    "images": [
+    id: 7,
+    name: "محفظة",
+    category: "إكسسوارات",
+    price: 300,
+    stock: 9,
+    tag: "",
+    desc: "حجم مناسب وتنظيم عملي للبطاقات والنقدية.",
+    images: [
       "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=700&q=75",
@@ -1629,13 +1907,14 @@ const defaultProducts = [
     ]
   },
   {
-    "id": 8,
-    "name": "مصباح مكتبي",
-    "category": "المنزل",
-    "price": 450,
-    "tag": "",
-    "desc": "إضاءة مريحة وواضحة للمذاكرة والعمل اليومي.",
-    "images": [
+    id: 8,
+    name: "مصباح مكتبي",
+    category: "المنزل",
+    price: 450,
+    stock: 5,
+    tag: "",
+    desc: "إضاءة مريحة وواضحة للمذاكرة والعمل اليومي.",
+    images: [
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&w=700&q=75",
@@ -1644,11 +1923,20 @@ const defaultProducts = [
   }
 ];
 
-let products = JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts;
+let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => ({
+  ...p,
+  stock: Math.max(0, Number(p.stock ?? 10))
+}));
 let cart = JSON.parse(localStorage.getItem("ns_cart") || "[]");
+let orders = JSON.parse(localStorage.getItem("ns_orders") || "[]");
 let activeCategory = "الكل";
 let isAdmin = sessionStorage.getItem("ns_admin") === "1";
+let activeAdminTab = "orders";
 let uploadedAdminImgs = [];
+let selectedPayment = "cod";
+let pendingOrderData = null;
+let brandClickCount = 0;
+let brandClickTimer = null;
 
 let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || [
   {name: "مريم", stars: 5, text: "التجربة كانت سهلة والمنتج وصل بحالة ممتازة. شكراً NS!"},
@@ -1664,7 +1952,14 @@ let activeModalImg = 0;
 products.forEach(p => { cardIdxMap[p.id] = 0; });
 
 const money = n => Number(n).toLocaleString("en-US") + " " + CURRENCY;
+const getStock = p => Math.max(0, Number(p.stock ?? 0));
 const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice(0, 4) : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"];
+
+function stockBadgeHtml(stock) {
+  if (stock <= 0) return '<span class="stock-pill out">نفدت الكمية</span>';
+  if (stock <= 3) return `<span class="stock-pill low">متبقي ${stock} فقط</span>`;
+  return `<span class="stock-pill">متاح: ${stock}</span>`;
+}
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
@@ -1678,6 +1973,37 @@ function showToast(msg) {
   el.classList.add("show");
   clearTimeout(window._toastT);
   window._toastT = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function initInstaPayDisplay() {
+  document.getElementById("instapayLinkText").textContent = INSTAPAY_LINK;
+  document.getElementById("instapayOpenLink").href = INSTAPAY_LINK;
+}
+
+function copyInstaPayLink() {
+  navigator.clipboard.writeText(INSTAPAY_LINK).then(() => {
+    showToast("تم نسخ رابط InstaPay ✓");
+  }).catch(() => {
+    alert("تعذر النسخ التلقائي.");
+  });
+}
+
+/* Triple-Click Logo to Open Admin Login */
+function handleBrandTripleClick(e) {
+  e.preventDefault();
+  brandClickCount++;
+  clearTimeout(brandClickTimer);
+  if (brandClickCount >= 3) {
+    brandClickCount = 0;
+    openAdminLogin();
+    return;
+  }
+  brandClickTimer = setTimeout(() => {
+    if (brandClickCount === 1) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    brandClickCount = 0;
+  }, 450);
 }
 
 /* Admin Login & Controls */
@@ -1720,14 +2046,146 @@ function scrollToAdmin() {
   document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
 }
 
+function switchAdminTab(tab) {
+  activeAdminTab = tab;
+  document.getElementById("tabBtnOrders").classList.toggle("active", tab === "orders");
+  document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
+  document.getElementById("adminTabOrders").style.display = tab === "orders" ? "block" : "none";
+  document.getElementById("adminTabProducts").style.display = tab === "products" ? "block" : "none";
+  if (tab === "orders") renderAdminOrders();
+  if (tab === "products") renderAdminManageList();
+}
+
 function syncAdminUI() {
+  const pendingCount = orders.filter(o => o.status === "pending").length;
+  document.getElementById("stripPendingCount").textContent = pendingCount;
+  document.getElementById("admOrdersTotal").textContent = orders.length;
   document.getElementById("adminStrip").classList.toggle("active", isAdmin);
   document.getElementById("adminPanel").classList.toggle("active", isAdmin);
   renderReviews();
-  if (isAdmin) renderAdminManageList();
+  if (isAdmin) {
+    switchAdminTab(activeAdminTab);
+  }
 }
 
-// ضغط الصور المرفوعة من الجهاز تلقائياً لتبقى خفيفة وسريعة
+/* Orders Management & Stock Deduction on Admin Confirm */
+function saveOrders() {
+  localStorage.setItem("ns_orders", JSON.stringify(orders));
+  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
+  document.getElementById("admOrdersTotal").textContent = orders.length;
+}
+
+function confirmOrderAndDeductStock(orderNumber) {
+  const order = orders.find(o => o.orderNumber === orderNumber);
+  if (!order || order.stockDeducted || order.status === "cancelled") return;
+
+  for (const item of order.items) {
+    const p = products.find(y => y.id === item.id);
+    const available = p ? getStock(p) : 0;
+    if (!p || available < item.qty) {
+      alert(`لا يمكن تأكيد الأوردر: الاستوك المتاح من "${item.name}" هو ${available} فقط والمطلوب ${item.qty}.`);
+      return;
+    }
+  }
+
+  order.items.forEach(item => {
+    const p = products.find(y => y.id === item.id);
+    if (p) {
+      p.stock = Math.max(0, getStock(p) - item.qty);
+    }
+  });
+
+  order.status = "confirmed";
+  order.stockDeducted = true;
+  localStorage.setItem("ns_products", JSON.stringify(products));
+  saveOrders();
+  renderProducts();
+  renderCart();
+  renderAdminOrders();
+  renderAdminManageList();
+  showToast(`تم تأكيد الأوردر #${orderNumber} وخصم الاستوك ✓`);
+}
+
+function cancelOrderInAdmin(orderNumber) {
+  const order = orders.find(o => o.orderNumber === orderNumber);
+  if (!order || order.status === "cancelled") return;
+  if (!confirm(`إلغاء الأوردر #${orderNumber}؟`)) return;
+
+  if (order.stockDeducted) {
+    order.items.forEach(item => {
+      const p = products.find(y => y.id === item.id);
+      if (p) {
+        p.stock = getStock(p) + item.qty;
+      }
+    });
+    order.stockDeducted = false;
+    localStorage.setItem("ns_products", JSON.stringify(products));
+  }
+
+  order.status = "cancelled";
+  saveOrders();
+  renderProducts();
+  renderCart();
+  renderAdminOrders();
+  renderAdminManageList();
+  showToast(`تم إلغاء الأوردر #${orderNumber}`);
+}
+
+function deleteOrderFromHistory(orderNumber) {
+  if (!confirm(`حذف سجل الأوردر #${orderNumber} نهائياً؟`)) return;
+  orders = orders.filter(o => o.orderNumber !== orderNumber);
+  saveOrders();
+  renderAdminOrders();
+  showToast("تم حذف سجل الأوردر");
+}
+
+function renderAdminOrders() {
+  document.getElementById("admOrdersTotal").textContent = orders.length;
+  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
+
+  const box = document.getElementById("admOrdersList");
+  if (!orders.length) {
+    box.innerHTML = '<div class="empty-msg">لا توجد أوردرات مسجلة بعد.</div>';
+    return;
+  }
+
+  box.innerHTML = orders.map(o => {
+    let badgeClass = "pending";
+    let badgeText = "بانتظار تأكيدك (لم يُخصم الاستوك)";
+    if (o.status === "confirmed") {
+      badgeClass = "confirmed";
+      badgeText = "مؤكد وتم خصم الاستوك ✓";
+    } else if (o.status === "cancelled") {
+      badgeClass = "cancelled";
+      badgeText = "ملغي";
+    }
+
+    return `
+      <div class="order-card">
+        <div class="order-card-head">
+          <div>
+            <strong style="font-size:15px">أوردر #${escapeHtml(o.orderNumber)}</strong>
+            <span style="font-size:11.5px;color:var(--muted);margin-right:8px">${escapeHtml(o.createdAt || "")}</span>
+          </div>
+          <span class="status-pill ${badgeClass}">${badgeText}</span>
+        </div>
+        <div style="font-size:13px"><b>العميل:</b> ${escapeHtml(o.name)} — <b>موبايل:</b> ${escapeHtml(o.phone)}</div>
+        <div style="font-size:12.5px;color:var(--muted)"><b>العنوان:</b> ${escapeHtml(o.address)}</div>
+        <div style="font-size:12.5px;margin-top:4px"><b>الدفع:</b> ${escapeHtml(o.paymentText)}</div>
+        <div class="order-items-box">
+          ${o.items.map(it => `<div>• ${escapeHtml(it.name)} × ${it.qty} = ${money(it.price * it.qty)}</div>`).join("")}
+          <div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-weight:900">الإجمالي: ${money(o.total)}</div>
+        </div>
+        <div class="order-actions">
+          ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">✓ كونفيرم وخصم الاستوك</button>` : ""}
+          ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">إلغاء الأوردر</button>` : ""}
+          <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">حذف من السجل</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
 function compressImageFile(file) {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -1765,6 +2223,8 @@ function adminAddProduct() {
   const name = document.getElementById("admName").value.trim();
   const category = document.getElementById("admCat").value.trim();
   const price = Number(document.getElementById("admPrice").value);
+  const stockRaw = document.getElementById("admStock").value;
+  const stock = Math.max(0, Number(stockRaw));
   const tag = document.getElementById("admTag").value.trim();
   const desc = document.getElementById("admDesc").value.trim();
   const urlLines = document.getElementById("admUrls").value
@@ -1774,8 +2234,8 @@ function adminAddProduct() {
 
   const finalImages = [...uploadedAdminImgs, ...urlLines].slice(0, 4);
 
-  if (!name || !category || !price || !desc) {
-    alert("من فضلك املأ الاسم والقسم والسعر والوصف.");
+  if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) {
+    alert("من فضلك املأ الاسم والقسم والسعر والاستوك والوصف.");
     return;
   }
   if (!finalImages.length) {
@@ -1784,7 +2244,7 @@ function adminAddProduct() {
   }
 
   const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-  const newProd = { id: newId, name, category, price, tag, desc, images: finalImages };
+  const newProd = { id: newId, name, category, price, stock, tag, desc, images: finalImages };
   products.unshift(newProd);
   cardIdxMap[newId] = 0;
 
@@ -1796,10 +2256,10 @@ function adminAddProduct() {
     return;
   }
 
-  // تفريغ الحقول
   document.getElementById("admName").value = "";
   document.getElementById("admCat").value = "";
   document.getElementById("admPrice").value = "";
+  document.getElementById("admStock").value = "10";
   document.getElementById("admTag").value = "";
   document.getElementById("admDesc").value = "";
   document.getElementById("admFiles").value = "";
@@ -1833,7 +2293,7 @@ function renderAdminManageList() {
         <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
         <div>
           <div style="font-weight:800;font-size:13px">${escapeHtml(p.name)}</div>
-          <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)}</div>
+          <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • استوك: ${getStock(p)}</div>
         </div>
       </div>
       <button class="del-btn" onclick="adminDeleteProduct(${p.id})">حذف</button>
@@ -1853,6 +2313,7 @@ function copyExportCode() {
 /* Store Core */
 function saveCart() {
   localStorage.setItem("ns_cart", JSON.stringify(cart));
+  resetOrderConfirmation();
   renderCart();
 }
 
@@ -1880,21 +2341,29 @@ function renderProducts() {
   document.getElementById("productGrid").innerHTML = list.map((p, idx) => {
     const imgs = getImgs(p);
     const cur = (cardIdxMap[p.id] || 0) % imgs.length;
+    const stock = getStock(p);
+    const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
+    const canAddMore = stock > 0 && inCartQty < stock;
+
     return `
       <article class="card" onmouseenter="hoveredSet.add(${p.id})" onmouseleave="hoveredSet.delete(${p.id})">
         <div class="card-media" onclick="showDetails(${p.id})">
           <img id="p-img-${p.id}" src="${imgs[cur]}" alt="${escapeHtml(p.name)}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async">
           ${p.tag ? `<span class="ribbon">${escapeHtml(p.tag)}</span>` : ""}
+          ${stock <= 0 ? `<div class="out-overlay">نفدت الكمية</div>` : ""}
           <span class="img-step" id="p-step-${p.id}">${cur + 1}/${imgs.length}</span>
           ${imgs.length > 1 ? `<div class="dots-row" id="p-dots-${p.id}">${imgs.map((_, i) => `<span class="dot-item ${i === cur ? 'active' : ''}"></span>`).join("")}</div>` : ""}
         </div>
         <div class="card-body">
-          <span class="card-cat">${escapeHtml(p.category)}</span>
+          <div class="card-meta-line">
+            <span class="card-cat">${escapeHtml(p.category)}</span>
+            ${stockBadgeHtml(stock)}
+          </div>
           <h3 class="card-title">${escapeHtml(p.name)}</h3>
           <p class="card-desc">${escapeHtml(p.desc)}</p>
           <div class="card-price">${money(p.price)}</div>
           <div class="card-actions">
-            <button class="btn-add" onclick="addToCart(${p.id})">أضف للسلة</button>
+            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "غير متاح" : (canAddMore ? "أضف للسلة" : "الحد الأقصى في السلة")}</button>
             <button class="btn-info" onclick="showDetails(${p.id})">التفاصيل</button>
           </div>
         </div>
@@ -1927,28 +2396,58 @@ setInterval(() => {
 }, 3200);
 
 function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const stock = getStock(p);
+  if (stock <= 0) {
+    alert("هذا المنتج نفد من الاستوك حالياً.");
+    return;
+  }
   const found = cart.find(x => x.id === id);
+  const currentQty = found ? found.qty : 0;
+  if (currentQty + 1 > stock) {
+    alert(`الحد الأقصى المتاح من هذا المنتج هو ${stock} فقط.`);
+    return;
+  }
   if (found) found.qty++;
   else cart.push({id, qty: 1});
   saveCart();
+  renderProducts();
   showToast("تمت إضافة المنتج للسلة ✓");
   openCart();
 }
 
 function changeQty(id, delta) {
+  const p = products.find(x => x.id === id);
   const found = cart.find(x => x.id === id);
-  if (!found) return;
-  found.qty += delta;
+  if (!found || !p) return;
+  const stock = getStock(p);
+  const nextQty = found.qty + delta;
+  if (delta > 0 && nextQty > stock) {
+    alert(`الكمية المتاحة في الاستوك هي ${stock} فقط.`);
+    return;
+  }
+  found.qty = nextQty;
   if (found.qty <= 0) cart = cart.filter(x => x.id !== id);
   saveCart();
+  renderProducts();
 }
 
 function removeItem(id) {
   cart = cart.filter(x => x.id !== id);
   saveCart();
+  renderProducts();
 }
 
 function renderCart() {
+  cart = cart.filter(x => {
+    const p = products.find(y => y.id === x.id);
+    const stock = p ? getStock(p) : 0;
+    if (!p || stock <= 0) return false;
+    if (x.qty > stock) x.qty = stock;
+    return x.qty > 0;
+  });
+
   const count = cart.reduce((s, x) => s + x.qty, 0);
   const total = cart.reduce((s, x) => {
     const p = products.find(y => y.id === x.id);
@@ -1961,16 +2460,17 @@ function renderCart() {
   document.getElementById("cartItems").innerHTML = cart.length ? cart.map(x => {
     const p = products.find(y => y.id === x.id);
     if (!p) return "";
+    const stock = getStock(p);
     return `
       <div class="cart-row">
         <div class="cart-thumb"><img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
         <div>
           <div style="font-weight:800">${escapeHtml(p.name)}</div>
-          <div style="font-size:13px;color:var(--muted);font-weight:700">${money(p.price)}</div>
+          <div style="font-size:13px;color:var(--muted);font-weight:700">${money(p.price)} • متاح: ${stock}</div>
           <div class="qty-box">
             <button onclick="changeQty(${p.id},-1)">−</button>
             <span style="font-weight:800">${x.qty}</span>
-            <button onclick="changeQty(${p.id},1)">+</button>
+            <button ${x.qty >= stock ? "disabled" : ""} onclick="changeQty(${p.id},1)">+</button>
           </div>
         </div>
         <button class="del-btn" onclick="removeItem(${p.id})">حذف</button>
@@ -1981,6 +2481,7 @@ function renderCart() {
 }
 
 function openCart() {
+  renderCart();
   document.getElementById("drawer").classList.add("open");
   document.getElementById("overlay").classList.add("show");
 }
@@ -1988,6 +2489,140 @@ function openCart() {
 function closeCart() {
   document.getElementById("drawer").classList.remove("open");
   document.getElementById("overlay").classList.remove("show");
+}
+
+/* Payment Selection, Order Numbering & Pre-WhatsApp Confirmation */
+function selectPayment(method) {
+  selectedPayment = method;
+  document.getElementById("pay-cod").classList.toggle("active", method === "cod");
+  document.getElementById("pay-instapay").classList.toggle("active", method === "instapay");
+  document.getElementById("instapayBox").classList.toggle("show", method === "instapay");
+  resetOrderConfirmation();
+}
+
+function resetOrderConfirmation() {
+  pendingOrderData = null;
+  document.getElementById("confirmBox").classList.remove("show");
+  document.getElementById("prepareOrderBtn").style.display = "block";
+}
+
+function generateNextOrderNumber() {
+  const lastNum = Number(localStorage.getItem("ns_last_order_num") || "1000");
+  const nextNum = lastNum + 1;
+  localStorage.setItem("ns_last_order_num", String(nextNum));
+  return "NS-" + nextNum;
+}
+
+function getPaymentLabel() {
+  if (selectedPayment === "instapay") {
+    return `InstaPay (${INSTAPAY_LINK})`;
+  }
+  return "الدفع عند الاستلام (Cash)";
+}
+
+function prepareOrderConfirmation() {
+  if (!cart.length) {
+    alert("السلة فاضية. أضف منتج واحد على الأقل.");
+    return;
+  }
+
+  const orderItems = [];
+  for (const item of cart) {
+    const p = products.find(y => y.id === item.id);
+    const stock = p ? getStock(p) : 0;
+    if (!p || stock <= 0) {
+      alert(`المنتج "${p ? p.name : "المحدد"}" نفد من الاستوك. احذفه من السلة أولاً.`);
+      renderCart();
+      renderProducts();
+      return;
+    }
+    if (item.qty > stock) {
+      alert(`الكمية المطلوبة من "${p.name}" (${item.qty}) أكبر من الاستوك المتاح (${stock}).`);
+      renderCart();
+      return;
+    }
+    orderItems.push({ id: p.id, name: p.name, price: p.price, qty: item.qty });
+  }
+
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+  if (!name || !phone || !address) {
+    alert("من فضلك اكتب الاسم ورقم الموبايل والعنوان.");
+    return;
+  }
+  if (!/^(\+?20|0)?1[0125][0-9]{8}$/.test(phone.replace(/[\s-]/g, ""))) {
+    if (!confirm("رقم الموبايل شكله غير معتاد. هل تريد المتابعة؟")) return;
+  }
+
+  const lines = orderItems.map(it => `• ${it.name} × ${it.qty} = ${money(it.price * it.qty)}`);
+  const total = orderItems.reduce((s, it) => s + it.qty * it.price, 0);
+  const orderNumber = generateNextOrderNumber();
+  const paymentText = getPaymentLabel();
+
+  pendingOrderData = {
+    orderNumber,
+    name,
+    phone,
+    address,
+    lines,
+    total,
+    paymentText,
+    items: orderItems,
+    createdAt: new Date().toLocaleString("ar-EG")
+  };
+
+  document.getElementById("confirmSummary").innerHTML = `
+    <div><b>رقم الأوردر:</b> #${escapeHtml(orderNumber)}</div>
+    <div><b>العميل:</b> ${escapeHtml(name)} (${escapeHtml(phone)})</div>
+    <div><b>طريقة الدفع:</b> ${escapeHtml(paymentText)}</div>
+    <div><b>الإجمالي:</b> ${money(total)}</div>
+  `;
+  document.getElementById("confirmBox").classList.add("show");
+  document.getElementById("prepareOrderBtn").style.display = "none";
+  showToast(`تم ترقيم الأوردر #${orderNumber} — راجع وأكّد الإرسال`);
+}
+
+function recordOrderToAdmin(data) {
+  const existing = orders.find(o => o.orderNumber === data.orderNumber);
+  if (existing) return;
+  orders.unshift({
+    orderNumber: data.orderNumber,
+    name: data.name,
+    phone: data.phone,
+    address: data.address,
+    paymentText: data.paymentText,
+    items: data.items,
+    total: data.total,
+    createdAt: data.createdAt,
+    status: "pending",
+    stockDeducted: false
+  });
+  saveOrders();
+  if (isAdmin) renderAdminOrders();
+}
+
+function finalizeAndSendWhatsApp() {
+  if (!pendingOrderData) {
+    prepareOrderConfirmation();
+    return;
+  }
+  const { orderNumber, name, phone, address, lines, total, paymentText } = pendingOrderData;
+  recordOrderToAdmin(pendingOrderData);
+
+  cart = [];
+  localStorage.setItem("ns_cart", JSON.stringify(cart));
+  renderCart();
+  renderProducts();
+  resetOrderConfirmation();
+
+  const msg = `طلب جديد من متجر NS\nرقم الأوردر: #${orderNumber}\n\nالاسم: ${name}\nرقم الموبايل: ${phone}\nالعنوان: ${address}\nطريقة الدفع: ${paymentText}\n\nالمنتجات:\n${lines.join("\n")}\n\nالإجمالي: ${money(total)}\n\nتم تسجيل الطلب وجاهز لتأكيد الأدمن.`;
+  const number = WHATSAPP_NUMBER.replace(/\D/g, "");
+  if (number === "201000000000") {
+    alert("تم تسجيل الأوردر في لوحة الأدمن، ولتفعيل إرسال واتساب غيّر رقم WHATSAPP_NUMBER في الكود.");
+    return;
+  }
+  window.open(`https://wa.me/${number}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
 function showDetails(id) {
@@ -2004,6 +2639,9 @@ function paintModal() {
   if (!p) return;
   const imgs = getImgs(p);
   const idx = activeModalImg % imgs.length;
+  const stock = getStock(p);
+  const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
+  const canAddMore = stock > 0 && inCartQty < stock;
 
   document.getElementById("modal").innerHTML = `
     <button class="x-btn" style="position:absolute;left:16px;top:16px;z-index:4" onclick="closeDetails()">×</button>
@@ -2018,11 +2656,14 @@ function paintModal() {
     <div class="strip">
       ${imgs.map((u, i) => `<button class="${i === idx ? 'active' : ''}" onclick="pickModal(${i})"><img src="${u}" alt="صورة ${i + 1}" loading="lazy"></button>`).join("")}
     </div>
-    <span class="card-cat">${escapeHtml(p.category)}</span>
+    <div class="card-meta-line">
+      <span class="card-cat">${escapeHtml(p.category)}</span>
+      ${stockBadgeHtml(stock)}
+    </div>
     <h3 style="margin:4px 0 6px;font-size:21px;font-weight:900">${escapeHtml(p.name)}</h3>
     <p style="margin:0 0 12px;color:var(--muted);font-size:14px">${escapeHtml(p.desc)}</p>
     <div class="card-price" style="font-size:21px">${money(p.price)}</div>
-    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" onclick="addToCart(${p.id});closeDetails()">أضف للسلة</button>
+    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "نفدت الكمية" : (canAddMore ? "أضف للسلة" : "الحد الأقصى المتاح في السلة")}</button>
   `;
 }
 
@@ -2053,35 +2694,6 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowLeft") stepModal(1);
   else if (e.key === "ArrowRight") stepModal(-1);
 });
-
-function sendOrder() {
-  if (!cart.length) {
-    alert("السلة فاضية. أضف منتج واحد على الأقل.");
-    return;
-  }
-  const name = document.getElementById("customerName").value.trim();
-  const phone = document.getElementById("customerPhone").value.trim();
-  const address = document.getElementById("customerAddress").value.trim();
-  if (!name || !phone || !address) {
-    alert("من فضلك اكتب الاسم ورقم الموبايل والعنوان.");
-    return;
-  }
-  if (!/^(\+?20|0)?1[0125][0-9]{8}$/.test(phone.replace(/[\s-]/g, ""))) {
-    if (!confirm("رقم الموبايل شكله غير معتاد. هل تريد المتابعة؟")) return;
-  }
-  const lines = cart.map(x => {
-    const p = products.find(y => y.id === x.id);
-    return `• ${p.name} × ${x.qty} = ${money(p.price * x.qty)}`;
-  });
-  const total = cart.reduce((s, x) => s + x.qty * products.find(p => p.id === x.id).price, 0);
-  const msg = `طلب جديد من متجر NS\n\nالاسم: ${name}\nرقم الموبايل: ${phone}\nالعنوان: ${address}\n\nالمنتجات:\n${lines.join("\n")}\n\nالإجمالي: ${money(total)}\n\nبرجاء تأكيد الطلب.`;
-  const number = WHATSAPP_NUMBER.replace(/\D/g, "");
-  if (number === "201000000000") {
-    alert("قبل استقبال الطلبات، غيّر رقم الواتساب في الكود إلى رقمك الحقيقي (WHATSAPP_NUMBER).");
-    return;
-  }
-  window.open(`https://wa.me/${number}?text=${encodeURIComponent(msg)}`, "_blank");
-}
 
 function renderReviews() {
   document.getElementById("reviewGrid").innerHTML = reviews.map((r, index) => `
@@ -2124,6 +2736,7 @@ function addReview() {
 }
 
 document.getElementById("year").textContent = new Date().getFullYear();
+initInstaPayDisplay();
 renderFilters();
 renderProducts();
 renderCart();

@@ -478,6 +478,39 @@ header {
   border: 1.5px solid var(--brown);
 }
 
+.edit-photo-tile {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+}
+
+.edit-photo-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.edit-photo-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(185, 28, 28, 0.92);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
 .admin-manage-list {
   max-height: 360px;
   overflow-y: auto;
@@ -514,12 +547,23 @@ header {
   display: flex;
   gap: 6px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .sale-edit-btn {
   border: 1px solid rgba(182, 130, 70, 0.6);
   background: #f8efe2;
   color: var(--brown);
+  padding: 5px 9px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.photo-edit-btn {
+  border: 1px solid rgba(59, 35, 22, 0.35);
+  background: var(--brown-soft);
+  color: var(--brown-deep);
   padding: 5px 9px;
   border-radius: 8px;
   font-size: 11.5px;
@@ -575,6 +619,7 @@ header {
   border-radius: 999px;
   font-size: 11.5px;
   font-weight: 800;
+  text-transform: uppercase;
 }
 
 .status-pill.pending {
@@ -587,7 +632,9 @@ header {
   color: #166534;
 }
 
-.status-pill.cancelled {
+.status-pill.declined,
+.status-pill.cancelled,
+.status-pill.canceled {
   background: #fee2e2;
   color: #991b1b;
 }
@@ -610,6 +657,16 @@ header {
 
 .btn-confirm-order {
   background: var(--ok);
+  color: #fff;
+  border: 0;
+  border-radius: 9px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.btn-decline-order {
+  background: #7f1d1d;
   color: #fff;
   border: 0;
   border-radius: 9px;
@@ -2236,7 +2293,7 @@ footer p {
         <div class="admin-card">
           <h3>Existing Products (<span id="admProdCount">0</span>)</h3>
           <div class="admin-manage-list" id="admProdList"></div>
-          <p class="note-txt" style="margin-top:10px">Click <b>Sale</b> on any item to set or clear a Sale discount anytime, or <b>Delete</b> to remove it.</p>
+          <p class="note-txt" style="margin-top:10px">Use <b>Photos</b> to add/remove product images, <b>Sale</b> to set discounts, or <b>Delete</b> to remove a product.</p>
         </div>
       </div>
     </div>
@@ -2270,7 +2327,7 @@ footer p {
             </div>
           </div>
           <button type="button" class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminCreateCoupon()">Save Coupon to Database</button>
-          <p class="note-txt">Coupon usage is counted only when you confirm an order, and returned automatically if a confirmed order is cancelled.</p>
+          <p class="note-txt">Coupon usage is counted only when you confirm an order, and returned automatically if a confirmed order is declined or canceled.</p>
         </div>
 
         <div class="admin-card">
@@ -2564,6 +2621,36 @@ footer p {
   <div class="modal-card" id="modal"></div>
 </div>
 
+<!-- Admin Edit Product Photos Modal -->
+<div class="modal-layer" id="photoModalWrap" onclick="if(event.target===this)closePhotoModal()">
+  <div class="modal-card" style="width:min(460px,100%)">
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closePhotoModal()">×</button>
+    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--brown)">🖼️ Edit Product Photos</h3>
+    <div id="photoEditProdTitle" style="font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px"></div>
+
+    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">Current &amp; Staged Photos (up to 4 — click × to remove)</label>
+    <div class="preview-strip" id="photoEditGrid"></div>
+
+    <div class="inp-group">
+      <label for="photoEditFiles">Add Photos from Device</label>
+      <input id="photoEditFiles" type="file" accept="image/*" multiple onchange="handleEditPhotoFiles(event)">
+    </div>
+
+    <div class="inp-group">
+      <label for="photoEditAddUrl">Or Add Image URL</label>
+      <div style="display:flex;gap:8px">
+        <input id="photoEditAddUrl" placeholder="https://example.com/photo.jpg" style="margin-bottom:0" onkeydown="if(event.key==='Enter'){event.preventDefault();addEditPhotoUrl();}">
+        <button type="button" class="btn-info" style="padding:0 14px;border-radius:10px;white-space:nowrap" onclick="addEditPhotoUrl()">+ Add</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button type="button" class="btn-add" id="savePhotoEditBtn" style="padding:10px;border-radius:11px" onclick="saveEditedProductPhotos()">Save Photos</button>
+      <button type="button" class="btn-info" style="padding:10px 14px;border-radius:11px" onclick="closePhotoModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Admin Edit Product Sale Modal -->
 <div class="modal-layer" id="saleModalWrap" onclick="if(event.target===this)closeSaleModal()">
   <div class="modal-card" style="width:min(420px,100%)">
@@ -2630,6 +2717,14 @@ const DIRECT_WHATSAPP_WEBHOOK_URL = "https://wgcbtfumziqmetevjgdw.supabase.co/fu
 const DIRECT_WHATSAPP_WEBHOOK_TOKEN = "";
 
 localStorage.removeItem("ns_products");
+
+function normalizeOrderStatus(status) {
+  const s = String(status || "pending").trim().toLowerCase();
+  if (s === "confirmed" || s === "confirm") return "confirmed";
+  if (s === "declined" || s === "decline" || s === "rejected") return "declined";
+  if (s === "canceled" || s === "cancelled" || s === "cancel") return "canceled";
+  return "pending";
+}
 
 function normalizeSaleFields(p) {
   const basePrice = Math.max(1, Number(p.price) || 1);
@@ -2734,6 +2829,8 @@ let activeAdminTab = "orders";
 let activeAccountPanel = "orders";
 let uploadedAdminImgs = [];
 let editingSaleProductId = null;
+let editingPhotoProductId = null;
+let draftProductPhotos = [];
 let selectedPayment = "cod";
 let pendingOrderData = null;
 let brandClickCount = 0;
@@ -2762,1680 +2859,80 @@ function saveCustomerProfile() {
   localStorage.setItem("ns_customer_profile", JSON.stringify(customerProfile));
 }
 
+function upsertRecentOrderInProfile(entry) {
+  const list = Array.isArray(customerProfile.recentOrders) ? [...customerProfile.recentOrders] : [];
+  const normNum = String(entry.orderNumber || "").toUpperCase();
+  const idx = list.findIndex(item => String(item.orderNumber || "").toUpperCase() === normNum);
+  if (idx >= 0) {
+    list[idx] = { ...list[idx], ...entry, status: normalizeOrderStatus(entry.status ?? list[idx].status) };
+  } else {
+    list.unshift({ ...entry, status: normalizeOrderStatus(entry.status) });
+  }
+  customerProfile.recentOrders = list.slice(0, 25);
+  saveCustomerProfile();
+}
+
+function syncOrderStatusEverywhere(orderNumber, status) {
+  const normStatus = normalizeOrderStatus(status);
+  const normNum = String(orderNumber || "").toUpperCase();
+  orders = orders.map(o => String(o.orderNumber || "").toUpperCase() === normNum ? { ...o, status: normStatus } : o);
+  customerProfile.recentOrders = (customerProfile.recentOrders || []).map(o =>
+    String(o.orderNumber || "").toUpperCase() === normNum ? { ...o, status: normStatus } : o
+  );
+  saveCustomerProfile();
+  saveOrders();
+  if (isAdmin) renderAdminOrders();
+  if (document.getElementById("accountWrap").classList.contains("show") && activeAccountPanel === "orders") {
+    renderAccountSubpanel();
+  }
+}
+
+async function persistCustomerOrderRecord({ orderNumber, email, name, phone, governorate, total, status }) {
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!cleanEmail) return;
+  const record = {
+    order_number: String(orderNumber).toUpperCase(),
+    customer_email: cleanEmail,
+    customer_name: name || "",
+    customer_phone: phone || "",
+    governorate: governorate || "",
+    total: Number(total || 0),
+    status: normalizeOrderStatus(status)
+  };
+  const { error } = await sb.from("ns_customer_orders").upsert(record, { onConflict: "order_number" });
+  if (error) {
+    console.warn("Could not sync customer order record:", error.message);
+  }
+}
+
+async function fetchOrdersByEmailFromCloud(email) {
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!cleanEmail) return [];
+  const { data, error } = await sb
+    .from("ns_customer_orders")
+    .select("*")
+    .ilike("customer_email", cleanEmail)
+    .order("created_at", { ascending: false })
+    .limit(25);
+  if (error) {
+    console.warn("Could not query customer orders by email:", error.message);
+    return null;
+  }
+  return (data || []).map(row => ({
+    orderNumber: String(row.order_number || "").toUpperCase(),
+    email: String(row.customer_email || "").toLowerCase(),
+    name: row.customer_name || "",
+    phone: row.customer_phone || "",
+    governorate: row.governorate || "",
+    total: Number(row.total || 0),
+    status: normalizeOrderStatus(row.status),
+    createdAt: row.created_at ? new Date(row.created_at).toLocaleString("en-US") : ""
+  }));
+}
+
 function hydrateSavedCustomerFields() {
   if (customerProfile.name && !document.getElementById("customerName").value) {
     document.getElementById("customerName").value = customerProfile.name;
   }
   if (customerProfile.email && !document.getElementById("customerEmail").value) {
     document.getElementById("customerEmail").value = customerProfile.email;
-  }
-  if (customerProfile.phone && !document.getElementById("customerPhone").value) {
-    document.getElementById("customerPhone").value = customerProfile.phone;
-  }
-  if (customerProfile.governorate && !document.getElementById("customerGovernorate").value) {
-    document.getElementById("customerGovernorate").value = customerProfile.governorate;
-  }
-  if (customerProfile.address && !document.getElementById("customerAddress").value) {
-    document.getElementById("customerAddress").value = customerProfile.address;
-  }
-  if (customerProfile.email && !document.getElementById("accountEmailInput").value) {
-    document.getElementById("accountEmailInput").value = customerProfile.email;
-  }
-}
-
-function onCustomerEmailChange() {
-  resetOrderConfirmation();
-  const em = document.getElementById("customerEmail").value.trim();
-  if (em) {
-    document.getElementById("accountEmailInput").value = em;
-  }
-}
-
-/* Shipping Calculation Matching Server Rules */
-function calculateShippingFee(governorate, productsAfterDiscount) {
-  const gov = String(governorate || "").trim();
-  if (!gov) return null;
-  if (productsAfterDiscount >= FREE_SHIPPING_THRESHOLD) return 0;
-  return gov.toLowerCase() === "monufia" ? 40 : 80;
-}
-
-function onGovernorateChange() {
-  resetOrderConfirmation();
-  renderCartTotals();
-}
-
-/* Custom Logo */
-function applyLogo(src) {
-  const clean = (src || "").trim();
-  logoValue = clean;
-  const headerBox = document.getElementById("siteLogoBox");
-  const prevBox = document.getElementById("admLogoPreview");
-  const urlInput = document.getElementById("admLogoUrl");
-
-  if (headerBox) {
-    if (clean) {
-      headerBox.innerHTML = `<img src="${escapeHtml(clean)}" alt="NS Accessories logo">`;
-      headerBox.classList.add("has-logo");
-    } else {
-      headerBox.innerHTML = "";
-      headerBox.classList.remove("has-logo");
-    }
-  }
-
-  if (prevBox) {
-    if (clean) {
-      prevBox.innerHTML = `<img src="${escapeHtml(clean)}" alt="Logo preview">`;
-      prevBox.classList.add("has-logo");
-    } else {
-      prevBox.innerHTML = `<span class="logo-empty-note">No logo set</span>`;
-      prevBox.classList.remove("has-logo");
-    }
-  }
-
-  if (urlInput && !clean.startsWith("data:")) {
-    urlInput.value = clean;
-  }
-}
-
-async function saveSharedLogo(src) {
-  if (!isAdmin) throw new Error("Only an authorized admin can change the store logo.");
-  const clean = (src || "").trim();
-  const { error } = await sb.from("ns_store_settings").upsert({ id: "main", logo_url: clean }, { onConflict: "id" });
-  if (error) throw error;
-  applyLogo(clean);
-}
-
-async function loadSharedLogo() {
-  const { data, error } = await sb.from("ns_store_settings").select("logo_url").eq("id", "main").maybeSingle();
-  if (error) {
-    console.warn("Could not load shared NS logo:", error.message);
-    return;
-  }
-  applyLogo(data?.logo_url || "");
-}
-
-async function uploadSharedLogo(file) {
-  const dataUrl = await resizeImageToDataUrl(file, 700, 0.9, "image/png");
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-  const path = `store-logo/logo-${Date.now()}.png`;
-  const { error: uploadError } = await sb.storage.from("ns-products").upload(path, blob, {
-    contentType: "image/png", upsert: false, cacheControl: "3600"
-  });
-  if (uploadError) throw uploadError;
-  const { data } = sb.storage.from("ns-products").getPublicUrl(path);
-  await saveSharedLogo(data.publicUrl);
-}
-
-function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image/jpeg") {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let w = img.width, h = img.height;
-        if (w > maxSide || h > maxSide) {
-          if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
-          else { w = Math.round(w * maxSide / h); h = maxSide; }
-        }
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL(mime, quality));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-async function handleLogoUpload(e) {
-  const file = (e.target.files || [])[0];
-  if (!file) return;
-  try {
-    showToast("Uploading shared logo...");
-    await uploadSharedLogo(file);
-    showToast("Shared store logo updated for everyone ✓");
-  } catch (err) {
-    console.error(err);
-    alert("Could not save the shared logo: " + (err.message || "Unknown error"));
-  } finally {
-    e.target.value = "";
-  }
-}
-
-function handleLogoUrlInput(e) {
-  const val = e.target.value.trim();
-  const prevBox = document.getElementById("admLogoPreview");
-  if (!prevBox) return;
-  if (val) {
-    prevBox.innerHTML = `<img src="${escapeHtml(val)}" alt="Logo preview">`;
-    prevBox.classList.add("has-logo");
-  } else {
-    prevBox.innerHTML = `<span class="logo-empty-note">No logo set</span>`;
-    prevBox.classList.remove("has-logo");
-  }
-}
-
-async function saveLogoUrlFromInput() {
-  const val = document.getElementById("admLogoUrl").value.trim();
-  if (!val) {
-    alert("Enter an image URL first.");
-    return;
-  }
-  try {
-    await saveSharedLogo(val);
-    showToast("Shared logo URL saved ✓");
-  } catch (err) {
-    alert("Could not save the shared logo: " + (err.message || "Unknown error"));
-  }
-}
-
-async function removeSharedLogo() {
-  document.getElementById("admLogoFile").value = "";
-  document.getElementById("admLogoUrl").value = "";
-  try {
-    await saveSharedLogo("");
-    showToast("Store logo removed for everyone ✓");
-  } catch (err) {
-    alert("Could not remove the shared logo: " + (err.message || "Unknown error"));
-  }
-}
-
-function updateSalePreviewCalc() {
-  const price = Number(document.getElementById("admPrice").value) || 0;
-  const type = document.getElementById("admSaleType").value;
-  const val = Number(document.getElementById("admSaleVal").value) || 0;
-  const labelEl = document.getElementById("admSaleValLabel");
-  const calcEl = document.getElementById("admSaleCalc");
-
-  if (type === "percent") {
-    labelEl.textContent = "Sale Percentage (%)";
-    document.getElementById("admSaleVal").placeholder = "e.g. 20";
-  } else if (type === "amount") {
-    labelEl.textContent = "Sale Amount (EGP)";
-    document.getElementById("admSaleVal").placeholder = "e.g. 100";
-  } else {
-    labelEl.textContent = "Sale Value";
-  }
-
-  if (!price || type === "none" || val <= 0) {
-    calcEl.textContent = price > 0 ? `Final Price: ${money(price)} (No Sale)` : "Final Price: No Sale";
-    return;
-  }
-
-  const info = computeSaleInfo(price, type, val);
-  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
-}
-
-function openSaleModal(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  editingSaleProductId = id;
-  document.getElementById("saleEditProdTitle").textContent = `${p.name} — Original Price: ${money(p.price)}`;
-  document.getElementById("editSaleType").value = p.saleType || "none";
-  document.getElementById("editSaleVal").value = p.saleType && p.saleType !== "none" ? (p.saleValue || "") : "";
-  updateEditSaleCalc();
-  document.getElementById("saleModalWrap").classList.add("show");
-}
-
-function closeSaleModal() {
-  editingSaleProductId = null;
-  document.getElementById("saleModalWrap").classList.remove("show");
-}
-
-function updateEditSaleCalc() {
-  const p = products.find(x => x.id === editingSaleProductId);
-  if (!p) return;
-  const type = document.getElementById("editSaleType").value;
-  const val = Number(document.getElementById("editSaleVal").value) || 0;
-  const labelEl = document.getElementById("editSaleValLabel");
-  const calcEl = document.getElementById("editSaleCalc");
-
-  if (type === "percent") labelEl.textContent = "Sale Percentage (%)";
-  else if (type === "amount") labelEl.textContent = "Sale Amount (EGP)";
-  else labelEl.textContent = "Sale Value";
-
-  if (type === "none" || val <= 0) {
-    calcEl.textContent = `Final Price: ${money(p.price)} (No Sale)`;
-    return;
-  }
-  const info = computeSaleInfo(p.price, type, val);
-  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
-}
-
-async function saveEditedProductSale() {
-  const p = products.find(x => x.id === editingSaleProductId);
-  if (!p) return;
-  const type = document.getElementById("editSaleType").value;
-  const val = Number(document.getElementById("editSaleVal").value) || 0;
-
-  if (type !== "none" && val <= 0) { alert("Enter a Sale value greater than 0 or choose No Sale."); return; }
-  if (type === "percent" && val > 95) { alert("Maximum Sale discount is 95%."); return; }
-  if (type === "amount" && val >= p.price) { alert("Sale amount must be less than the original price."); return; }
-
-  const { error } = await sb.from("ns_products").update({ sale_type: type, sale_value: val }).eq("id", p.id);
-  if (error) { alert("Couldn't save sale: " + error.message); return; }
-  Object.assign(p, normalizeSaleFields({ ...p, saleType: type, saleValue: val }));
-  closeSaleModal();
-  renderProducts(); renderCart(); renderAdminManageList();
-  showToast("Sale updated for everyone ✓");
-}
-
-function clearEditedProductSale() {
-  document.getElementById("editSaleType").value = "none";
-  document.getElementById("editSaleVal").value = "";
-  saveEditedProductSale();
-}
-
-function stockBadgeHtml(stock) {
-  if (stock <= 0) return '<span class="stock-pill out">Sold Out</span>';
-  if (stock <= 3) return `<span class="stock-pill low">Only ${stock} left</span>`;
-  return `<span class="stock-pill">In Stock: ${stock}</span>`;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
-}
-
-function showToast(msg) {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  clearTimeout(window._toastT);
-  window._toastT = setTimeout(() => el.classList.remove("show"), 2200);
-}
-
-function initInstaPayDisplay() {
-  document.getElementById("instapayLinkText").textContent = INSTAPAY_LINK;
-  document.getElementById("instapayOpenLink").href = INSTAPAY_LINK;
-}
-
-function copyInstaPayLink() {
-  navigator.clipboard.writeText(INSTAPAY_LINK).then(() => {
-    showToast("Payment link copied ✓");
-  }).catch(() => {
-    alert("Unable to copy automatically.");
-  });
-}
-
-/* Triple-Click Logo to Open Admin Login */
-function handleBrandTripleClick(e) {
-  e.preventDefault();
-  brandClickCount++;
-  clearTimeout(brandClickTimer);
-  if (brandClickCount >= 3) {
-    brandClickCount = 0;
-    openAdminLogin();
-    return;
-  }
-  brandClickTimer = setTimeout(() => {
-    if (brandClickCount === 1) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    brandClickCount = 0;
-  }, 450);
-}
-
-/* Customer Account / Orders / Profile Sheet */
-function openAccountModal(panel = "orders") {
-  activeAccountPanel = panel;
-  const currentCheckoutEmail = document.getElementById("customerEmail").value.trim();
-  document.getElementById("accountEmailInput").value = currentCheckoutEmail || customerProfile.email || "";
-  document.getElementById("accountWrap").classList.add("show");
-  switchAccountPanel(panel);
-}
-
-function closeAccountModal() {
-  document.getElementById("accountWrap").classList.remove("show");
-}
-
-function switchAccountPanel(panel) {
-  activeAccountPanel = panel;
-  document.getElementById("accTabOrdersBtn").classList.toggle("active", panel === "orders");
-  document.getElementById("accTabProfileBtn").classList.toggle("active", panel === "profile");
-  renderAccountSubpanel();
-}
-
-function submitAccountEmail() {
-  const em = document.getElementById("accountEmailInput").value.trim();
-  if (!em || !isValidEmail(em)) {
-    alert("Please enter a valid email address.");
-    document.getElementById("accountEmailInput").focus();
-    return;
-  }
-  customerProfile.email = em;
-  saveCustomerProfile();
-  document.getElementById("customerEmail").value = em;
-  resetOrderConfirmation();
-  renderAccountSubpanel();
-  showToast("Email saved ✓");
-}
-
-function saveCustomerProfileDetails() {
-  const name = document.getElementById("profNameInput").value.trim();
-  const email = document.getElementById("profEmailInput").value.trim();
-  const phone = document.getElementById("profPhoneInput").value.trim();
-  const governorate = document.getElementById("profGovInput").value.trim();
-  const address = document.getElementById("profAddressInput").value.trim();
-
-  if (email && !isValidEmail(email)) {
-    alert("Please enter a valid email address.");
-    return;
-  }
-
-  customerProfile = {
-    ...customerProfile,
-    name,
-    email,
-    phone,
-    governorate,
-    address
-  };
-  saveCustomerProfile();
-
-  document.getElementById("customerName").value = name;
-  document.getElementById("customerEmail").value = email;
-  document.getElementById("customerPhone").value = phone;
-  if (governorate) document.getElementById("customerGovernorate").value = governorate;
-  document.getElementById("customerAddress").value = address;
-  document.getElementById("accountEmailInput").value = email;
-
-  resetOrderConfirmation();
-  renderCartTotals();
-  showToast("Profile updated ✓");
-}
-
-function renderAccountSubpanel() {
-  const box = document.getElementById("accountSubpanel");
-  if (!box) return;
-
-  if (activeAccountPanel === "orders") {
-    const emailFilter = document.getElementById("accountEmailInput").value.trim().toLowerCase() || (customerProfile.email || "").toLowerCase();
-    const list = (customerProfile.recentOrders || []).filter(o => {
-      if (!emailFilter) return true;
-      return !o.email || String(o.email).toLowerCase() === emailFilter;
-    });
-
-    if (!list.length) {
-      box.innerHTML = `
-        <div style="font-weight:800;color:var(--brown-deep);margin-bottom:4px">Recent Orders</div>
-        <div class="note-txt" style="margin:0">No orders found for ${escapeHtml(emailFilter || "this account")} yet. Once you confirm an order on Checkout, it appears here.</div>
-      `;
-      return;
-    }
-
-    box.innerHTML = `
-      <div style="font-weight:800;color:var(--brown-deep);margin-bottom:8px">Recent Orders (${list.length})</div>
-      ${list.map(o => `
-        <div style="padding:8px 0;border-top:1px solid var(--line)">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-            <b>#${escapeHtml(o.orderNumber)}</b>
-            <span class="status-pill pending">${escapeHtml(String(o.status || "pending").toUpperCase())}</span>
-          </div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">
-            ${escapeHtml(o.governorate || "")} • Total: <b>${money(o.total)}</b>
-          </div>
-          <div style="font-size:11.5px;color:var(--muted)">${escapeHtml(o.createdAt || "")}</div>
-        </div>
-      `).join("")}
-    `;
-    return;
-  }
-
-  box.innerHTML = `
-    <div style="font-weight:800;color:var(--brown-deep);margin-bottom:8px">Saved Checkout Profile</div>
-    <div class="inp-group">
-      <label for="profNameInput">Full Name</label>
-      <input id="profNameInput" value="${escapeHtml(customerProfile.name || "")}" placeholder="Your full name">
-    </div>
-    <div class="inp-group">
-      <label for="profEmailInput">Email</label>
-      <input id="profEmailInput" type="email" value="${escapeHtml(customerProfile.email || document.getElementById("accountEmailInput").value.trim())}" placeholder="name@example.com">
-    </div>
-    <div class="inp-group">
-      <label for="profPhoneInput">Phone Number</label>
-      <input id="profPhoneInput" value="${escapeHtml(customerProfile.phone || "")}" placeholder="01xxxxxxxxx">
-    </div>
-    <div class="inp-group">
-      <label for="profGovInput">Governorate</label>
-      <input id="profGovInput" value="${escapeHtml(customerProfile.governorate || "")}" placeholder="e.g. Monufia or Cairo">
-    </div>
-    <div class="inp-group">
-      <label for="profAddressInput">Delivery Address</label>
-      <input id="profAddressInput" value="${escapeHtml(customerProfile.address || "")}" placeholder="Street, building, apartment">
-    </div>
-    <button type="button" class="btn-add" style="width:100%;padding:9px;border-radius:10px" onclick="saveCustomerProfileDetails()">Save Profile</button>
-  `;
-}
-
-/* Admin Login & Controls */
-function openAdminLogin() {
-  if (isAdmin) { scrollToAdmin(); return; }
-  document.getElementById("adminEmailInput").value = "";
-  document.getElementById("adminPassInput").value = "";
-  document.getElementById("loginWrap").classList.add("show");
-  setTimeout(() => document.getElementById("adminEmailInput").focus(), 100);
-}
-
-function closeAdminLogin() {
-  document.getElementById("loginWrap").classList.remove("show");
-}
-
-async function submitAdminLogin() {
-  const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
-  const password = document.getElementById("adminPassInput").value;
-  if (!email || !password) { alert("Enter your admin email and password."); return; }
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) { alert("Sign in failed: " + error.message); return; }
-  const { data: allowed, error: allowError } = await sb.rpc("is_ns_admin");
-  if (allowError || allowed !== true) {
-    await sb.auth.signOut();
-    alert("This account is not authorized as an NS Store admin.");
-    return;
-  }
-  isAdmin = true;
-  closeAdminLogin();
-  await Promise.all([loadOrders(), loadCoupons(), loadProductsFromDatabase()]);
-  syncAdminUI();
-  showToast("Signed in as Admin ✓");
-  scrollToAdmin();
-}
-
-async function logoutAdmin() {
-  await sb.auth.signOut();
-  isAdmin = false;
-  orders = [];
-  coupons = [];
-  syncAdminUI();
-  showToast("Signed out of Admin");
-}
-
-function scrollToAdmin() {
-  document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
-}
-
-function switchAdminTab(tab) {
-  activeAdminTab = tab;
-  document.getElementById("tabBtnOrders").classList.toggle("active", tab === "orders");
-  document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
-  document.getElementById("tabBtnCoupons").classList.toggle("active", tab === "coupons");
-  document.getElementById("adminTabOrders").style.display = tab === "orders" ? "block" : "none";
-  document.getElementById("adminTabProducts").style.display = tab === "products" ? "block" : "none";
-  document.getElementById("adminTabCoupons").style.display = tab === "coupons" ? "block" : "none";
-  if (tab === "orders") renderAdminOrders();
-  if (tab === "products") {
-    updateSalePreviewCalc();
-    renderAdminManageList();
-  }
-  if (tab === "coupons") {
-    updateCouponFormLabel();
-    renderAdminCoupons();
-  }
-}
-
-function syncAdminUI() {
-  const pendingCount = orders.filter(o => o.status === "pending").length;
-  document.getElementById("stripPendingCount").textContent = pendingCount;
-  document.getElementById("admOrdersTotal").textContent = orders.length;
-  document.getElementById("admCouponsCount").textContent = coupons.length;
-  document.getElementById("adminStrip").classList.toggle("active", isAdmin);
-  document.getElementById("adminPanel").classList.toggle("active", isAdmin);
-  renderReviews();
-  if (isAdmin) {
-    switchAdminTab(activeAdminTab);
-  }
-}
-
-/* Coupons Management */
-function updateCouponFormLabel() {
-  const type = document.getElementById("cpnType").value;
-  const lbl = document.getElementById("cpnValLabel");
-  const inp = document.getElementById("cpnVal");
-  if (type === "percent") {
-    lbl.textContent = "Discount Percentage (%) *";
-    inp.placeholder = "e.g. 15";
-  } else {
-    lbl.textContent = "Discount Amount (EGP) *";
-    inp.placeholder = "e.g. 100";
-  }
-}
-
-async function loadCoupons() {
-  if (!isAdmin) return;
-  const { data, error } = await sb.from("ns_coupons").select("*").order("id", { ascending: false });
-  if (error) {
-    console.warn("Coupons table error:", error.message);
-    return;
-  }
-  coupons = data || [];
-  document.getElementById("admCouponsCount").textContent = coupons.length;
-  renderAdminCoupons();
-}
-
-async function adminCreateCoupon() {
-  if (!isAdmin) return;
-  const code = document.getElementById("cpnCode").value.trim().toUpperCase().replace(/\s+/g, "");
-  const usageLimit = Math.max(1, parseInt(document.getElementById("cpnLimit").value, 10) || 1);
-  const discountType = document.getElementById("cpnType").value;
-  const discountValue = Number(document.getElementById("cpnVal").value);
-
-  if (!code) { alert("Please enter a coupon code."); return; }
-  if (!discountValue || discountValue <= 0) { alert("Please enter a discount value greater than 0."); return; }
-  if (discountType === "percent" && discountValue > 95) { alert("Percentage discount cannot exceed 95%."); return; }
-
-  const { error } = await sb.from("ns_coupons").insert({
-    code,
-    discount_type: discountType,
-    discount_value: discountValue,
-    usage_limit: usageLimit,
-    used_count: 0,
-    is_active: true
-  });
-
-  if (error) {
-    alert("Couldn't create coupon: " + error.message);
-    return;
-  }
-
-  document.getElementById("cpnCode").value = "";
-  document.getElementById("cpnLimit").value = "3";
-  document.getElementById("cpnVal").value = "";
-  await loadCoupons();
-  showToast(`Coupon ${code} created ✓`);
-}
-
-async function toggleCouponActive(id, currentActive) {
-  if (!isAdmin) return;
-  const { error } = await sb.from("ns_coupons").update({ is_active: !currentActive }).eq("id", id);
-  if (error) { alert("Couldn't update coupon: " + error.message); return; }
-  await loadCoupons();
-  showToast("Coupon status updated ✓");
-}
-
-async function adminDeleteCoupon(id) {
-  if (!isAdmin) return;
-  if (!confirm("Delete this coupon?")) return;
-  const { error } = await sb.from("ns_coupons").delete().eq("id", id);
-  if (error) { alert("Couldn't delete coupon: " + error.message); return; }
-  await loadCoupons();
-  showToast("Coupon deleted");
-}
-
-function renderAdminCoupons() {
-  document.getElementById("admCouponsCount").textContent = coupons.length;
-  const box = document.getElementById("admCouponsList");
-  if (!coupons.length) {
-    box.innerHTML = '<div class="empty-msg">No coupons created yet.</div>';
-    return;
-  }
-
-  box.innerHTML = coupons.map(c => {
-    const valText = c.discount_type === "percent" ? `${c.discount_value}% OFF` : `${money(c.discount_value)} OFF`;
-    const exhausted = Number(c.used_count) >= Number(c.usage_limit);
-    const activeNow = !!c.is_active && !exhausted;
-    return `
-      <div class="manage-item">
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <strong style="font-size:14px;color:var(--brown-deep)">${escapeHtml(c.code)}</strong>
-            <span class="save-chip">${escapeHtml(valText)}</span>
-            <span class="coupon-badge ${activeNow ? 'on' : 'off'}">${activeNow ? 'Active' : (exhausted ? 'Limit Reached' : 'Disabled')}</span>
-          </div>
-          <div style="font-size:11.5px;color:var(--muted);margin-top:3px">
-            Confirmed uses: <b>${Number(c.used_count)}</b> / <b>${Number(c.usage_limit)}</b>
-          </div>
-        </div>
-        <div class="manage-item-actions">
-          <button type="button" class="sale-edit-btn" onclick="toggleCouponActive(${c.id}, ${!!c.is_active})">${c.is_active ? 'Disable' : 'Enable'}</button>
-          <button type="button" class="del-btn" onclick="adminDeleteCoupon(${c.id})">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-/* Cart Coupon & Totals */
-function getCartSubtotal() {
-  return cart.reduce((s, x) => {
-    const p = products.find(y => y.id === x.id);
-    return s + (p ? x.qty * getSaleInfo(p).finalPrice : 0);
-  }, 0);
-}
-
-function calcLocalCouponDiscount(subtotal, cpn) {
-  if (!cpn || subtotal <= 0) return 0;
-  let disc = 0;
-  if (cpn.discountType === "percent") {
-    disc = Math.round((subtotal * Math.min(95, Number(cpn.discountValue) || 0)) / 100);
-  } else {
-    disc = Math.min(Math.max(0, subtotal - 1), Number(cpn.discountValue) || 0);
-  }
-  return Math.max(0, Math.min(subtotal, disc));
-}
-
-async function applyCouponCode() {
-  const inputEl = document.getElementById("couponInput");
-  const msgEl = document.getElementById("couponMsg");
-  const code = inputEl.value.trim().toUpperCase();
-  const subtotal = getCartSubtotal();
-
-  if (!cart.length || subtotal <= 0) {
-    msgEl.className = "coupon-msg err";
-    msgEl.textContent = "Add items to your Cart before applying a coupon.";
-    return;
-  }
-  if (!code) {
-    msgEl.className = "coupon-msg err";
-    msgEl.textContent = "Enter a coupon code first.";
-    return;
-  }
-
-  const btn = document.getElementById("applyCouponBtn");
-  btn.disabled = true;
-  btn.textContent = "...";
-  try {
-    const { data, error } = await sb.rpc("preview_ns_coupon", {
-      p_code: code,
-      p_subtotal: subtotal
-    });
-    if (error) throw error;
-    const row = Array.isArray(data) ? data[0] : data;
-    if (!row || !row.valid) {
-      appliedCoupon = null;
-      msgEl.className = "coupon-msg err";
-      msgEl.textContent = (row && row.message) || "Invalid coupon code.";
-      renderCartTotals();
-      return;
-    }
-
-    appliedCoupon = {
-      code: row.code,
-      discountType: row.discount_type,
-      discountValue: Number(row.discount_value),
-      discountAmount: Number(row.discount_amount),
-      finalTotal: Number(row.final_total),
-      remainingUses: Number(row.remaining_uses)
-    };
-    inputEl.value = row.code;
-    msgEl.className = "coupon-msg ok";
-    msgEl.textContent = `${row.message} (${appliedCoupon.remainingUses} confirmed use(s) left)`;
-    resetOrderConfirmation();
-    renderCartTotals();
-    showToast(`Coupon ${row.code} applied ✓`);
-  } catch (err) {
-    console.error(err);
-    msgEl.className = "coupon-msg err";
-    msgEl.textContent = "Could not verify coupon right now.";
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Apply";
-  }
-}
-
-function clearAppliedCoupon() {
-  appliedCoupon = null;
-  document.getElementById("couponInput").value = "";
-  const msgEl = document.getElementById("couponMsg");
-  msgEl.className = "coupon-msg";
-  msgEl.textContent = "";
-  resetOrderConfirmation();
-  renderCartTotals();
-}
-
-function renderCheckoutItemsSummary() {
-  const box = document.getElementById("checkoutItemsSummary");
-  if (!box) return;
-  if (!cart.length) {
-    box.innerHTML = '<div class="empty-msg" style="padding:8px 0">No items in cart.</div>';
-    return;
-  }
-  box.innerHTML = cart.map(item => {
-    const p = products.find(x => x.id === item.id);
-    if (!p) return "";
-    const sale = getSaleInfo(p);
-    return `
-      <div class="checkout-mini-row">
-        <span>${escapeHtml(p.name)} × ${item.qty}</span>
-        <b>${money(sale.finalPrice * item.qty)}</b>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderCartTotals() {
-  const subtotal = getCartSubtotal();
-  document.getElementById("cartDrawerSubtotal").textContent = money(subtotal);
-  document.getElementById("cartSubtotal").textContent = money(subtotal);
-
-  const discRow = document.getElementById("cartDiscountRow");
-  const clearBtn = document.getElementById("clearCouponBtn");
-  const msgEl = document.getElementById("couponMsg");
-  const gov = document.getElementById("customerGovernorate").value;
-  const shipRow = document.getElementById("cartShippingRow");
-  const shipLabel = document.getElementById("cartShippingLabel");
-  const shipFeeEl = document.getElementById("cartShippingFee");
-  const shipHintEl = document.getElementById("shippingFreeHint");
-
-  let discountAmount = 0;
-  if (appliedCoupon && subtotal > 0) {
-    discountAmount = calcLocalCouponDiscount(subtotal, appliedCoupon);
-    appliedCoupon.discountAmount = discountAmount;
-    appliedCoupon.finalTotal = Math.max(0, subtotal - discountAmount);
-    discRow.style.display = "flex";
-    clearBtn.style.display = "inline-block";
-    document.getElementById("cartDiscountLabel").textContent = `Coupon (${appliedCoupon.code})`;
-    document.getElementById("cartDiscountAmount").textContent = `-${money(discountAmount)}`;
-  } else {
-    if (!cart.length) {
-      appliedCoupon = null;
-      msgEl.textContent = "";
-    }
-    discRow.style.display = "none";
-    clearBtn.style.display = "none";
-  }
-
-  const productsAfterDiscount = Math.max(0, subtotal - discountAmount);
-  const shippingFee = subtotal > 0 ? calculateShippingFee(gov, productsAfterDiscount) : null;
-
-  if (subtotal <= 0) {
-    shipRow.className = "sum-line";
-    shipLabel.textContent = "Shipping";
-    shipFeeEl.textContent = "0 EGP";
-    shipHintEl.textContent = "Add 2,000 EGP or more for FREE shipping across Egypt.";
-    document.getElementById("cartTotal").textContent = money(0);
-    return;
-  }
-
-  if (productsAfterDiscount >= FREE_SHIPPING_THRESHOLD) {
-    shipHintEl.textContent = "🎉 You unlocked FREE shipping across Egypt!";
-  } else {
-    const remaining = FREE_SHIPPING_THRESHOLD - productsAfterDiscount;
-    shipHintEl.textContent = `Add ${money(remaining)} more for FREE shipping (Monufia 40 EGP • Other governorates 80 EGP).`;
-  }
-
-  if (shippingFee === null) {
-    shipRow.className = "sum-line";
-    shipLabel.textContent = "Shipping";
-    shipFeeEl.textContent = "Select governorate";
-    document.getElementById("cartTotal").textContent = money(productsAfterDiscount);
-  } else if (shippingFee === 0) {
-    shipRow.className = "sum-line shipping-free";
-    shipLabel.textContent = gov ? `Shipping (${gov})` : "Shipping";
-    shipFeeEl.textContent = "FREE (0 EGP)";
-    document.getElementById("cartTotal").textContent = money(productsAfterDiscount);
-  } else {
-    shipRow.className = "sum-line";
-    shipLabel.textContent = `Shipping (${gov})`;
-    shipFeeEl.textContent = money(shippingFee);
-    document.getElementById("cartTotal").textContent = money(productsAfterDiscount + shippingFee);
-  }
-}
-
-/* Orders Management */
-function saveOrders() {
-  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
-  document.getElementById("admOrdersTotal").textContent = orders.length;
-}
-
-function mapDbOrder(row) {
-  return {
-    orderNumber: "NS-" + row.order_number,
-    name: row.customer_name,
-    phone: row.customer_phone,
-    governorate: row.governorate || "",
-    address: row.customer_address,
-    paymentText: row.payment_text,
-    couponCode: row.coupon_code || "",
-    couponDeducted: !!row.coupon_deducted,
-    items: row.items || [],
-    subtotal: Number(row.subtotal || 0),
-    discountAmount: Number(row.discount_amount || 0),
-    shippingFee: Number(row.shipping_fee || 0),
-    total: Number(row.total || 0),
-    createdAt: new Date(row.created_at).toLocaleString("en-US"),
-    status: row.status,
-    stockDeducted: !!row.stock_deducted
-  };
-}
-
-async function loadOrders() {
-  if (!isAdmin) return;
-  const { data, error } = await sb.from("ns_orders").select("*").order("order_number", { ascending: false });
-  if (error) { console.error(error); alert("Couldn't load orders: " + error.message); return; }
-  orders = (data || []).map(mapDbOrder);
-  saveOrders();
-  renderAdminOrders();
-}
-
-async function confirmOrderAndDeductStock(orderNumber) {
-  const order = orders.find(o => o.orderNumber === orderNumber);
-  if (!order || order.status !== "pending") return;
-  const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.rpc("confirm_ns_order", { p_order_number: numericNo });
-  if (error) {
-    alert("Couldn't confirm order. Stock or coupon count was not changed. " + error.message);
-    return;
-  }
-  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
-  showToast(`Order #${orderNumber} confirmed ✓`);
-}
-
-async function cancelOrderInAdmin(orderNumber) {
-  const order = orders.find(o => o.orderNumber === orderNumber);
-  if (!order || order.status === "cancelled") return;
-  if (!confirm(`Cancel order #${orderNumber}? Stock and coupon usage will be restored if they were counted.`)) return;
-  const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.rpc("cancel_ns_order", { p_order_number: numericNo });
-  if (error) { alert("Couldn't cancel order: " + error.message); return; }
-  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
-  showToast(`Order #${orderNumber} cancelled`);
-}
-
-async function deleteOrderFromHistory(orderNumber) {
-  const order = orders.find(o => o.orderNumber === orderNumber);
-  if (!confirm(`Permanently delete order #${orderNumber} from history?`)) return;
-  const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  if (order && order.status !== "cancelled" && (order.stockDeducted || order.couponDeducted)) {
-    const { error: cancelErr } = await sb.rpc("cancel_ns_order", { p_order_number: numericNo });
-    if (cancelErr) { alert("Couldn't restore stock/coupon before delete: " + cancelErr.message); return; }
-  }
-  const { error } = await sb.from("ns_orders").delete().eq("order_number", numericNo);
-  if (error) { alert("Couldn't delete order: " + error.message); return; }
-  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
-  showToast("Order removed from log");
-}
-
-function renderAdminOrders() {
-  document.getElementById("admOrdersTotal").textContent = orders.length;
-  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
-
-  const box = document.getElementById("admOrdersList");
-  if (!orders.length) {
-    box.innerHTML = '<div class="empty-msg">No orders logged yet.</div>';
-    return;
-  }
-
-  box.innerHTML = orders.map(o => {
-    let badgeClass = "pending";
-    let badgeText = "Pending Admin Confirm";
-    if (o.status === "confirmed") {
-      badgeClass = "confirmed";
-      badgeText = "Confirmed ✓";
-    } else if (o.status === "cancelled") {
-      badgeClass = "cancelled";
-      badgeText = "Cancelled";
-    }
-
-    return `
-      <div class="order-card">
-        <div class="order-card-head">
-          <div>
-            <strong style="font-size:15px">Order #${escapeHtml(o.orderNumber)}</strong>
-            <span style="font-size:11.5px;color:var(--muted);margin-left:8px">${escapeHtml(o.createdAt || "")}</span>
-          </div>
-          <span class="status-pill ${badgeClass}">${badgeText}</span>
-        </div>
-        <div style="font-size:13px"><b>Customer:</b> ${escapeHtml(o.name)} — <b>Phone:</b> ${escapeHtml(o.phone)}</div>
-        ${o.governorate ? `<div style="font-size:12.5px;color:var(--brown)"><b>Governorate:</b> ${escapeHtml(o.governorate)}</div>` : ``}
-        <div style="font-size:12.5px;color:var(--muted)"><b>Address:</b> ${escapeHtml(o.address)}</div>
-        <div style="font-size:12.5px;margin-top:4px"><b>Payment:</b> ${escapeHtml(o.paymentText)}</div>
-        <div class="order-items-box">
-          ${o.items.map(it => `<div>• ${escapeHtml(it.name)} × ${it.qty} = ${money(it.price * it.qty)}</div>`).join("")}
-          <div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)">
-            Shipping: <b>${o.shippingFee === 0 ? "FREE (0 EGP)" : money(o.shippingFee)}</b>
-          </div>
-          <div style="margin-top:4px;font-weight:800">Total: ${money(o.total)}</div>
-        </div>
-        <div class="order-actions">
-          ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">✓ Confirm Order</button>` : ""}
-          ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">Cancel Order</button>` : ""}
-          <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-async function handleAdminImages(e) {
-  const files = Array.from(e.target.files || []).slice(0, 4);
-  if (!files.length) return;
-  uploadedAdminImgs = await Promise.all(files.map(f => resizeImageToDataUrl(f, 750, 0.78, "image/jpeg")));
-  document.getElementById("admPreview").innerHTML = uploadedAdminImgs
-    .map(src => `<img src="${src}" alt="Preview">`)
-    .join("");
-}
-
-async function uploadProductImageIfNeeded(src) {
-  if (!String(src).startsWith("data:")) return src;
-  const match = String(src).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
-  if (!match) throw new Error("One of the product images has an unsupported format.");
-  const mime = match[1];
-  const ext = mime.split("/")[1].replace("jpeg", "jpg").replace("svg+xml", "svg");
-  const binary = atob(match[2]);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const path = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
-  const { error } = await sb.storage.from("ns-products").upload(path, new Blob([bytes], { type: mime }), { contentType: mime, upsert: false });
-  if (error) throw error;
-  return sb.storage.from("ns-products").getPublicUrl(path).data.publicUrl;
-}
-
-function mapDbProduct(row) {
-  return normalizeSaleFields({
-    id: Number(row.id), name: row.name, category: row.category,
-    price: Number(row.price), saleType: row.sale_type || "none", saleValue: Number(row.sale_value || 0),
-    stock: Number(row.stock || 0), tag: row.tag || "", desc: row.description || "", images: row.images || []
-  });
-}
-
-async function loadProductsFromDatabase() {
-  const { data, error } = await sb.from("ns_products").select("*").order("id", { ascending: false });
-  if (error) { console.error(error); showToast("Couldn't refresh products"); return; }
-
-  products = (data || []).map(mapDbProduct);
-  products.forEach(p => { cardIdxMap[p.id] = cardIdxMap[p.id] || 0; });
-  renderFilters(); renderProducts(); renderCart();
-  if (isAdmin) renderAdminManageList();
-}
-
-async function adminAddProduct() {
-  if (!isAdmin) { alert("Only an authorized admin can add products."); return; }
-  const name = document.getElementById("admName").value.trim();
-  const category = document.getElementById("admCat").value.trim();
-  const price = Number(document.getElementById("admPrice").value);
-  const stockRaw = document.getElementById("admStock").value;
-  const stock = Math.max(0, Number(stockRaw));
-  const saleType = document.getElementById("admSaleType").value;
-  const saleValue = Number(document.getElementById("admSaleVal").value) || 0;
-  const tag = document.getElementById("admTag").value.trim();
-  const desc = document.getElementById("admDesc").value.trim();
-  const urlLines = document.getElementById("admUrls").value.split("\n").map(x => x.trim()).filter(Boolean);
-  const finalImages = [...uploadedAdminImgs, ...urlLines].slice(0, 4);
-
-  if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) { alert("Please fill in Name, Category, Original Price, Stock, and Description."); return; }
-  if (saleType !== "none" && saleValue <= 0) { alert("Enter a Sale value greater than 0 or select No Sale."); return; }
-  if (saleType === "percent" && saleValue > 95) { alert("Maximum Sale discount is 95%."); return; }
-  if (saleType === "amount" && saleValue >= price) { alert("Sale amount must be less than the original price."); return; }
-  if (!finalImages.length) { alert("Upload at least one image or add an image URL."); return; }
-
-  const saveBtn = document.querySelector('#adminTabProducts button[onclick="adminAddProduct()"]');
-  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Saving product..."; }
-  try {
-    const images = await Promise.all(finalImages.map(uploadProductImageIfNeeded));
-    const { data, error } = await sb.from("ns_products").insert({
-      name, category, price, sale_type: saleType, sale_value: saleValue, stock, tag, description: desc, images
-    }).select("*").single();
-    if (error) throw error;
-    const created = mapDbProduct(data);
-    products.unshift(created);
-    cardIdxMap[created.id] = 0;
-
-    document.getElementById("admName").value = "";
-    document.getElementById("admCat").value = "";
-    document.getElementById("admPrice").value = "";
-    document.getElementById("admStock").value = "10";
-    document.getElementById("admSaleType").value = "none";
-    document.getElementById("admSaleVal").value = "";
-    document.getElementById("admTag").value = "";
-    document.getElementById("admDesc").value = "";
-    document.getElementById("admFiles").value = "";
-    document.getElementById("admUrls").value = "";
-    document.getElementById("admPreview").innerHTML = "";
-    uploadedAdminImgs = [];
-    updateSalePreviewCalc();
-    renderFilters(); renderProducts(); renderAdminManageList();
-    showToast("Product saved and published for everyone ✓");
-  } catch (err) {
-    console.error(err);
-    alert("Couldn't publish product: " + (err.message || "Unknown error"));
-  } finally {
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = "Save & Publish Product"; }
-  }
-}
-
-async function adminDeleteProduct(id) {
-  if (!isAdmin) return;
-  if (!confirm("Delete this product for everyone?")) return;
-  const { error } = await sb.from("ns_products").delete().eq("id", id);
-  if (error) { alert("Couldn't delete product: " + error.message); return; }
-  products = products.filter(p => p.id !== id);
-  cart = cart.filter(c => c.id !== id);
-  saveCart(); renderFilters(); renderProducts(); renderAdminManageList();
-  showToast("Product deleted for everyone");
-}
-
-function renderAdminManageList() {
-  document.getElementById("admProdCount").textContent = products.length;
-  if (!products.length) {
-    document.getElementById("admProdList").innerHTML = '<div class="empty-msg">No products in database yet.</div>';
-    return;
-  }
-  document.getElementById("admProdList").innerHTML = products.map(p => {
-    const s = getSaleInfo(p);
-    const saleTag = s.hasSale ? ` • <b style="color:#8a561e">${escapeHtml(s.badgeText)} (${money(s.finalPrice)})</b>` : "";
-    return `
-      <div class="manage-item">
-        <div class="manage-item-info">
-          <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
-          <div>
-            <div style="font-weight:800;font-size:13px">${escapeHtml(p.name)}</div>
-            <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • Stock: ${getStock(p)}${saleTag}</div>
-          </div>
-        </div>
-        <div class="manage-item-actions">
-          <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">Sale</button>
-          <button type="button" class="del-btn" onclick="adminDeleteProduct(${p.id})">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-/* Store Core */
-function saveCart() {
-  localStorage.setItem("ns_cart", JSON.stringify(cart));
-  resetOrderConfirmation();
-  renderCart();
-}
-
-function renderFilters() {
-  const cats = ["All", ...new Set(products.map(p => p.category))];
-  if (!cats.includes(activeCategory)) activeCategory = "All";
-  document.getElementById("filters").innerHTML = cats.map(c =>
-    `<button class="cat-btn ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
-  ).join("");
-}
-
-function setCategory(c) {
-  activeCategory = c;
-  renderFilters();
-  renderProducts();
-}
-
-function visibleProducts() {
-  return activeCategory === "All" ? products : products.filter(p => p.category === activeCategory);
-}
-
-function renderProducts() {
-  const list = visibleProducts();
-  document.getElementById("productTotal").textContent = list.length + (list.length === 1 ? " piece" : " pieces");
-  if (!list.length) {
-    document.getElementById("productGrid").innerHTML = '<div class="empty-msg" style="grid-column:1/-1">No products available right now.</div>';
-    return;
-  }
-  document.getElementById("productGrid").innerHTML = list.map((p, idx) => {
-    const imgs = getImgs(p);
-    const cur = (cardIdxMap[p.id] || 0) % imgs.length;
-    const stock = getStock(p);
-    const soldOut = stock <= 0;
-    const sale = getSaleInfo(p);
-
-    return `
-      <article class="card ${sale.hasSale ? 'is-sale' : ''}" style="animation-delay:${idx * 0.04}s"
-        onmouseenter="hoveredSet.add(${p.id})" onmouseleave="hoveredSet.delete(${p.id})">
-        <div class="card-media" onclick="openDetails(${p.id})">
-          <div class="top-badges">
-            ${p.tag ? `<span class="ribbon">${escapeHtml(p.tag)}</span>` : `<span></span>`}
-            ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ``}
-          </div>
-          ${soldOut ? `<div class="out-overlay">Sold Out</div>` : ``}
-          <img id="cardImg-${p.id}" src="${imgs[cur]}" alt="${escapeHtml(p.name)}" loading="lazy">
-          <div class="dots-row" id="dots-${p.id}">
-            ${imgs.map((_, i) => `<span class="dot-item ${i === cur ? 'active' : ''}"></span>`).join("")}
-          </div>
-          <span class="img-step" id="step-${p.id}">${cur + 1}/${imgs.length}</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta-line">
-            <span class="card-cat">${escapeHtml(p.category)}</span>
-            ${stockBadgeHtml(stock)}
-          </div>
-          <h3 class="card-title">${escapeHtml(p.name)}</h3>
-          <p class="card-desc">${escapeHtml(p.desc)}</p>
-          ${priceHtml(p)}
-          <div class="card-actions">
-            <button class="btn-add" ${soldOut ? "disabled" : ""} onclick="addToCart(${p.id})">
-              ${soldOut ? "Sold Out" : "Add to Cart"}
-            </button>
-            <button class="btn-info" onclick="openDetails(${p.id})">Details</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-setInterval(() => {
-  visibleProducts().forEach(p => {
-    if (hoveredSet.has(p.id)) return;
-    const imgs = getImgs(p);
-    if (imgs.length <= 1) return;
-    cardIdxMap[p.id] = ((cardIdxMap[p.id] || 0) + 1) % imgs.length;
-    const imgEl = document.getElementById("cardImg-" + p.id);
-    const stepEl = document.getElementById("step-" + p.id);
-    const dotsEl = document.getElementById("dots-" + p.id);
-    if (!imgEl) return;
-    imgEl.style.opacity = 0.35;
-    setTimeout(() => {
-      imgEl.src = imgs[cardIdxMap[p.id]];
-      imgEl.style.opacity = 1;
-    }, 140);
-    if (stepEl) stepEl.textContent = (cardIdxMap[p.id] + 1) + "/" + imgs.length;
-    if (dotsEl) {
-      [...dotsEl.children].forEach((d, i) => d.classList.toggle("active", i === cardIdxMap[p.id]));
-    }
-  });
-}, 2600);
-
-function addToCart(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  const stock = getStock(p);
-  if (stock <= 0) { showToast("This piece is currently sold out"); return; }
-  const found = cart.find(x => x.id === id);
-  const currentQty = found ? found.qty : 0;
-  if (currentQty + 1 > stock) { showToast(`Only ${stock} available in stock`); return; }
-  if (found) found.qty++;
-  else cart.push({ id, qty: 1 });
-  saveCart();
-  showToast("Added to Cart ✓");
-}
-
-function changeQty(id, d) {
-  const item = cart.find(x => x.id === id);
-  const p = products.find(x => x.id === id);
-  if (!item || !p) return;
-  const stock = getStock(p);
-  const next = item.qty + d;
-  if (d > 0 && next > stock) { showToast(`Only ${stock} available in stock`); return; }
-  if (next <= 0) cart = cart.filter(x => x.id !== id);
-  else item.qty = next;
-  saveCart();
-}
-
-function removeFromCart(id) {
-  cart = cart.filter(x => x.id !== id);
-  saveCart();
-}
-
-function renderCart() {
-  const count = cart.reduce((s, x) => s + x.qty, 0);
-  document.getElementById("cartCount").textContent = count;
-
-  const checkoutBtn = document.getElementById("openCheckoutBtn");
-  const box = document.getElementById("cartItems");
-  if (!cart.length) {
-    box.innerHTML = '<div class="empty-msg">Your Cart is empty.</div>';
-    if (checkoutBtn) checkoutBtn.disabled = true;
-    renderCartTotals();
-    renderCheckoutItemsSummary();
-    return;
-  }
-
-  if (checkoutBtn) checkoutBtn.disabled = false;
-  box.innerHTML = cart.map(item => {
-    const p = products.find(x => x.id === item.id);
-    if (!p) return "";
-    const sale = getSaleInfo(p);
-    return `
-      <div class="cart-row">
-        <div class="cart-thumb"><img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}"></div>
-        <div>
-          <div style="font-weight:800;font-size:14px">${escapeHtml(p.name)}</div>
-          <div style="color:var(--muted);font-size:12px">
-            ${money(sale.finalPrice)}
-            ${sale.hasSale ? `<s style="margin-left:4px">${money(sale.originalPrice)}</s>` : ``}
-            × ${item.qty} = <b>${money(sale.finalPrice * item.qty)}</b>
-          </div>
-          <div class="qty-box">
-            <button onclick="changeQty(${p.id},-1)">−</button>
-            <span>${item.qty}</span>
-            <button onclick="changeQty(${p.id},1)">+</button>
-          </div>
-        </div>
-        <button class="del-btn" onclick="removeFromCart(${p.id})">Remove</button>
-      </div>
-    `;
-  }).join("");
-
-  renderCartTotals();
-  renderCheckoutItemsSummary();
-}
-
-function selectPayment(method) {
-  selectedPayment = method;
-  document.getElementById("pay-cod").classList.toggle("active", method === "cod");
-  document.getElementById("pay-instapay").classList.toggle("active", method === "instapay");
-  document.getElementById("instapayBox").classList.toggle("show", method === "instapay");
-  resetOrderConfirmation();
-}
-
-function resetOrderConfirmation() {
-  pendingOrderData = null;
-  document.getElementById("confirmBox").classList.remove("show");
-  document.getElementById("confirmSummary").innerHTML = "";
-  if (!document.getElementById("pendingStatusCard").classList.contains("show")) {
-    document.getElementById("prepareOrderBtn").style.display = "block";
-  }
-}
-
-function openCheckoutModal() {
-  if (!cart.length) {
-    alert("Your Cart is empty.");
-    return;
-  }
-  closeCart();
-  hydrateSavedCustomerFields();
-  renderCheckoutItemsSummary();
-  renderCartTotals();
-  document.getElementById("pendingStatusCard").classList.remove("show");
-  document.getElementById("prepareOrderBtn").style.display = "block";
-  document.getElementById("checkoutWrap").classList.add("show");
-}
-
-function closeCheckoutModal() {
-  document.getElementById("checkoutWrap").classList.remove("show");
-}
-
-function validateOrderForm() {
-  if (!cart.length) { alert("Your Cart is empty."); return null; }
-
-  const name = document.getElementById("customerName").value.trim();
-  const email = document.getElementById("customerEmail").value.trim();
-  const phone = document.getElementById("customerPhone").value.trim();
-  const governorate = document.getElementById("customerGovernorate").value.trim();
-  const address = document.getElementById("customerAddress").value.trim();
-
-  if (!name) { alert("Please enter your full name."); document.getElementById("customerName").focus(); return null; }
-  if (!email || !isValidEmail(email)) { alert("Please enter a valid email address."); document.getElementById("customerEmail").focus(); return null; }
-  if (!phone) { alert("Please enter your phone number."); document.getElementById("customerPhone").focus(); return null; }
-  if (!governorate) { alert("Please choose your governorate."); document.getElementById("customerGovernorate").focus(); return null; }
-  if (!address) { alert("Please enter your delivery address."); document.getElementById("customerAddress").focus(); return null; }
-
-  const lines = [];
-  let subtotal = 0;
-  for (const c of cart) {
-    const p = products.find(x => x.id === c.id);
-    if (!p) continue;
-    const stock = getStock(p);
-    if (stock <= 0 || c.qty > stock) {
-      alert(`"${p.name}" has only ${stock} available in stock. Please update your Cart.`);
-      return null;
-    }
-    const sale = getSaleInfo(p);
-    const lineTotal = sale.finalPrice * c.qty;
-    subtotal += lineTotal;
-    lines.push({
-      id: p.id,
-      product_id: p.id,
-      name: p.name,
-      price: sale.finalPrice,
-      qty: c.qty,
-      lineTotal
-    });
-  }
-
-  if (!lines.length) return null;
-
-  let discountAmount = 0;
-  let couponCode = "";
-  if (appliedCoupon) {
-    couponCode = appliedCoupon.code;
-    discountAmount = calcLocalCouponDiscount(subtotal, appliedCoupon);
-  }
-  const productsTotal = Math.max(0, subtotal - discountAmount);
-  const shippingFee = calculateShippingFee(governorate, productsTotal);
-  const grandTotal = productsTotal + shippingFee;
-
-  const paymentText = selectedPayment === "instapay"
-    ? `InstaPay / Telda Link (${INSTAPAY_LINK})`
-    : "Cash on Delivery";
-
-  return {
-    name,
-    email,
-    phone,
-    governorate,
-    address,
-    paymentText,
-    lines,
-    subtotal,
-    discountAmount,
-    couponCode,
-    productsTotal,
-    shippingFee,
-    grandTotal
-  };
-}
-
-function prepareOrderConfirmation() {
-  const data = validateOrderForm();
-  if (!data) return;
-
-  pendingOrderData = data;
-  document.getElementById("pendingStatusCard").classList.remove("show");
-  document.getElementById("confirmSummary").innerHTML = `
-    <div><b>Name:</b> ${escapeHtml(data.name)}</div>
-    <div><b>Email:</b> ${escapeHtml(data.email)}</div>
-    <div><b>Phone:</b> ${escapeHtml(data.phone)}</div>
-    <div><b>Governorate:</b> ${escapeHtml(data.governorate)}</div>
-    <div><b>Shipping:</b> ${data.shippingFee === 0 ? "FREE (0 EGP)" : money(data.shippingFee)}</div>
-    <div><b>Payment:</b> ${escapeHtml(selectedPayment === "instapay" ? "InstaPay / Telda Link" : "Cash on Delivery")}</div>
-    ${data.couponCode ? `<div><b>Coupon:</b> ${escapeHtml(data.couponCode)} (-${money(data.discountAmount)})</div>` : ``}
-    <div><b>Total:</b> ${money(data.grandTotal)}</div>
-  `;
-  document.getElementById("confirmBox").classList.add("show");
-  document.getElementById("prepareOrderBtn").style.display = "none";
-}
-
-async function sendDirectWhatsAppOrderPayload(payload) {
-  if (!DIRECT_WHATSAPP_WEBHOOK_URL) {
-    return { sent: false, reason: "Direct WhatsApp webhook is not configured yet." };
-  }
-  const headers = { "Content-Type": "application/json" };
-  if (DIRECT_WHATSAPP_WEBHOOK_TOKEN) {
-    headers["Authorization"] = `Bearer ${DIRECT_WHATSAPP_WEBHOOK_TOKEN}`;
-  }
-  const res = await fetch(DIRECT_WHATSAPP_WEBHOOK_URL, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) {
-    throw new Error(`Webhook responded with status ${res.status}`);
-  }
-  return { sent: true };
-}
-
-async function finalizeWebsiteOrder() {
-  const data = pendingOrderData || validateOrderForm();
-  if (!data) return;
-
-  const confirmBtn = document.querySelector('#confirmBox .site-confirm-btn');
-  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = "Confirming order..."; }
-
-  try {
-    if (data.couponCode) {
-      const { data: cpnCheck, error: cpnErr } = await sb.rpc("preview_ns_coupon", {
-        p_code: data.couponCode,
-        p_subtotal: data.subtotal
-      });
-      if (cpnErr) throw cpnErr;
-      const row = Array.isArray(cpnCheck) ? cpnCheck[0] : cpnCheck;
-      if (!row || !row.valid) {
-        clearAppliedCoupon();
-        throw new Error((row && row.message) || "Coupon is no longer available.");
-      }
-    }
-
-    const { data: orderNum, error } = await sb.rpc("create_ns_order_checkout_v1", {
-      p_customer_name: data.name,
-      p_customer_phone: data.phone,
-      p_customer_address: data.address,
-      p_governorate: data.governorate,
-      p_shipping_fee: data.shippingFee,
-      p_payment_text: data.paymentText,
-      p_items: data.lines.map(l => ({ id: l.id, product_id: l.product_id, name: l.name, price: l.price, qty: l.qty })),
-      p_total: data.productsTotal,
-      p_coupon_code: data.couponCode || null,
-      p_discount_amount: data.discountAmount || 0,
-      p_subtotal: data.subtotal
-    });
-    if (error) throw error;
-
-    const orderNumber = "NS-" + orderNum;
-    if (isAdmin) await Promise.all([loadOrders(), loadCoupons()]);
-
-    customerProfile = {
-      ...customerProfile,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      governorate: data.governorate,
-      address: data.address,
-      recentOrders: [
-        {
-          orderNumber,
-          email: data.email,
-          governorate: data.governorate,
-          total: data.grandTotal,
-          status: "pending",
-          createdAt: new Date().toLocaleString("en-US")
-        },
-        ...(customerProfile.recentOrders || [])
-      ].slice(0, 15)
-    };
-    saveCustomerProfile();
-    document.getElementById("accountEmailInput").value = data.email;
-
-    const orderDetailsPayload = {
-      order_number: orderNumber,
-      status: "pending",
-      customer_name: data.name,
-      customer_email: data.email,
-      customer_phone: data.phone,
-      governorate: data.governorate,
-      customer_address: `${data.governorate} - ${data.address}`,
-      payment_method: data.paymentText,
-      items: data.lines.map(l => ({
-        product_id: l.product_id,
-        name: l.name,
-        qty: l.qty,
-        unit_price: l.price,
-        line_total: l.lineTotal
-      })),
-      subtotal: data.subtotal,
-      coupon_code: data.couponCode || "",
-      discount_amount: data.discountAmount || 0,
-      shipping_fee: data.shippingFee,
-      total: data.grandTotal
-    };
-
-    let dispatchStatusText = "A WhatsApp confirmation message with your full order details will be sent shortly.";
-    let dispatchSent = false;
-
-    try {
-      const dispatchRes = await sendDirectWhatsAppOrderPayload(orderDetailsPayload);
-      if (dispatchRes.sent) {
-        dispatchSent = true;
-        dispatchStatusText = `Direct WhatsApp confirmation with order details sent automatically to ${data.phone}.`;
-      }
-    } catch (webhookErr) {
-      console.warn("Direct WhatsApp webhook dispatch failed:", webhookErr);
-      dispatchStatusText = "Order saved as pending; ensure the WhatsApp Edge Function secrets & template are configured.";
-    }
-
-    cart = [];
-    appliedCoupon = null;
-    document.getElementById("couponInput").value = "";
-    saveCart();
-    resetOrderConfirmation();
-    document.getElementById("prepareOrderBtn").style.display = "none";
-
-    document.getElementById("pendingOrderHeading").textContent = `Order #${orderNumber} is pending`;
-    document.getElementById("pendingOrderMessage").textContent =
-      `Your order (#${orderNumber}) has been confirmed on the website and is currently pending. A WhatsApp message with your order details will be sent to ${data.phone}.`;
-
-    const noteEl = document.getElementById("pendingDispatchNote");
-    noteEl.textContent = dispatchStatusText;
-    noteEl.className = dispatchSent ? "pending-dispatch-note sent" : "pending-dispatch-note";
-
-    document.getElementById("pendingStatusCard").classList.add("show");
-    showToast(`Order #${orderNumber} is pending ✓`);
-  } catch (err) {
-    console.error(err);
-    alert("Couldn't confirm your order: " + (err.message || "Unknown error"));
-  } finally {
-    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = "Confirm Order on Website"; }
-  }
-}
-
-/* Details Modal */
-function openDetails(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  activeModalId = id;
-  activeModalImg = cardIdxMap[id] || 0;
-  drawModal();
-  document.getElementById("modalWrap").classList.add("show");
-}
-
-function drawModal() {
-  const p = products.find(x => x.id === activeModalId);
-  if (!p) return;
-  const imgs = getImgs(p);
-  activeModalImg = ((activeModalImg % imgs.length) + imgs.length) % imgs.length;
-  const stock = getStock(p);
-  const soldOut = stock <= 0;
-
-  document.getElementById("modal").innerHTML = `
-    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeDetails()">×</button>
-    <div class="card-meta-line" style="margin-bottom:4px;padding-right:40px">
-      <div class="card-cat" style="margin:0">${escapeHtml(p.category)}</div>
-      ${stockBadgeHtml(stock)}
-    </div>
-    <h2 style="margin:0 0 12px;font-size:26px;font-weight:700;color:var(--brown-deep)">${escapeHtml(p.name)}</h2>
-    <div class="stage">
-      <img src="${imgs[activeModalImg]}" alt="${escapeHtml(p.name)}">
-      ${imgs.length > 1 ? `
-        <button class="arrow-btn prev-pos" onclick="shiftModal(-1)">‹</button>
-        <button class="arrow-btn next-pos" onclick="shiftModal(1)">›</button>
-      ` : ``}
-      <span class="stage-tag">${activeModalImg + 1} / ${imgs.length}</span>
-    </div>
-    <div class="strip">
-      ${imgs.map((src, i) => `
-        <button class="${i === activeModalImg ? 'active' : ''}" onclick="jumpModal(${i})">
-          <img src="${src}" alt="Angle ${i + 1}">
-        </button>
-      `).join("")}
-    </div>
-    <p style="color:var(--muted);margin:0 0 14px;font-size:14px">${escapeHtml(p.desc)}</p>
-    ${priceHtml(p, true)}
-    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px" ${soldOut ? "disabled" : ""} onclick="addToCart(${p.id});closeDetails()">
-      ${soldOut ? "Sold Out" : "Add to Cart"}
-    </button>
-  `;
-}
-
-function shiftModal(d) { activeModalImg += d; drawModal(); }
-function jumpModal(i) { activeModalImg = i; drawModal(); }
-function closeDetails() { document.getElementById("modalWrap").classList.remove("show"); }
-
-function openCart() {
-  renderCart();
-  document.getElementById("overlay").classList.add("show");
-  document.getElementById("drawer").classList.add("open");
-}
-
-function closeCart() {
-  document.getElementById("overlay").classList.remove("show");
-  document.getElementById("drawer").classList.remove("open");
-}
-
-/* Reviews */
-function renderReviews() {
-  document.getElementById("reviewGrid").innerHTML = reviews.map((r, i) => `
-    <div class="rev-card">
-      <div>
-        <div class="rev-top-row">
-          <div class="stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div>
-          ${isAdmin ? `<button type="button" class="rev-del-btn" onclick="deleteReview(${i})">Delete</button>` : ``}
-        </div>
-        <p>"${escapeHtml(r.text)}"</p>
-      </div>
-      <strong>${escapeHtml(r.name)}</strong>
-    </div>
-  `).join("");
-}
-
-function addReview() {
-  const name = document.getElementById("reviewName").value.trim();
-  const stars = Number(document.getElementById("reviewStars").value);
-  const text = document.getElementById("reviewText").value.trim();
-  if (!name || !text) { alert("Please enter your name and comment."); return; }
-  reviews.unshift({ name, stars, text });
-  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
-  document.getElementById("reviewName").value = "";
-  document.getElementById("reviewText").value = "";
-  renderReviews();
-  showToast("Thanks for your review ✓");
-}
-
-function deleteReview(index) {
-  if (!isAdmin) return;
-  reviews.splice(index, 1);
-  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
-  renderReviews();
-  showToast("Review deleted");
-}
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    closeDetails();
-    closeCart();
-    closeCheckoutModal();
-    closeAccountModal();
-    closeAdminLogin();
-    closeSaleModal();
-  }
-  if (document.getElementById("modalWrap").classList.contains("show")) {
-    if (e.key === "ArrowLeft") shiftModal(-1);
-    if (e.key === "ArrowRight") shiftModal(1);
-  }
-});
-
-document.getElementById("year").textContent = new Date().getFullYear();
-applyLogo(CUSTOM_LOGO_SRC);
-initInstaPayDisplay();
-hydrateSavedCustomerFields();
-renderFilters();
-renderProducts();
-renderCart();
-renderReviews();
-updateSalePreviewCalc();
-updateCouponFormLabel();
-
-sb.auth.onAuthStateChange((_event, session) => {
-  if (!session?.user) {
-    isAdmin = false;
-    orders = [];
-    coupons = [];
-    syncAdminUI();
-  }
-});
-
-(async function initStoreBackend() {
-  await loadSharedLogo();
-  await loadProductsFromDatabase();
-  const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) {
-    const { data: allowed } = await sb.rpc("is_ns_admin");
-    if (allowed === true) {
-      isAdmin = true;
-      await Promise.all([loadOrders(), loadCoupons(), loadProductsFromDatabase()]);
-      syncAdminUI();
-    }
-  }
-  sb.channel("ns-live-store")
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_products" }, () => {
-      loadProductsFromDatabase();
-    })
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_store_settings" }, () => {
-      loadSharedLogo();
-    })
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
-      if (isAdmin) loadOrders();
-    })
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_coupons" }, () => {
-      if (isAdmin) loadCoupons();
-    })
-    .subscribe();
-})();
-</script>
-</body>
-</html>

@@ -836,26 +836,100 @@ header {
 }
 .rev-submit:hover { background: var(--brown-deep); }
 
-.about-banner {
-  background: var(--bg-warm);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 36px 32px;
-  text-align: center;
-  box-shadow: var(--shadow);
-}
-.about-banner h2 { margin: 0 0 10px; font-size: 32px; font-weight: 700; color: var(--brown-deep); }
-.about-banner p { margin: 0 auto; color: var(--muted); max-width: 680px; font-size: 14.5px; }
-
 footer {
-  margin-top: 68px;
+  margin-top: 72px;
   background: var(--brown-deep);
   color: #faf6f0;
-  text-align: center;
-  padding: 40px 20px;
+  padding: 46px 24px 28px;
   border-top: 3px solid var(--bronze);
 }
-footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
+.footer-inner { max-width: 1240px; margin: 0 auto; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr 1.15fr;
+  gap: 28px;
+  padding-bottom: 34px;
+  border-bottom: 1px solid rgba(250, 246, 240, 0.16);
+}
+.footer-col {
+  padding-right: 16px;
+  border-right: 1px solid rgba(250, 246, 240, 0.14);
+}
+.footer-col:last-child { border-right: 0; padding-right: 0; }
+.footer-brand-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: 1px;
+  color: #faf6f0;
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+.footer-brand-copy {
+  margin: 0;
+  color: rgba(250, 246, 240, 0.82);
+  font-size: 13px;
+  line-height: 1.65;
+  max-width: 290px;
+}
+.footer-col-title {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--bronze-light);
+  margin: 0 0 14px;
+}
+.footer-links-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer-links-list a {
+  color: rgba(250, 246, 240, 0.85);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.footer-links-list a:hover { color: var(--bronze-light); }
+.footer-social-slot {
+  min-height: 54px;
+  border: 1px dashed rgba(228, 190, 139, 0.35);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.footer-social-placeholder {
+  font-size: 12px;
+  color: rgba(250, 246, 240, 0.65);
+}
+.footer-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-top: 18px;
+  font-size: 12.5px;
+  color: rgba(250, 246, 240, 0.78);
+}
+.powered-mrk-btn {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--bronze-light);
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.powered-mrk-btn:hover { color: #fffdf9; }
 
 .backdrop {
   position: fixed;
@@ -1334,6 +1408,31 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   margin: 0 auto 12px;
 }
 
+.mrk-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+.mrk-contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 14px;
+  text-decoration: none;
+  color: var(--brown-deep);
+  font-weight: 700;
+  font-size: 13px;
+}
+.mrk-contact-item:hover {
+  border-color: var(--brown);
+  background: var(--brown-soft);
+}
+
 .track-quick-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1444,6 +1543,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 
 @media (max-width: 960px) {
   .admin-grid, .reviews-layout { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-products { grid-template-columns: repeat(2, 1fr); }
   .nav { grid-template-columns: auto 1fr auto; }
   .links { justify-content: center; gap: 16px; }
@@ -1469,6 +1569,9 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   .card-title { font-size: 15px; }
   .card-actions { flex-direction: column; }
   .reviews-3 { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+  .footer-col { padding-right: 0; padding-bottom: 16px; border-right: 0; border-bottom: 1px solid rgba(250, 246, 240, 0.14); }
+  .footer-col:last-child { border-bottom: 0; padding-bottom: 0; }
   .stage { height: 225px; }
   .strip button { height: 52px; }
   .admin-row-2 { grid-template-columns: 1fr; }
@@ -1503,7 +1606,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
     <nav class="links">
       <a href="#products">Collection</a>
       <a href="#reviews">Reviews</a>
-      <a href="#about">Story</a>
+      <a href="#footer">Connect</a>
     </nav>
     <a class="brand" href="#" onclick="handleBrandTripleClick(event)">
       <span class="logo-3d-wrap" id="siteLogoBox"></span>
@@ -1747,19 +1850,48 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       </div>
     </div>
   </section>
-
-  <section class="block-sec" id="about">
-    <div class="about-banner">
-      <h2>About NS Accessories</h2>
-      <p>A dedicated boutique space bringing together timeless accessories and everyday essentials—designed so you can examine every detail from multiple angles, place orders smoothly on the website, and track your order status anytime.</p>
-    </div>
-  </section>
 </main>
 
-<footer>
-  <div class="serif-title" style="font-weight:700;font-size:28px;letter-spacing:1.5px">NS ACCESSORIES</div>
-  <p>Timeless details and seamless website order confirmation.</p>
-  <p>© <span id="year"></span> NS. All rights reserved.</p>
+<footer id="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand-title">NS</div>
+        <p class="footer-brand-copy">NS Accessories, curated pieces crafted for everyday style with smooth ordering and live order tracking.</p>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-col-title">COLLECTIONS</h3>
+        <ul class="footer-links-list" id="footerCollectionsList">
+          <li><a href="#products" onclick="setCat('All')">All Pieces</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-col-title">POLICIES</h3>
+        <ul class="footer-links-list">
+          <li><a href="#track-order" onclick="openTrackPage(event)">Track Your Order</a></li>
+          <li><a href="#reviews">Customer Reviews</a></li>
+          <li><a href="#products">Shipping &amp; Returns</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-col-title">SOCIAL ACCOUNTS</h3>
+        <div class="footer-social-slot" id="socialAccountsSlot">
+          <span class="footer-social-placeholder">Add your social media links here</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <div>
+        © <span id="year"></span> - NS Accessories
+        <button type="button" class="powered-mrk-btn" onclick="openMrkContactModal()">POWERED BY MR.K</button>
+      </div>
+      <div>Live Order Tracking &amp; Instant Checkout</div>
+    </div>
+  </div>
 </footer>
 
 <div class="backdrop" id="overlay" onclick="closeCart()"></div>
@@ -1955,6 +2087,16 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   </div>
 </section>
 
+<div class="modal-layer" id="mrkContactWrap" onclick="if(event.target===this)closeMrkContactModal()">
+  <div class="modal-card" style="width:min(440px,100%)">
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeMrkContactModal()">×</button>
+    <div class="card-cat">MR.K CONTACT</div>
+    <h3 style="margin:2px 0 6px;font-size:22px;font-weight:800;color:var(--brown-deep)">Get in Touch with MR.K</h3>
+    <p style="margin:0;color:var(--muted);font-size:13px">Reach out directly for store support, custom features, or inquiries.</p>
+    <div class="mrk-contact-list" id="mrkContactList"></div>
+  </div>
+</div>
+
 <div class="modal-layer" id="modalWrap" onclick="if(event.target===this)closeDetails()">
   <div class="modal-card" id="modal"></div>
 </div>
@@ -2043,7 +2185,67 @@ const CURRENCY = "EGP";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
 const CUSTOM_LOGO_SRC = "";
 
+// أضف روابطك في MRK_CONTACT_CHANNELS لتظهر عند الضغط على POWERED BY MR.K
+const MRK_CONTACT_CHANNELS = [
+  // مثال: { label: "WhatsApp", value: "Message on WhatsApp", url: "https://wa.me/201000000000" },
+  // مثال: { label: "Instagram", value: "@mrk", url: "https://instagram.com/" },
+  // مثال: { label: "Email", value: "mrk@example.com", url: "mailto:mrk@example.com" }
+];
+
+// أضف روابط سوشيال المتجر هنا لتظهر في خانة SOCIAL ACCOUNTS بالفوتر
+const STORE_SOCIAL_ACCOUNTS = [
+  // مثال: { label: "Instagram", url: "https://instagram.com/" },
+  // مثال: { label: "Facebook", url: "https://facebook.com/" }
+];
+
 localStorage.removeItem("ns_products");
+
+function renderMrkContactModal() {
+  const box = document.getElementById("mrkContactList");
+  if (!box) return;
+  if (!MRK_CONTACT_CHANNELS.length) {
+    box.innerHTML = '<div class="empty-msg">Add your contact links inside MRK_CONTACT_CHANNELS in the script.</div>';
+    return;
+  }
+  box.innerHTML = MRK_CONTACT_CHANNELS.map(ch => `
+    <a class="mrk-contact-item" href="${escapeHtml(ch.url)}" target="_blank" rel="noopener noreferrer">
+      <span>${escapeHtml(ch.label)}</span>
+      <span style="color:var(--bronze);font-size:12px">${escapeHtml(ch.value || "Open →")}</span>
+    </a>
+  `).join("");
+}
+
+function openMrkContactModal() {
+  renderMrkContactModal();
+  document.getElementById("mrkContactWrap").classList.add("show");
+}
+
+function closeMrkContactModal() {
+  document.getElementById("mrkContactWrap").classList.remove("show");
+}
+
+function renderStoreSocialSlot() {
+  const slot = document.getElementById("socialAccountsSlot");
+  if (!slot) return;
+  if (!STORE_SOCIAL_ACCOUNTS.length) {
+    slot.innerHTML = '<span class="footer-social-placeholder">Add your social media links here</span>';
+    return;
+  }
+  slot.innerHTML = STORE_SOCIAL_ACCOUNTS.map(acc => `
+    <a href="${escapeHtml(acc.url)}" target="_blank" rel="noopener noreferrer" style="color:#faf6f0;font-size:12.5px;font-weight:700;text-decoration:none;background:rgba(255,255,255,0.08);padding:5px 10px;border-radius:8px">${escapeHtml(acc.label)}</a>
+  `).join("");
+}
+
+function renderFooterCollections() {
+  const list = document.getElementById("footerCollectionsList");
+  if (!list) return;
+  const cats = [...new Set(products.map(p => p.category).filter(Boolean))];
+  const links = ['<li><a href="#products" onclick="setCat(\'All\')">All Pieces</a></li>'];
+  cats.forEach(c => {
+    links.push(`<li><a href="#products" onclick="setCat('${escapeHtml(c)}')">${escapeHtml(c)}</a></li>`);
+  });
+  list.innerHTML = links.join("");
+}
 
 function getTrackingPageUrl() {
   const base = `${window.location.origin}${window.location.pathname}`;
@@ -2780,7 +2982,7 @@ function renderAdminCoupons() {
     return;
   }
 
-  list.innerHTML = coupons.map(c => {
+  list.innerHTML= coupons.map(c => {
     const rem = Math.max(0, c.usage_limit - c.used_count);
     const usable = c.is_active && rem > 0;
     const discLabel = c.discount_type === "percent" ? `${c.discount_value}% OFF` : `${money(c.discount_value)} OFF`;

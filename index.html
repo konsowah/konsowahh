@@ -3898,7 +3898,7 @@ async function finalizeWebsiteOrder() {
   if (confirmBtn) confirmBtn.disabled = true;
 
   try {
-    let proofUrl = null;
+    let proofUrl = "";
     if (pendingOrderData.proofDataUrl) {
       showToast("Uploading transfer screenshot...");
       proofUrl = await uploadPaymentProofToStorage(pendingOrderData.proofDataUrl, pendingOrderData.name);

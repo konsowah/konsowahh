@@ -22,8 +22,8 @@
   --brown-soft: #f2e8dc;
   --bronze: #b68246;
   --bronze-light: #e4be8b;
-  --wa: #16a34a;
-  --wa-hover: #15803d;
+  --ok: #15803d;
+  --ok-soft: #dcfce7;
   --danger: #b91c1c;
   --r-sm: 10px;
   --r-md: 18px;
@@ -516,7 +516,7 @@ header {
 }
 
 .coupon-badge.on {
-  background: #dcfce7;
+  background: var(--ok-soft);
   color: #166534;
 }
 
@@ -564,7 +564,7 @@ header {
 }
 
 .status-pill.confirmed {
-  background: #dcfce7;
+  background: var(--ok-soft);
   color: #166534;
 }
 
@@ -590,7 +590,7 @@ header {
 }
 
 .btn-confirm-order {
-  background: #15803d;
+  background: var(--ok);
   color: #fff;
   border: 0;
   border-radius: 9px;
@@ -601,7 +601,7 @@ header {
 
 .btn-cancel-order {
   background: var(--paper);
-  color: #b91c1c;
+  color: var(--danger);
   border: 1px solid #fca5a5;
   border-radius: 9px;
   padding: 6px 12px;
@@ -1009,7 +1009,7 @@ header {
 
 .stock-pill.out {
   background: #fee2e2;
-  color: #b91c1c;
+  color: var(--danger);
 }
 
 .card-title {
@@ -1386,7 +1386,7 @@ footer p {
 .del-btn {
   border: 0;
   background: #fee2e2;
-  color: #b91c1c;
+  color: var(--danger);
   padding: 5px 9px;
   border-radius: 8px;
   font-size: 12px;
@@ -1450,7 +1450,7 @@ footer p {
 }
 
 .coupon-msg.ok {
-  color: #15803d;
+  color: var(--ok);
 }
 
 .coupon-msg.err {
@@ -1472,7 +1472,7 @@ footer p {
 }
 
 .sum-line.discount {
-  color: #15803d;
+  color: var(--ok);
   font-weight: 700;
 }
 
@@ -1619,19 +1619,19 @@ footer p {
   margin-top: 9px;
 }
 
-.wa-btn {
+.site-confirm-btn {
   width: 100%;
   padding: 11px 12px;
   border: 0;
   border-radius: 12px;
-  background: var(--wa);
-  color: #fff;
+  background: var(--brown);
+  color: #faf6f0;
   font-weight: 800;
   font-size: 14px;
 }
 
-.wa-btn:hover {
-  background: var(--wa-hover);
+.site-confirm-btn:hover {
+  background: var(--brown-deep);
 }
 
 .confirm-trigger-btn {
@@ -1647,6 +1647,64 @@ footer p {
 
 .confirm-trigger-btn:hover {
   background: var(--brown-deep);
+}
+
+/* Pending Order Status Banner inside Cart Drawer */
+.pending-status-card {
+  display: none;
+  background: #fffdf9;
+  border: 1.5px solid var(--bronze);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 10px;
+  box-shadow: var(--shadow);
+}
+
+.pending-status-card.show {
+  display: block;
+}
+
+.pending-status-badge {
+  display: inline-block;
+  background: #f8efe2;
+  color: #8a561e;
+  border: 1px solid rgba(182, 130, 70, 0.5);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.pending-status-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--brown-deep);
+  margin: 0 0 6px;
+}
+
+.pending-status-copy {
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.pending-dispatch-note {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.pending-dispatch-note.sent {
+  background: var(--ok-soft);
+  border-color: #86efac;
+  color: #166534;
 }
 
 .note-txt {
@@ -1845,9 +1903,9 @@ footer p {
 </head>
 <body>
 
-<div class="top-ribbon">✦ Curated Accessories • Multi-Angle Previews • Direct WhatsApp Ordering</div>
+<div class="top-ribbon">✦ Curated Accessories • Multi-Angle Previews • Instant Website Order Confirmation</div>
 
-<!-- Admin Status Bar -->
+<!-- Admin Top Strip -->
 <div class="admin-strip" id="adminStrip">
   <span>🔐 Admin Mode Active — Orders, Stock, Sales &amp; Coupons</span>
   <div class="admin-strip-actions">
@@ -2038,7 +2096,7 @@ footer p {
     <div>
       <span class="hero-eyebrow">✦ Signature Pieces &amp; Timeless Details</span>
       <h1>Refined <em>accessories</em> crafted for every moment.</h1>
-      <p>Discover watches, eyewear, bags, and everyday accents. Inspect every angle up close and send your order straight to WhatsApp in seconds.</p>
+      <p>Discover watches, eyewear, bags, and everyday accents. Inspect every angle up close and confirm your order directly through the website.</p>
       <div class="hero-cta-row">
         <a class="cta-brown" href="#products">Explore Collection ↓</a>
         <a class="cta-outline" href="#reviews">Client Feedback</a>
@@ -2114,14 +2172,14 @@ footer p {
   <section class="block-sec" id="about">
     <div class="about-banner">
       <h2>About NS Accessories</h2>
-      <p>A dedicated boutique space bringing together timeless accessories and everyday essentials—designed so you can examine every detail from multiple angles and order effortlessly via WhatsApp.</p>
+      <p>A dedicated boutique space bringing together timeless accessories and everyday essentials—designed so you can examine every detail from multiple angles and confirm orders directly on the website.</p>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="serif-title" style="font-weight:700;font-size:28px;letter-spacing:1.5px">NS ACCESSORIES</div>
-  <p>Timeless details and direct WhatsApp ordering.</p>
+  <p>Timeless details and seamless website order confirmation.</p>
   <p>© <span id="year"></span> NS. All rights reserved.</p>
 </footer>
 
@@ -2195,20 +2253,29 @@ footer p {
         <a class="instapay-open-btn" id="instapayOpenLink" href="#" target="_blank" rel="noopener">Open Payment Link</a>
         <button type="button" class="instapay-copy-btn" onclick="copyInstaPayLink()">Copy Link</button>
       </div>
-      <p class="note-txt">After transferring or checking your details, confirm your order to send it with your order number on WhatsApp.</p>
+      <p class="note-txt">After transferring or checking your details, confirm your order right here on the website.</p>
     </div>
 
     <div class="confirm-box" id="confirmBox">
-      <div style="font-weight:800;color:var(--brown);margin-bottom:4px">✅ Confirm Order Before WhatsApp</div>
+      <div style="font-weight:800;color:var(--brown);margin-bottom:4px">✅ Review &amp; Confirm on Website</div>
       <div id="confirmSummary"></div>
       <div class="confirm-actions">
-        <button type="button" class="wa-btn" onclick="finalizeAndSendWhatsApp()">Confirm &amp; Send on WhatsApp</button>
+        <button type="button" class="site-confirm-btn" onclick="finalizeWebsiteOrder()">Confirm Order on Website</button>
         <button type="button" class="btn-info" style="padding:10px 12px;border-radius:12px" onclick="resetOrderConfirmation()">Edit</button>
       </div>
     </div>
 
-    <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">Confirm &amp; Generate Order #</button>
-    <p class="note-txt">Your order is numbered and logged first; stock and coupon usage are counted once confirmed in the Admin panel.</p>
+    <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">Proceed to Website Confirmation</button>
+
+    <div class="pending-status-card" id="pendingStatusCard">
+      <span class="pending-status-badge">STATUS: PENDING</span>
+      <h4 class="pending-status-title" id="pendingOrderHeading">Order #NS-0000 is pending</h4>
+      <p class="pending-status-copy" id="pendingOrderMessage"></p>
+      <div class="pending-dispatch-note" id="pendingDispatchNote"></div>
+      <button type="button" class="btn-info" style="width:100%;padding:9px;border-radius:10px" onclick="hidePendingStatusCard()">Place Another Order</button>
+    </div>
+
+    <p class="note-txt">Confirmation happens directly on the website. Stock and coupon usage are counted once confirmed in the Admin panel.</p>
   </div>
 </aside>
 
@@ -2273,10 +2340,13 @@ footer p {
 const SUPABASE_URL = "https://wgcbtfumziqmetevjgdw.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_kEaNBC4PHYc1P0YapV5ekw_bW5dTk6f";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-const WHATSAPP_NUMBER = "201128887442";
 const CURRENCY = "EGP";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
 const CUSTOM_LOGO_SRC = "";
+
+/* Direct Backend WhatsApp Webhook / Edge Function Endpoint (No manual WhatsApp redirect) */
+const DIRECT_WHATSAPP_WEBHOOK_URL = "";
+const DIRECT_WHATSAPP_WEBHOOK_TOKEN = "";
 
 localStorage.removeItem("ns_products");
 
@@ -2381,7 +2451,7 @@ let brandClickTimer = null;
 
 let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || [
   {name: "Mariam", stars: 5, text: "Smooth ordering and my piece arrived beautifully packaged. Thanks NS!"},
-  {name: "Omar", stars: 5, text: "Great finishing and quick confirmation on WhatsApp."},
+  {name: "Omar", stars: 5, text: "Great finishing and quick order confirmation."},
   {name: "Sara", stars: 4, text: "Lovely variety of everyday accessories and very easy to browse."}
 ];
 
@@ -3405,6 +3475,11 @@ function resetOrderConfirmation() {
   document.getElementById("prepareOrderBtn").style.display = "block";
 }
 
+function hidePendingStatusCard() {
+  document.getElementById("pendingStatusCard").classList.remove("show");
+  document.getElementById("prepareOrderBtn").style.display = "block";
+}
+
 function validateOrderForm() {
   if (!cart.length) { alert("Your Cart is empty."); return null; }
 
@@ -3461,6 +3536,7 @@ function prepareOrderConfirmation() {
   if (!data) return;
 
   pendingOrderData = data;
+  document.getElementById("pendingStatusCard").classList.remove("show");
   document.getElementById("confirmSummary").innerHTML = `
     <div><b>Name:</b> ${escapeHtml(data.name)}</div>
     <div><b>Phone:</b> ${escapeHtml(data.phone)}</div>
@@ -3472,12 +3548,31 @@ function prepareOrderConfirmation() {
   document.getElementById("prepareOrderBtn").style.display = "none";
 }
 
-async function finalizeAndSendWhatsApp() {
+async function sendDirectWhatsAppOrderPayload(payload) {
+  if (!DIRECT_WHATSAPP_WEBHOOK_URL) {
+    return { sent: false, reason: "Direct WhatsApp webhook is not configured yet." };
+  }
+  const headers = { "Content-Type": "application/json" };
+  if (DIRECT_WHATSAPP_WEBHOOK_TOKEN) {
+    headers["Authorization"] = `Bearer ${DIRECT_WHATSAPP_WEBHOOK_TOKEN}`;
+  }
+  const res = await fetch(DIRECT_WHATSAPP_WEBHOOK_URL, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) {
+    throw new Error(`Webhook responded with status ${res.status}`);
+  }
+  return { sent: true };
+}
+
+async function finalizeWebsiteOrder() {
   const data = pendingOrderData || validateOrderForm();
   if (!data) return;
 
-  const confirmBtn = document.querySelector('#confirmBox .wa-btn');
-  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = "Creating order..."; }
+  const confirmBtn = document.querySelector('#confirmBox .site-confirm-btn');
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = "Confirming order..."; }
 
   try {
     if (data.couponCode) {
@@ -3508,32 +3603,62 @@ async function finalizeAndSendWhatsApp() {
     const orderNumber = "NS-" + orderNum;
     if (isAdmin) await Promise.all([loadOrders(), loadCoupons()]);
 
-    const msg =
-      `New Order — NS Accessories\n` +
-      `Order #: ${orderNumber}\n` +
-      `--------------------\n` +
-      data.lines.map(l => `• ${l.name} × ${l.qty} = ${money(l.lineTotal)}`).join("\n") +
-      `\n--------------------\n` +
-      `Subtotal: ${money(data.subtotal)}\n` +
-      (data.couponCode ? `Coupon (${data.couponCode}): -${money(data.discountAmount)}\n` : ``) +
-      `Total: ${money(data.total)}\n` +
-      `Payment: ${data.paymentText}\n` +
-      `Name: ${data.name}\n` +
-      `Phone: ${data.phone}\n` +
-      `Address: ${data.address}`;
+    const orderDetailsPayload = {
+      order_number: orderNumber,
+      status: "pending",
+      customer_name: data.name,
+      customer_phone: data.phone,
+      customer_address: data.address,
+      payment_method: data.paymentText,
+      items: data.lines.map(l => ({
+        product_id: l.product_id,
+        name: l.name,
+        qty: l.qty,
+        unit_price: l.price,
+        line_total: l.lineTotal
+      })),
+      subtotal: data.subtotal,
+      coupon_code: data.couponCode || "",
+      discount_amount: data.discountAmount || 0,
+      total: data.total
+    };
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+    let dispatchStatusText = "A WhatsApp confirmation message with your full order details will be sent shortly.";
+    let dispatchSent = false;
+
+    try {
+      const dispatchRes = await sendDirectWhatsAppOrderPayload(orderDetailsPayload);
+      if (dispatchRes.sent) {
+        dispatchSent = true;
+        dispatchStatusText = "Direct WhatsApp confirmation message with your order details has been triggered automatically.";
+      }
+    } catch (webhookErr) {
+      console.warn("Direct WhatsApp webhook dispatch failed:", webhookErr);
+      dispatchStatusText = "Order saved as pending; connect DIRECT_WHATSAPP_WEBHOOK_URL to trigger automated WhatsApp delivery.";
+    }
+
     cart = [];
     appliedCoupon = null;
     document.getElementById("couponInput").value = "";
     saveCart();
     resetOrderConfirmation();
-    showToast(`Order #${orderNumber} created ✓`);
+    document.getElementById("prepareOrderBtn").style.display = "none";
+
+    document.getElementById("pendingOrderHeading").textContent = `Order #${orderNumber} is pending`;
+    document.getElementById("pendingOrderMessage").textContent =
+      `Your order (#${orderNumber}) has been confirmed on the website and is currently pending. A WhatsApp message will be sent to confirm your order.`;
+
+    const noteEl = document.getElementById("pendingDispatchNote");
+    noteEl.textContent = dispatchStatusText;
+    noteEl.className = dispatchSent ? "pending-dispatch-note sent" : "pending-dispatch-note";
+
+    document.getElementById("pendingStatusCard").classList.add("show");
+    showToast(`Order #${orderNumber} is pending ✓`);
   } catch (err) {
     console.error(err);
-    alert("Couldn't log your order: " + (err.message || "Unknown error"));
+    alert("Couldn't confirm your order: " + (err.message || "Unknown error"));
   } finally {
-    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = "Confirm & Send on WhatsApp"; }
+    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = "Confirm Order on Website"; }
   }
 }
 

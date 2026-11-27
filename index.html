@@ -2315,10 +2315,12 @@ function priceHtml(p, large = false) {
 }
 
 let logoValue = CUSTOM_LOGO_SRC.trim() || localStorage.getItem("ns_logo_custom") || "";
+// Local products are used only as a temporary first-render fallback. Supabase is the source of truth.
 let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => normalizeSaleFields({
   ...p,
   stock: Math.max(0, Number(p.stock ?? 10))
 }));
+let hasLoadedProductsFromDb = false;
 let cart = JSON.parse(localStorage.getItem("ns_cart") || "[]");
 let orders = [];
 let activeCategory = "All";
@@ -2490,32 +2492,22 @@ function updateEditSaleCalc() {
   calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
 }
 
-function saveEditedProductSale() {
+async function saveEditedProductSale() {
   const p = products.find(x => x.id === editingSaleProductId);
   if (!p) return;
   const type = document.getElementById("editSaleType").value;
   const val = Number(document.getElementById("editSaleVal").value) || 0;
 
-  if (type !== "none" && val <= 0) {
-    alert("Enter a Sale value greater than 0 or choose No Sale.");
-    return;
-  }
-  if (type === "percent" && val > 95) {
-    alert("Maximum Sale discount is 95%.");
-    return;
-  }
-  if (type === "amount" && val >= p.price) {
-    alert("Sale amount must be less than the original price.");
-    return;
-  }
+  if (type !== "none" && val <= 0) { alert("Enter a Sale value greater than 0 or choose No Sale."); return; }
+  if (type === "percent" && val > 95) { alert("Maximum Sale discount is 95%."); return; }
+  if (type === "amount" && val >= p.price) { alert("Sale amount must be less than the original price."); return; }
 
+  const { error } = await sb.from("ns_products").update({ sale_type: type, sale_value: val }).eq("id", p.id);
+  if (error) { alert("Couldn't save sale: " + error.message); return; }
   Object.assign(p, normalizeSaleFields({ ...p, saleType: type, saleValue: val }));
-  localStorage.setItem("ns_products", JSON.stringify(products));
   closeSaleModal();
-  renderProducts();
-  renderCart();
-  renderAdminManageList();
-  showToast("Sale updated ✓");
+  renderProducts(); renderCart(); renderAdminManageList();
+  showToast("Sale updated for everyone ✓");
 }
 
 function clearEditedProductSale() {
@@ -2602,7 +2594,7 @@ async function submitAdminLogin() {
   }
   isAdmin = true;
   closeAdminLogin();
-  await loadOrders();
+  await Promise.all([loadOrders(), loadProductsFromDatabase({ seedIfEmpty: true })]);
   syncAdminUI();
   showToast("Signed in as Admin ✓");
   scrollToAdmin();
@@ -2679,20 +2671,23 @@ async function confirmOrderAndDeductStock(orderNumber) {
   const order = orders.find(o => o.orderNumber === orderNumber);
   if (!order || order.status !== "pending") return;
   const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.from("ns_orders").update({ status: "confirmed", stock_deducted: false }).eq("order_number", numericNo);
-  if (error) { alert("Couldn't confirm order: " + error.message); return; }
-  await loadOrders();
-  showToast(`Order #${orderNumber} confirmed ✓`);
+  const { error } = await sb.rpc("confirm_ns_order", { p_order_number: numericNo });
+  if (error) {
+    alert("Couldn't confirm order. Stock was not changed. " + error.message);
+    return;
+  }
+  await Promise.all([loadOrders(), loadProductsFromDatabase()]);
+  showToast(`Order #${orderNumber} confirmed and stock deducted ✓`);
 }
 
 async function cancelOrderInAdmin(orderNumber) {
   const order = orders.find(o => o.orderNumber === orderNumber);
   if (!order || order.status === "cancelled") return;
-  if (!confirm(`Cancel order #${orderNumber}?`)) return;
+  if (!confirm(`Cancel order #${orderNumber}? If it was confirmed, its quantities will be returned to stock.`)) return;
   const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.from("ns_orders").update({ status: "cancelled", stock_deducted: false }).eq("order_number", numericNo);
+  const { error } = await sb.rpc("cancel_ns_order", { p_order_number: numericNo });
   if (error) { alert("Couldn't cancel order: " + error.message); return; }
-  await loadOrders();
+  await Promise.all([loadOrders(), loadProductsFromDatabase()]);
   showToast(`Order #${orderNumber} cancelled`);
 }
 
@@ -2761,7 +2756,70 @@ async function handleAdminImages(e) {
     .join("");
 }
 
-function adminAddProduct() {
+async function uploadProductImageIfNeeded(src) {
+  if (!String(src).startsWith("data:")) return src;
+  const match = String(src).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+  if (!match) throw new Error("One of the product images has an unsupported format.");
+  const mime = match[1];
+  const ext = mime.split("/")[1].replace("jpeg", "jpg").replace("svg+xml", "svg");
+  const binary = atob(match[2]);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const path = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+  const { error } = await sb.storage.from("ns-products").upload(path, new Blob([bytes], { type: mime }), { contentType: mime, upsert: false });
+  if (error) throw error;
+  return sb.storage.from("ns-products").getPublicUrl(path).data.publicUrl;
+}
+
+function mapDbProduct(row) {
+  return normalizeSaleFields({
+    id: Number(row.id), name: row.name, category: row.category,
+    price: Number(row.price), saleType: row.sale_type || "none", saleValue: Number(row.sale_value || 0),
+    stock: Number(row.stock || 0), tag: row.tag || "", desc: row.description || "", images: row.images || []
+  });
+}
+
+async function loadProductsFromDatabase({ seedIfEmpty = false } = {}) {
+  const { data, error } = await sb.from("ns_products").select("*").order("id", { ascending: false });
+  if (error) { console.error(error); showToast("Couldn't refresh products"); return; }
+
+  if ((!data || data.length === 0) && !seedIfEmpty && !hasLoadedProductsFromDb) return; // Keep starter catalog only before the database has been initialized.
+
+  if ((!data || data.length === 0) && seedIfEmpty && isAdmin) {
+    try {
+      const legacy = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts);
+      const rows = [];
+      for (const p of legacy) {
+        const imgs = await Promise.all((p.images || []).slice(0, 4).map(uploadProductImageIfNeeded));
+        rows.push({
+          id: Number(p.id), name: p.name, category: p.category, price: Number(p.price),
+          sale_type: p.saleType || "none", sale_value: Number(p.saleValue || 0), stock: Math.max(0, Number(p.stock ?? 0)),
+          tag: p.tag || "", description: p.desc || "", images: imgs
+        });
+      }
+      if (rows.length) {
+        const { error: seedError } = await sb.from("ns_products").upsert(rows, { onConflict: "id" });
+        if (seedError) throw seedError;
+        const { error: seqError } = await sb.rpc("sync_ns_products_identity");
+        if (seqError) console.warn("Product ID sequence sync:", seqError.message);
+        return loadProductsFromDatabase();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Couldn't migrate the existing products to the shared database: " + err.message);
+      return;
+    }
+  }
+
+  products = (data || []).map(mapDbProduct);
+  hasLoadedProductsFromDb = true;
+  products.forEach(p => { cardIdxMap[p.id] = cardIdxMap[p.id] || 0; });
+  renderFilters(); renderProducts(); renderCart();
+  if (isAdmin) renderAdminManageList();
+}
+
+async function adminAddProduct() {
+  if (!isAdmin) { alert("Only an authorized admin can add products."); return; }
   const name = document.getElementById("admName").value.trim();
   const category = document.getElementById("admCat").value.trim();
   const price = Number(document.getElementById("admPrice").value);
@@ -2771,77 +2829,59 @@ function adminAddProduct() {
   const saleValue = Number(document.getElementById("admSaleVal").value) || 0;
   const tag = document.getElementById("admTag").value.trim();
   const desc = document.getElementById("admDesc").value.trim();
-  const urlLines = document.getElementById("admUrls").value
-    .split("\n")
-    .map(s => s.trim())
-    .filter(Boolean);
-
+  const urlLines = document.getElementById("admUrls").value.split("\n").map(x => x.trim()).filter(Boolean);
   const finalImages = [...uploadedAdminImgs, ...urlLines].slice(0, 4);
 
-  if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) {
-    alert("Please fill in Name, Category, Original Price, Stock, and Description.");
-    return;
-  }
-  if (saleType !== "none" && saleValue <= 0) {
-    alert("Enter a Sale value greater than 0 or select No Sale.");
-    return;
-  }
-  if (saleType === "percent" && saleValue > 95) {
-    alert("Maximum Sale discount is 95%.");
-    return;
-  }
-  if (saleType === "amount" && saleValue >= price) {
-    alert("Sale amount must be less than the original price.");
-    return;
-  }
-  if (!finalImages.length) {
-    alert("Upload at least one image or add an image URL.");
-    return;
-  }
+  if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) { alert("Please fill in Name, Category, Original Price, Stock, and Description."); return; }
+  if (saleType !== "none" && saleValue <= 0) { alert("Enter a Sale value greater than 0 or select No Sale."); return; }
+  if (saleType === "percent" && saleValue > 95) { alert("Maximum Sale discount is 95%."); return; }
+  if (saleType === "amount" && saleValue >= price) { alert("Sale amount must be less than the original price."); return; }
+  if (!finalImages.length) { alert("Upload at least one image or add an image URL."); return; }
 
-  const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-  const newProd = normalizeSaleFields({ id: newId, name, category, price, saleType, saleValue, stock, tag, desc, images: finalImages });
-  products.unshift(newProd);
-  cardIdxMap[newId] = 0;
-
+  const saveBtn = document.querySelector('#adminTabProducts button[onclick="adminAddProduct()"]');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Saving product..."; }
   try {
-    localStorage.setItem("ns_products", JSON.stringify(products));
+    const images = await Promise.all(finalImages.map(uploadProductImageIfNeeded));
+    const { data, error } = await sb.from("ns_products").insert({
+      name, category, price, sale_type: saleType, sale_value: saleValue, stock, tag, description: desc, images
+    }).select("*").single();
+    if (error) throw error;
+    const created = mapDbProduct(data);
+    products.unshift(created);
+    cardIdxMap[created.id] = 0;
+
+    document.getElementById("admName").value = "";
+    document.getElementById("admCat").value = "";
+    document.getElementById("admPrice").value = "";
+    document.getElementById("admStock").value = "10";
+    document.getElementById("admSaleType").value = "none";
+    document.getElementById("admSaleVal").value = "";
+    document.getElementById("admTag").value = "";
+    document.getElementById("admDesc").value = "";
+    document.getElementById("admFiles").value = "";
+    document.getElementById("admUrls").value = "";
+    document.getElementById("admPreview").innerHTML = "";
+    uploadedAdminImgs = [];
+    updateSalePreviewCalc();
+    renderFilters(); renderProducts(); renderAdminManageList();
+    showToast("Product saved and published for everyone ✓");
   } catch (err) {
-    alert("Storage is full. Try fewer/smaller photos or image URLs.");
-    products.shift();
-    return;
+    console.error(err);
+    alert("Couldn't publish product: " + (err.message || "Unknown error"));
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = "Save & Publish Product"; }
   }
-
-  document.getElementById("admName").value = "";
-  document.getElementById("admCat").value = "";
-  document.getElementById("admPrice").value = "";
-  document.getElementById("admStock").value = "10";
-  document.getElementById("admSaleType").value = "none";
-  document.getElementById("admSaleVal").value = "";
-  document.getElementById("admTag").value = "";
-  document.getElementById("admDesc").value = "";
-  document.getElementById("admFiles").value = "";
-  document.getElementById("admUrls").value = "";
-  document.getElementById("admPreview").innerHTML = "";
-  uploadedAdminImgs = [];
-  updateSalePreviewCalc();
-
-  renderFilters();
-  renderProducts();
-  renderAdminManageList();
-  showToast("Product published ✓");
 }
 
-function adminDeleteProduct(id) {
-  if (!confirm("Delete this product?")) return;
+async function adminDeleteProduct(id) {
+  if (!isAdmin) return;
+  if (!confirm("Delete this product for everyone?")) return;
+  const { error } = await sb.from("ns_products").delete().eq("id", id);
+  if (error) { alert("Couldn't delete product: " + error.message); return; }
   products = products.filter(p => p.id !== id);
   cart = cart.filter(c => c.id !== id);
-  localStorage.setItem("ns_products", JSON.stringify(products));
-  saveCart();
-  renderFilters();
-  renderProducts();
-  renderAdminManageList();
-  showToast("Product deleted");
+  saveCart(); renderFilters(); renderProducts(); renderAdminManageList();
+  showToast("Product deleted for everyone");
 }
 
 function renderAdminManageList() {
@@ -3120,6 +3160,7 @@ function prepareOrderConfirmation() {
     const sale = getSaleInfo(p);
     orderItems.push({
       id: p.id,
+      product_id: p.id,
       name: sale.hasSale ? `${p.name} (${sale.labelText})` : p.name,
       price: sale.finalPrice,
       qty: item.qty
@@ -3324,13 +3365,17 @@ async function initializeSupabaseAdmin() {
   if (session) {
     const { data: allowed, error } = await sb.rpc("is_ns_admin");
     isAdmin = !error && allowed === true;
-    if (isAdmin) await loadOrders();
+    if (isAdmin) await Promise.all([loadOrders(), loadProductsFromDatabase({ seedIfEmpty: true })]);
     else await sb.auth.signOut();
   }
+  if (!isAdmin) await loadProductsFromDatabase();
   syncAdminUI();
-  sb.channel("ns-orders-live")
+  sb.channel("ns-store-live")
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
       if (isAdmin) loadOrders();
+    })
+    .on("postgres_changes", { event: "*", schema: "public", table: "ns_products" }, () => {
+      loadProductsFromDatabase();
     })
     .subscribe();
 }

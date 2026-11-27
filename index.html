@@ -478,37 +478,54 @@ header {
   border: 1.5px solid var(--brown);
 }
 
-.edit-photo-tile {
-  position: relative;
-  width: 74px;
-  height: 74px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1.5px solid var(--line);
-  background: var(--bg);
+.edit-img-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
-.edit-photo-tile img {
+.edit-img-tile {
+  position: relative;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+  height: 96px;
+}
+
+.edit-img-tile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.edit-photo-remove {
+.edit-img-remove {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 22px;
-  height: 22px;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 0;
   background: rgba(185, 28, 28, 0.92);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   display: grid;
   place-items: center;
-  line-height: 1;
+}
+
+.edit-img-idx {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: rgba(36, 19, 10, 0.78);
+  color: #faf6f0;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 999px;
 }
 
 .admin-manage-list {
@@ -560,8 +577,8 @@ header {
   font-weight: 800;
 }
 
-.photo-edit-btn {
-  border: 1px solid rgba(59, 35, 22, 0.35);
+.img-edit-btn {
+  border: 1px solid rgba(59, 35, 22, 0.28);
   background: var(--brown-soft);
   color: var(--brown-deep);
   padding: 5px 9px;
@@ -633,8 +650,8 @@ header {
 }
 
 .status-pill.declined,
-.status-pill.cancelled,
-.status-pill.canceled {
+.status-pill.canceled,
+.status-pill.cancelled {
   background: #fee2e2;
   color: #991b1b;
 }
@@ -666,9 +683,9 @@ header {
 }
 
 .btn-decline-order {
-  background: #7f1d1d;
-  color: #fff;
-  border: 0;
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid #fca5a5;
   border-radius: 9px;
   padding: 6px 12px;
   font-size: 12px;
@@ -677,8 +694,8 @@ header {
 
 .btn-cancel-order {
   background: var(--paper);
-  color: var(--danger);
-  border: 1px solid #fca5a5;
+  color: var(--brown-deep);
+  border: 1px solid var(--line);
   border-radius: 9px;
   padding: 6px 12px;
   font-size: 12px;
@@ -1349,7 +1366,7 @@ footer p {
   font-size: 13px;
 }
 
-/* Backdrop & Cart Drawer (Products Only + Checkout Button) */
+/* Backdrop & Cart Drawer */
 .backdrop {
   position: fixed;
   inset: 0;
@@ -1849,7 +1866,7 @@ footer p {
   color: #166534;
 }
 
-/* Reference-Inspired Account / Orders / Profile Sheet */
+/* Account / Orders / Profile Sheet */
 .account-sheet-card {
   background: #f6efe4;
   border: 1px solid var(--line);
@@ -1949,6 +1966,16 @@ footer p {
   border-radius: 14px;
   padding: 14px;
   font-size: 13px;
+}
+
+.lookup-order-row {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.lookup-order-row:first-of-type {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .note-txt {
@@ -2293,7 +2320,7 @@ footer p {
         <div class="admin-card">
           <h3>Existing Products (<span id="admProdCount">0</span>)</h3>
           <div class="admin-manage-list" id="admProdList"></div>
-          <p class="note-txt" style="margin-top:10px">Use <b>Photos</b> to add/remove product images, <b>Sale</b> to set discounts, or <b>Delete</b> to remove a product.</p>
+          <p class="note-txt" style="margin-top:10px">Click <b>Images</b> to add, remove, or update product photos anytime, <b>Sale</b> to set a discount, or <b>Delete</b> to remove.</p>
         </div>
       </div>
     </div>
@@ -2327,7 +2354,7 @@ footer p {
             </div>
           </div>
           <button type="button" class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminCreateCoupon()">Save Coupon to Database</button>
-          <p class="note-txt">Coupon usage is counted only when you confirm an order, and returned automatically if a confirmed order is declined or canceled.</p>
+          <p class="note-txt">Coupon usage is counted only when you confirm an order, and returned automatically if a confirmed order is cancelled or declined.</p>
         </div>
 
         <div class="admin-card">
@@ -2432,7 +2459,7 @@ footer p {
 
 <div class="backdrop" id="overlay" onclick="closeCart()"></div>
 
-<!-- Cart Drawer: Products Only + Checkout Button -->
+<!-- Cart Drawer -->
 <aside class="drawer" id="drawer" aria-label="Shopping Cart">
   <div class="drawer-head">
     <h2 style="margin:0;font-size:22px;font-weight:700;color:var(--brown-deep);display:inline-flex;align-items:center;gap:8px">
@@ -2460,7 +2487,7 @@ footer p {
   </div>
 </aside>
 
-<!-- Checkout Modal (Details, Email, Governorate, Shipping, Coupon & Confirmation) -->
+<!-- Checkout Modal -->
 <div class="modal-layer" id="checkoutWrap" onclick="if(event.target===this)closeCheckoutModal()">
   <div class="checkout-card" onclick="event.stopPropagation()">
     <div class="checkout-head">
@@ -2588,17 +2615,17 @@ footer p {
   </div>
 </div>
 
-<!-- Sign In / Create Account / Orders / Profile Modal (Reference Style + Email) -->
+<!-- Sign In / Create Account / Orders / Profile Modal -->
 <div class="modal-layer" id="accountWrap" onclick="if(event.target===this)closeAccountModal()">
   <div class="account-sheet-card" onclick="event.stopPropagation()">
     <div class="account-sheet-head">
-      <h3 class="account-sheet-title">Sign in or create account</h3>
+      <h3 class="account-sheet-title">Track Orders &amp; Account</h3>
       <button class="x-btn" onclick="closeAccountModal()">×</button>
     </div>
 
     <div class="email-pill-box">
-      <input id="accountEmailInput" type="email" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter')submitAccountEmail()">
-      <button type="button" class="email-arrow-btn" onclick="submitAccountEmail()" aria-label="Continue with email">→</button>
+      <input id="accountEmailInput" type="email" placeholder="Enter your email to check order status" autocomplete="email" onkeydown="if(event.key==='Enter')submitAccountEmail()">
+      <button type="button" class="email-arrow-btn" id="accountEmailSearchBtn" onclick="submitAccountEmail()" aria-label="Search orders by email">→</button>
     </div>
 
     <div class="account-quick-grid">
@@ -2621,32 +2648,32 @@ footer p {
   <div class="modal-card" id="modal"></div>
 </div>
 
-<!-- Admin Edit Product Photos Modal -->
-<div class="modal-layer" id="photoModalWrap" onclick="if(event.target===this)closePhotoModal()">
-  <div class="modal-card" style="width:min(460px,100%)">
-    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closePhotoModal()">×</button>
-    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--brown)">🖼️ Edit Product Photos</h3>
-    <div id="photoEditProdTitle" style="font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px"></div>
+<!-- Admin Edit Product Images Modal -->
+<div class="modal-layer" id="imgModalWrap" onclick="if(event.target===this)closeImagesModal()">
+  <div class="modal-card" style="width:min(470px,100%)">
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeImagesModal()">×</button>
+    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--brown)">🖼️ Edit Product Images</h3>
+    <div id="imgEditProdTitle" style="font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px"></div>
 
-    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">Current &amp; Staged Photos (up to 4 — click × to remove)</label>
-    <div class="preview-strip" id="photoEditGrid"></div>
+    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">Current &amp; Staged Photos (up to 4 — first image is main)</label>
+    <div class="edit-img-grid" id="editImgGrid"></div>
 
     <div class="inp-group">
-      <label for="photoEditFiles">Add Photos from Device</label>
-      <input id="photoEditFiles" type="file" accept="image/*" multiple onchange="handleEditPhotoFiles(event)">
+      <label for="editImgFiles">Add Photos from Device</label>
+      <input id="editImgFiles" type="file" accept="image/*" multiple onchange="handleEditImagesUpload(event)">
     </div>
 
     <div class="inp-group">
-      <label for="photoEditAddUrl">Or Add Image URL</label>
+      <label for="editImgUrlInput">Or Add Image URL</label>
       <div style="display:flex;gap:8px">
-        <input id="photoEditAddUrl" placeholder="https://example.com/photo.jpg" style="margin-bottom:0" onkeydown="if(event.key==='Enter'){event.preventDefault();addEditPhotoUrl();}">
-        <button type="button" class="btn-info" style="padding:0 14px;border-radius:10px;white-space:nowrap" onclick="addEditPhotoUrl()">+ Add</button>
+        <input id="editImgUrlInput" placeholder="https://example.com/photo.jpg" style="margin-bottom:0" onkeydown="if(event.key==='Enter'){event.preventDefault();addEditImageUrl();}">
+        <button type="button" class="btn-info" style="padding:0 14px;border-radius:10px;white-space:nowrap" onclick="addEditImageUrl()">+ Add URL</button>
       </div>
     </div>
 
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button type="button" class="btn-add" id="savePhotoEditBtn" style="padding:10px;border-radius:11px" onclick="saveEditedProductPhotos()">Save Photos</button>
-      <button type="button" class="btn-info" style="padding:10px 14px;border-radius:11px" onclick="closePhotoModal()">Cancel</button>
+      <button type="button" class="btn-add" id="saveEditedImagesBtn" style="padding:10px;border-radius:11px" onclick="saveEditedProductImages()">Save Images</button>
+      <button type="button" class="btn-info" style="padding:10px 14px;border-radius:11px" onclick="closeImagesModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -2717,14 +2744,6 @@ const DIRECT_WHATSAPP_WEBHOOK_URL = "https://wgcbtfumziqmetevjgdw.supabase.co/fu
 const DIRECT_WHATSAPP_WEBHOOK_TOKEN = "";
 
 localStorage.removeItem("ns_products");
-
-function normalizeOrderStatus(status) {
-  const s = String(status || "pending").trim().toLowerCase();
-  if (s === "confirmed" || s === "confirm") return "confirmed";
-  if (s === "declined" || s === "decline" || s === "rejected") return "declined";
-  if (s === "canceled" || s === "cancelled" || s === "cancel") return "canceled";
-  return "pending";
-}
 
 function normalizeSaleFields(p) {
   const basePrice = Math.max(1, Number(p.price) || 1);
@@ -2817,9 +2836,10 @@ let customerProfile = JSON.parse(localStorage.getItem("ns_customer_profile") || 
   name: "",
   phone: "",
   governorate: "",
-  address: "",
-  recentOrders: []
+  address: ""
 };
+let customerLookupOrders = [];
+let customerLookupStatus = "idle"; // idle | loading | ready | empty | error
 let orders = [];
 let coupons = [];
 let appliedCoupon = null;
@@ -2829,8 +2849,8 @@ let activeAdminTab = "orders";
 let activeAccountPanel = "orders";
 let uploadedAdminImgs = [];
 let editingSaleProductId = null;
-let editingPhotoProductId = null;
-let draftProductPhotos = [];
+let editingImagesProductId = null;
+let editingImagesDraft = [];
 let selectedPayment = "cod";
 let pendingOrderData = null;
 let brandClickCount = 0;
@@ -2855,79 +2875,24 @@ function isValidEmail(val) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(val || "").trim());
 }
 
+function normalizeOrderStatus(st) {
+  const s = String(st || "pending").toLowerCase().trim();
+  if (s === "confirmed") return "confirmed";
+  if (s === "declined") return "declined";
+  if (s === "canceled" || s === "cancelled") return "canceled";
+  return "pending";
+}
+
+function formatStatusLabel(st) {
+  const norm = normalizeOrderStatus(st);
+  if (norm === "confirmed") return "CONFIRMED";
+  if (norm === "declined") return "DECLINED";
+  if (norm === "canceled") return "CANCELED";
+  return "PENDING";
+}
+
 function saveCustomerProfile() {
   localStorage.setItem("ns_customer_profile", JSON.stringify(customerProfile));
-}
-
-function upsertRecentOrderInProfile(entry) {
-  const list = Array.isArray(customerProfile.recentOrders) ? [...customerProfile.recentOrders] : [];
-  const normNum = String(entry.orderNumber || "").toUpperCase();
-  const idx = list.findIndex(item => String(item.orderNumber || "").toUpperCase() === normNum);
-  if (idx >= 0) {
-    list[idx] = { ...list[idx], ...entry, status: normalizeOrderStatus(entry.status ?? list[idx].status) };
-  } else {
-    list.unshift({ ...entry, status: normalizeOrderStatus(entry.status) });
-  }
-  customerProfile.recentOrders = list.slice(0, 25);
-  saveCustomerProfile();
-}
-
-function syncOrderStatusEverywhere(orderNumber, status) {
-  const normStatus = normalizeOrderStatus(status);
-  const normNum = String(orderNumber || "").toUpperCase();
-  orders = orders.map(o => String(o.orderNumber || "").toUpperCase() === normNum ? { ...o, status: normStatus } : o);
-  customerProfile.recentOrders = (customerProfile.recentOrders || []).map(o =>
-    String(o.orderNumber || "").toUpperCase() === normNum ? { ...o, status: normStatus } : o
-  );
-  saveCustomerProfile();
-  saveOrders();
-  if (isAdmin) renderAdminOrders();
-  if (document.getElementById("accountWrap").classList.contains("show") && activeAccountPanel === "orders") {
-    renderAccountSubpanel();
-  }
-}
-
-async function persistCustomerOrderRecord({ orderNumber, email, name, phone, governorate, total, status }) {
-  const cleanEmail = String(email || "").trim().toLowerCase();
-  if (!cleanEmail) return;
-  const record = {
-    order_number: String(orderNumber).toUpperCase(),
-    customer_email: cleanEmail,
-    customer_name: name || "",
-    customer_phone: phone || "",
-    governorate: governorate || "",
-    total: Number(total || 0),
-    status: normalizeOrderStatus(status)
-  };
-  const { error } = await sb.from("ns_customer_orders").upsert(record, { onConflict: "order_number" });
-  if (error) {
-    console.warn("Could not sync customer order record:", error.message);
-  }
-}
-
-async function fetchOrdersByEmailFromCloud(email) {
-  const cleanEmail = String(email || "").trim().toLowerCase();
-  if (!cleanEmail) return [];
-  const { data, error } = await sb
-    .from("ns_customer_orders")
-    .select("*")
-    .ilike("customer_email", cleanEmail)
-    .order("created_at", { ascending: false })
-    .limit(25);
-  if (error) {
-    console.warn("Could not query customer orders by email:", error.message);
-    return null;
-  }
-  return (data || []).map(row => ({
-    orderNumber: String(row.order_number || "").toUpperCase(),
-    email: String(row.customer_email || "").toLowerCase(),
-    name: row.customer_name || "",
-    phone: row.customer_phone || "",
-    governorate: row.governorate || "",
-    total: Number(row.total || 0),
-    status: normalizeOrderStatus(row.status),
-    createdAt: row.created_at ? new Date(row.created_at).toLocaleString("en-US") : ""
-  }));
 }
 
 function hydrateSavedCustomerFields() {
@@ -2936,3 +2901,128 @@ function hydrateSavedCustomerFields() {
   }
   if (customerProfile.email && !document.getElementById("customerEmail").value) {
     document.getElementById("customerEmail").value = customerProfile.email;
+  }
+  if (customerProfile.phone && !document.getElementById("customerPhone").value) {
+    document.getElementById("customerPhone").value = customerProfile.phone;
+  }
+  if (customerProfile.governorate && !document.getElementById("customerGovernorate").value) {
+    document.getElementById("customerGovernorate").value = customerProfile.governorate;
+  }
+  if (customerProfile.address && !document.getElementById("customerAddress").value) {
+    document.getElementById("customerAddress").value = customerProfile.address;
+  }
+  if (customerProfile.email && !document.getElementById("accountEmailInput").value) {
+    document.getElementById("accountEmailInput").value = customerProfile.email;
+  }
+}
+
+function onCustomerEmailChange() {
+  resetOrderConfirmation();
+  const em = document.getElementById("customerEmail").value.trim();
+  if (em) {
+    document.getElementById("accountEmailInput").value = em;
+  }
+}
+
+/* Shipping Calculation Matching Server Rules */
+function calculateShippingFee(governorate, productsAfterDiscount) {
+  const gov = String(governorate || "").trim();
+  if (!gov) return null;
+  if (productsAfterDiscount >= FREE_SHIPPING_THRESHOLD) return 0;
+  return gov.toLowerCase() === "monufia" ? 40 : 80;
+}
+
+function onGovernorateChange() {
+  resetOrderConfirmation();
+  renderCartTotals();
+}
+
+/* Custom Logo */
+function applyLogo(src) {
+  const clean = (src || "").trim();
+  logoValue = clean;
+  const headerBox = document.getElementById("siteLogoBox");
+  const prevBox = document.getElementById("admLogoPreview");
+  const urlInput = document.getElementById("admLogoUrl");
+
+  if (headerBox) {
+    if (clean) {
+      headerBox.innerHTML = `<img src="${escapeHtml(clean)}" alt="NS Accessories logo">`;
+      headerBox.classList.add("has-logo");
+    } else {
+      headerBox.innerHTML = "";
+      headerBox.classList.remove("has-logo");
+    }
+  }
+
+  if (prevBox) {
+    if (clean) {
+      prevBox.innerHTML = `<img src="${escapeHtml(clean)}" alt="Logo preview">`;
+      prevBox.classList.add("has-logo");
+    } else {
+      prevBox.innerHTML = `<span class="logo-empty-note">No logo set</span>`;
+      prevBox.classList.remove("has-logo");
+    }
+  }
+
+  if (urlInput && !clean.startsWith("data:")) {
+    urlInput.value = clean;
+  }
+}
+
+async function saveSharedLogo(src) {
+  if (!isAdmin) throw new Error("Only an authorized admin can change the store logo.");
+  const clean = (src || "").trim();
+  const { error } = await sb.from("ns_store_settings").upsert({ id: "main", logo_url: clean }, { onConflict: "id" });
+  if (error) throw error;
+  applyLogo(clean);
+}
+
+async function loadSharedLogo() {
+  const { data, error } = await sb.from("ns_store_settings").select("logo_url").eq("id", "main").maybeSingle();
+  if (error) {
+    console.warn("Could not load shared NS logo:", error.message);
+    return;
+  }
+  applyLogo(data?.logo_url || "");
+}
+
+async function uploadSharedLogo(file) {
+  const dataUrl = await resizeImageToDataUrl(file, 700, 0.9, "image/png");
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+  const path = `store-logo/logo-${Date.now()}.png`;
+  const { error: uploadError } = await sb.storage.from("ns-products").upload(path, blob, {
+    contentType: "image/png", upsert: false, cacheControl: "3600"
+  });
+  if (uploadError) throw uploadError;
+  const { data } = sb.storage.from("ns-products").getPublicUrl(path);
+  await saveSharedLogo(data.publicUrl);
+}
+
+function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image/jpeg") {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width, h = img.height;
+        if (w > maxSide || h > maxSide) {
+          if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
+          else { w = Math.round(w * maxSide / h); h = maxSide; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL(mime, quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleLogoUpload(e) {
+  const file = (e.target.files || [])[0];
+  if (!

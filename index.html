@@ -454,14 +454,19 @@ header {
   font-size: 12px;
   font-weight: 800;
 }
-.btn-status-order {
-  background: var(--brown);
-  color: #faf6f0;
-  border: 0;
+.status-select-order {
+  background: var(--paper);
+  color: var(--brown-deep);
+  border: 1.5px solid var(--brown);
   border-radius: 9px;
-  padding: 6px 12px;
+  padding: 5px 10px;
   font-size: 12px;
   font-weight: 800;
+  cursor: pointer;
+  outline: none;
+}
+.status-select-order:hover {
+  background: var(--brown-soft);
 }
 .btn-cancel-order {
   background: var(--paper);
@@ -1422,10 +1427,8 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   <div class="top-ribbon-track">
     <span>✦ FREE SHIPPING ON ORDERS OVER 2,000 EGP</span>
     <span>✦ SHIPPING: 40 EGP IN MONUFIA • 80 EGP TO ALL OTHER GOVERNORATES</span>
-    <span>✦ SALES UP TO 30 %</span>
     <span>✦ FREE SHIPPING ON ORDERS OVER 2,000 EGP</span>
     <span>✦ SHIPPING: 40 EGP IN MONUFIA • 80 EGP TO ALL OTHER GOVERNORATES</span>
-    <span>✦ SALES UP TO 30 %</span>
   </div>
 </div>
 
@@ -2596,8 +2599,7 @@ function scrollToAdmin() {
   const panel = document.getElementById("adminPanel");
   if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
-function updateCouponFormLabel() {
+  function updateCouponFormLabel() {
   const type = document.getElementById("cpnType").value;
   document.getElementById("cpnValLabel").textContent = type === "percent" ? "Discount Value (%) *" : "Discount Value (EGP) *";
   document.getElementById("cpnVal").placeholder = type === "percent" ? "e.g. 15" : "e.g. 100";
@@ -2905,6 +2907,14 @@ function renderAdminOrders() {
          </div>`
       : "";
 
+    const statusDropdownHtml = o.status !== "cancelled"
+      ? `<select class="status-select-order" aria-label="Set order status" onchange="handleOrderStatusSelect(${o.order_number}, this)">
+           <option value="">Set as...</option>
+           <option value="shipped" ${o.status === "shipped" ? "disabled" : ""}>Set as Shipped</option>
+           <option value="delivered" ${o.status === "delivered" ? "disabled" : ""}>Set as Delivered</option>
+         </select>`
+      : "";
+
     return `
       <div class="order-card">
         <div class="order-card-head">
@@ -2928,14 +2938,20 @@ function renderAdminOrders() {
         ${breakdownHtml}
         <div class="order-actions">
           ${o.status === "pending" ? `<button class="btn-confirm-order" onclick="adminConfirmOrder(${o.order_number})">✓ Confirm &amp; Deduct Stock</button>` : ""}
-          ${o.status !== "shipped" && o.status !== "cancelled" ? `<button class="btn-status-order" onclick="adminSetOrderStatus(${o.order_number}, 'shipped')">🚚 Shipped</button>` : ""}
-          ${o.status !== "delivered" && o.status !== "cancelled" ? `<button class="btn-status-order" onclick="adminSetOrderStatus(${o.order_number}, 'delivered')">📦 Delivered</button>` : ""}
+          ${statusDropdownHtml}
           ${o.status !== "cancelled" ? `<button class="btn-cancel-order" onclick="adminCancelOrder(${o.order_number})">✕ Cancel Order</button>` : ""}
           <button class="del-btn" style="padding:6px 12px;border-radius:9px" onclick="adminDeleteOrder(${o.order_number})">🗑 Delete</button>
         </div>
       </div>
     `;
   }).join("");
+}
+
+async function handleOrderStatusSelect(orderNumber, selectEl) {
+  const nextStatus = selectEl.value;
+  if (!nextStatus) return;
+  selectEl.value = "";
+  await adminSetOrderStatus(orderNumber, nextStatus);
 }
 
 async function adminConfirmOrder(orderNumber) {
@@ -2954,7 +2970,7 @@ async function adminSetOrderStatus(orderNumber, nextStatus) {
   });
   if (error) { alert("Could not update status: " + error.message); return; }
   await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
-  showToast(`Order #NS-${orderNumber} marked as ${statusLabelText(nextStatus)} ✓`);
+  showToast(`Order #NS-${orderNumber} set as ${statusLabelText(nextStatus)} ✓`);
 }
 
 async function adminCancelOrder(orderNumber) {

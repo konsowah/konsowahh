@@ -465,9 +465,7 @@ header {
   cursor: pointer;
   outline: none;
 }
-.status-select-order:hover {
-  background: var(--brown-soft);
-}
+.status-select-order:hover { background: var(--brown-soft); }
 .btn-cancel-order {
   background: var(--paper);
   color: var(--danger);
@@ -478,7 +476,64 @@ header {
   font-weight: 800;
 }
 
-.editorial-hero {
+.proof-upload-box {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(90, 54, 28, 0.25);
+  text-align: left;
+}
+.proof-upload-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--brown-deep);
+  margin-bottom: 6px;
+}
+.proof-preview-img {
+  display: none;
+  margin-top: 8px;
+  max-width: 190px;
+  max-height: 190px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  object-fit: cover;
+}
+.proof-preview-img.show { display: block; }
+.proof-thumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  text-decoration: none;
+  color: var(--brown-deep);
+  font-weight: 700;
+  font-size: 12px;
+}
+.proof-thumb-link img {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+.delivery-date-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 12.5px;
+}
+.delivery-date-input {
+  border: 1.5px solid var(--line);
+  border-radius: 9px;
+  padding: 5px 9px;
+  font-family: inherit;
+  font-size: 12.5px;
+  background: var(--paper);
+  color: var(--ink);
+}
+  .editorial-hero {
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -801,7 +856,8 @@ footer {
   border-top: 3px solid var(--bronze);
 }
 footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
-  .backdrop {
+
+.backdrop {
   position: fixed;
   inset: 0;
   background: rgba(36, 19, 10, 0.55);
@@ -919,8 +975,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   font-size: 14px;
 }
 .go-checkout-btn:hover:not(:disabled) { background: var(--brown-deep); }
-
-.checkout-page {
+  .checkout-page {
   display: none;
   position: fixed;
   inset: 0;
@@ -1636,7 +1691,6 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       </div>
     </div>
   </section>
-
   <section class="editorial-hero">
     <div class="hero-inner">
       <span class="hero-eyebrow">✦ Signature Pieces &amp; Everyday Luxury</span>
@@ -1808,7 +1862,12 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
             <a class="instapay-open-btn" id="instapayOpenLink" href="#" target="_blank" rel="noopener">Open Payment Link</a>
             <button type="button" class="instapay-copy-btn" onclick="copyInstaPayLink()">Copy Link</button>
           </div>
-          <p class="note-txt">After transferring or checking your details, confirm your order right here on the website.</p>
+          <div class="proof-upload-box">
+            <label class="proof-upload-label" for="instapayProofInput">Transfer Screenshot (Required for InstaPay)</label>
+            <input type="file" id="instapayProofInput" accept="image/*" onchange="handleInstaPayProofChange(event)">
+            <img id="instapayProofPreview" class="proof-preview-img" alt="Transfer screenshot preview">
+          </div>
+          <p class="note-txt">After transferring, attach the transfer screenshot and confirm your order right here on the website.</p>
         </div>
 
         <div class="confirm-box" id="confirmBox">
@@ -2139,6 +2198,7 @@ let editingSaleProductId = null;
 let editingImagesProductId = null;
 let editingImagesList = [];
 let selectedPayment = "cod";
+let instapayProofDataUrl = "";
 let pendingOrderData = null;
 let brandClickCount = 0;
 let brandClickTimer = null;
@@ -2508,6 +2568,50 @@ function copyInstaPayLink() {
   }).catch(() => {
     alert("Unable to copy automatically.");
   });
+}
+
+function handleInstaPayProofChange(e) {
+  const file = (e.target.files || [])[0];
+  const imgEl = document.getElementById("instapayProofPreview");
+  if (!file) {
+    instapayProofDataUrl = "";
+    if (imgEl) { imgEl.src = ""; imgEl.classList.remove("show"); }
+    resetOrderConfirmation();
+    return;
+  }
+  resizeImageToDataUrl(file, 900, 0.82).then(dataUrl => {
+    instapayProofDataUrl = dataUrl;
+    if (imgEl) {
+      imgEl.src = dataUrl;
+      imgEl.classList.add("show");
+    }
+    resetOrderConfirmation();
+  });
+}
+
+function clearInstaPayProofInput() {
+  instapayProofDataUrl = "";
+  const fileEl = document.getElementById("instapayProofInput");
+  const imgEl = document.getElementById("instapayProofPreview");
+  if (fileEl) fileEl.value = "";
+  if (imgEl) { imgEl.src = ""; imgEl.classList.remove("show"); }
+}
+
+async function uploadPaymentProofToStorage(dataUrl, customerName) {
+  if (!dataUrl) return null;
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+  const ext = (blob.type.split("/")[1] || "jpg").replace("jpeg", "jpg");
+  const safeSlug = (customerName || "customer").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "customer";
+  const filePath = `payment-proofs/${safeSlug}-${Date.now()}.${ext}`;
+  const { error: uploadError } = await sb.storage.from("ns-products").upload(filePath, blob, {
+    contentType: blob.type || "image/jpeg",
+    upsert: false,
+    cacheControl: "3600"
+  });
+  if (uploadError) throw uploadError;
+  const { data: pub } = sb.storage.from("ns-products").getPublicUrl(filePath);
+  return pub.publicUrl;
 }
 
 function handleBrandTripleClick(e) {
@@ -2899,6 +3003,21 @@ function renderAdminOrders() {
     const govHtml = o.governorate
       ? `<div><b>Governorate:</b> ${escapeHtml(o.governorate)}</div>`
       : "";
+    const proofHtml = o.payment_proof_url
+      ? `<div style="margin-top:6px">
+           <b>Transfer Proof:</b><br>
+           <a class="proof-thumb-link" href="${escapeHtml(o.payment_proof_url)}" target="_blank" rel="noopener noreferrer">
+             <img src="${escapeHtml(o.payment_proof_url)}" alt="Transfer screenshot">
+             <span>View Full Screenshot ↗</span>
+           </a>
+         </div>`
+      : "";
+    const deliveryDateHtml = `
+      <div class="delivery-date-row">
+        <label for="deliv-date-${o.order_number}" style="margin:0;font-weight:800;color:var(--brown-deep)">📅 Estimated Delivery:</label>
+        <input type="date" id="deliv-date-${o.order_number}" class="delivery-date-input" value="${escapeHtml(o.estimated_delivery_date || "")}" onchange="adminSetDeliveryDate(${o.order_number}, this.value)">
+      </div>
+    `;
     const breakdownHtml = (Number(o.subtotal) > 0 || Number(o.shipping_fee) > 0 || Number(o.discount_amount) > 0)
       ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">
            Subtotal: <b>${money(Number(o.subtotal || 0))}</b>
@@ -2932,6 +3051,8 @@ function renderAdminOrders() {
           ${govHtml}
           <div><b>Address:</b> ${escapeHtml(o.customer_address)}</div>
           <div><b>Payment:</b> ${escapeHtml(o.payment_text)}</div>
+          ${proofHtml}
+          ${deliveryDateHtml}
         </div>
         <div class="order-items-box">${itemsHtml}</div>
         <div style="font-weight:800;color:var(--brown);font-size:14.5px">Total: ${money(o.total)}</div>
@@ -2952,6 +3073,20 @@ async function handleOrderStatusSelect(orderNumber, selectEl) {
   if (!nextStatus) return;
   selectEl.value = "";
   await adminSetOrderStatus(orderNumber, nextStatus);
+}
+
+async function adminSetDeliveryDate(orderNumber, dateVal) {
+  if (!isAdmin) return;
+  const { error } = await sb.rpc("set_ns_order_delivery_date", {
+    p_order_number: orderNumber,
+    p_delivery_date: dateVal || null
+  });
+  if (error) {
+    alert("Could not save delivery date: " + error.message);
+    return;
+  }
+  await loadOrders();
+  showToast(`Estimated delivery date updated for #NS-${orderNumber} ✓`);
 }
 
 async function adminConfirmOrder(orderNumber) {
@@ -3202,6 +3337,9 @@ async function searchOrdersByEmail() {
     const itemsArr = Array.isArray(o.items) ? o.items : [];
     const itemsTxt = itemsArr.map(i => `${escapeHtml(i.name)} × ${i.qty}`).join(" • ");
     const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString("en-GB") : "";
+    const estDateHtml = o.estimated_delivery_date
+      ? `<div style="color:var(--ok);font-weight:800;font-size:12px;margin-bottom:5px">📅 Estimated Delivery: ${escapeHtml(o.estimated_delivery_date)}</div>`
+      : "";
     return `
       <div class="track-order-item">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px">
@@ -3209,6 +3347,7 @@ async function searchOrdersByEmail() {
           <span class="status-pill ${escapeHtml(st)}">${escapeHtml(statusLabelText(st))}</span>
         </div>
         <div style="color:var(--muted);font-size:11.5px;margin-bottom:5px">${escapeHtml(dateStr)}${o.governorate ? ` • ${escapeHtml(o.governorate)}` : ""}</div>
+        ${estDateHtml}
         <div style="color:var(--ink);margin-bottom:5px">${itemsTxt}</div>
         <div style="font-weight:800;color:var(--brown)">Total: ${money(o.total)}</div>
       </div>
@@ -3502,6 +3641,9 @@ function selectPayment(method) {
   document.getElementById("pay-cod").classList.toggle("active", method === "cod");
   document.getElementById("pay-instapay").classList.toggle("active", method === "instapay");
   document.getElementById("instapayBox").classList.toggle("show", method === "instapay");
+  if (method !== "instapay") {
+    clearInstaPayProofInput();
+  }
   resetOrderConfirmation();
 }
 
@@ -3532,6 +3674,11 @@ function prepareOrderConfirmation() {
   if (!phone) { alert("Please enter your phone number."); document.getElementById("customerPhone").focus(); return; }
   if (!governorate) { alert("Please choose your governorate."); document.getElementById("customerGovernorate").focus(); return; }
   if (!address) { alert("Please enter your detailed address."); document.getElementById("customerAddress").focus(); return; }
+  if (selectedPayment === "instapay" && !instapayProofDataUrl) {
+    alert("Please attach your InstaPay / Telda transfer screenshot before reviewing your order.");
+    document.getElementById("instapayProofInput").focus();
+    return;
+  }
 
   const items = [];
   for (const item of cart) {
@@ -3566,6 +3713,7 @@ function prepareOrderConfirmation() {
     governorate,
     address,
     paymentLabel,
+    proofDataUrl: selectedPayment === "instapay" ? instapayProofDataUrl : "",
     items,
     subtotal: totals.subtotal,
     discount: totals.discount,
@@ -3581,6 +3729,9 @@ function prepareOrderConfirmation() {
   const shippingHtml = pendingOrderData.shippingFee === 0
     ? `<div><b>Shipping (${escapeHtml(governorate)}):</b> FREE</div>`
     : `<div><b>Shipping (${escapeHtml(governorate)}):</b> ${money(pendingOrderData.shippingFee)}</div>`;
+  const proofPreviewHtml = pendingOrderData.proofDataUrl
+    ? `<div style="margin-top:6px"><b>Transfer Screenshot:</b><br><img src="${escapeHtml(pendingOrderData.proofDataUrl)}" alt="Transfer proof" style="max-width:140px;max-height:140px;border-radius:8px;margin-top:4px;border:1px solid var(--line)"></div>`
+    : "";
 
   document.getElementById("confirmSummary").innerHTML = `
     <div><b>Name:</b> ${escapeHtml(name)}</div>
@@ -3589,6 +3740,7 @@ function prepareOrderConfirmation() {
     <div><b>Governorate:</b> ${escapeHtml(governorate)}</div>
     <div><b>Address:</b> ${escapeHtml(address)}</div>
     <div><b>Payment:</b> ${escapeHtml(paymentLabel)}</div>
+    ${proofPreviewHtml}
     <div><b>Subtotal:</b> ${money(pendingOrderData.subtotal)}</div>
     ${discountHtml}
     ${shippingHtml}
@@ -3603,6 +3755,12 @@ async function finalizeWebsiteOrder() {
   if (confirmBtn) confirmBtn.disabled = true;
 
   try {
+    let proofUrl = null;
+    if (pendingOrderData.proofDataUrl) {
+      showToast("Uploading transfer screenshot...");
+      proofUrl = await uploadPaymentProofToStorage(pendingOrderData.proofDataUrl, pendingOrderData.name);
+    }
+
     const compactItems = pendingOrderData.items.map(i => ({
       id: i.id,
       product_id: i.product_id,
@@ -3623,7 +3781,8 @@ async function finalizeWebsiteOrder() {
       p_coupon_code: pendingOrderData.couponCode || null,
       p_discount_amount: pendingOrderData.discount,
       p_subtotal: pendingOrderData.subtotal,
-      p_customer_email: pendingOrderData.email
+      p_customer_email: pendingOrderData.email,
+      p_payment_proof_url: proofUrl
     });
 
     if (error) {
@@ -3642,6 +3801,7 @@ async function finalizeWebsiteOrder() {
     const createdOrder = { ...pendingOrderData, orderNumber };
     cart = [];
     saveCart();
+    clearInstaPayProofInput();
     appliedCoupon = null;
     document.getElementById("couponInput").value = "";
     document.getElementById("clearCouponBtn").style.display = "none";
@@ -3659,6 +3819,8 @@ async function finalizeWebsiteOrder() {
 
     if (isAdmin) await Promise.all([loadOrders(), loadCoupons()]);
     showToast(`Order #NS-${orderNumber} recorded ✓`);
+  } catch (err) {
+    alert("Could not complete order: " + (err.message || err));
   } finally {
     if (confirmBtn) confirmBtn.disabled = false;
   }

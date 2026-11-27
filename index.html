@@ -119,7 +119,7 @@ header {
 .nav {
   max-width: 1220px;
   margin: auto;
-  padding: 14px 24px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -135,23 +135,37 @@ header {
   user-select: none;
 }
 
-.brand-mark {
-  width: 40px;
-  height: 40px;
-  border-radius: 13px;
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-deep));
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-  font-size: 18px;
-  box-shadow: 0 8px 18px rgba(74, 21, 37, 0.25);
+/* Frameless 3D Logo */
+.logo-3d-wrap {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 8px 10px rgba(46, 11, 22, 0.28)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+  transition: transform 0.28s ease, filter 0.28s ease;
+}
+
+.brand:hover .logo-3d-wrap {
+  transform: translateY(-2px) scale(1.04);
+  filter: drop-shadow(0 11px 14px rgba(46, 11, 22, 0.34)) drop-shadow(0 3px 4px rgba(200, 138, 43, 0.25));
+}
+
+.logo-3d-wrap svg,
+.logo-3d-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  background: transparent;
 }
 
 .brand-name {
   font-weight: 900;
   font-size: 22px;
   letter-spacing: 0.5px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 3px 6px rgba(46, 11, 22, 0.14);
 }
 
 .brand-pill {
@@ -284,6 +298,7 @@ header {
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 18px;
+  margin-bottom: 16px;
 }
 
 .admin-card h3 {
@@ -322,6 +337,32 @@ header {
 .admin-card input:focus,
 .admin-card textarea:focus {
   border-color: var(--burgundy);
+}
+
+.logo-uploader-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0 10px;
+}
+
+.logo-live-preview {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 7px 9px rgba(46, 11, 22, 0.25));
+}
+
+.logo-live-preview svg,
+.logo-live-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  background: transparent;
 }
 
 .preview-strip {
@@ -1514,6 +1555,8 @@ footer p {
 @media (max-width: 600px) {
   .links { display: none; }
   .container { padding: 16px 14px 0; }
+  .logo-3d-wrap { width: 44px; height: 44px; }
+  .brand-name { font-size: 19px; }
   .hero-main { min-height: 290px; padding: 24px 20px; }
   .grid-products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
   .card-media { height: 160px; }
@@ -1545,9 +1588,8 @@ footer p {
 <header>
   <div class="nav">
     <a class="brand" href="#" onclick="handleBrandTripleClick(event)">
-      <span class="brand-mark">NS</span>
-      <span class="brand-name">متجر NS</span>
-      <span class="brand-pill">إصدار مختلف</span>
+      <span class="logo-3d-wrap" id="siteLogoBox"></span>
+      <span class="brand-name">NS store</span>
     </a>
     <nav class="links">
       <a href="#products">المنتجات</a>
@@ -1584,6 +1626,23 @@ footer p {
 
     <!-- Products Tab -->
     <div id="adminTabProducts" style="display:none">
+      <div class="admin-card">
+        <h3>✦ لوجو 3D بدون فريم (أو صورة مخصصة من اختيارك)</h3>
+        <div class="logo-uploader-box">
+          <div class="logo-live-preview" id="admLogoPreview"></div>
+          <div style="flex:1">
+            <label style="margin-bottom:4px">ارفع صورة من جهازك أو اترك اللوجو 3D المجسّم</label>
+            <input id="admLogoFile" type="file" accept="image/*" style="margin-bottom:0" onchange="handleLogoUpload(event)">
+          </div>
+        </div>
+        <label>أو ضع رابط صورة مباشرة</label>
+        <input id="admLogoUrl" placeholder="https://example.com/logo.png" oninput="handleLogoUrlInput(event)">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn-add" style="padding:8px 16px;border-radius:10px;font-size:12.5px" onclick="saveLogoUrlFromInput()">حفظ رابط الصورة</button>
+          <button type="button" class="btn-info" style="padding:8px 14px;border-radius:10px;font-size:12.5px" onclick="resetDefaultLogo()">استعادة اللوجو 3D الافتراضي</button>
+        </div>
+      </div>
+
       <div class="admin-grid">
         <!-- Add New Product Form -->
         <div class="admin-card">
@@ -1806,174 +1865,180 @@ footer p {
 
 <script>
 // عدّل رقم الواتساب وكلمة مرور الأدمن ورابط InstaPay الثابت هنا
+// لو عاوز تحط رابط صورة مخصصة للوجو بدل اللوجو 3D المجسّم اكتب الرابط في CUSTOM_LOGO_SRC
 const WHATSAPP_NUMBER = "201128887442";
-const ADMIN_PASS = "admin1234";
+const ADMIN_PASS = "admin123";
 const CURRENCY = "ج.م";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
+const CUSTOM_LOGO_SRC = "";
+
+const LOGO_3D_SVG = `
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="ns3dBody" x1="16" y1="12" x2="84" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7c233f"/>
+      <stop offset="52%" stop-color="#4a1525"/>
+      <stop offset="100%" stop-color="#260812"/>
+    </linearGradient>
+    <linearGradient id="ns3dDepth" x1="20" y1="20" x2="85" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#220710"/>
+      <stop offset="100%" stop-color="#120308"/>
+    </linearGradient>
+    <linearGradient id="ns3dGold" x1="15" y1="15" x2="85" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffe096"/>
+      <stop offset="50%" stop-color="#d49635"/>
+      <stop offset="100%" stop-color="#8f5b12"/>
+    </linearGradient>
+    <linearGradient id="ns3dShine" x1="50" y1="10" x2="50" y2="55" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 3D Extruded Base Layer -->
+  <path d="M50 11L85 30V70L50 89L15 70V30L50 11Z" fill="url(#ns3dDepth)" transform="translate(0, 4.5)"/>
+
+  <!-- Main 3D Faceted Emblem -->
+  <path d="M50 9L85 28V68L50 87L15 68V28L50 9Z" fill="url(#ns3dBody)" stroke="url(#ns3dGold)" stroke-width="2.4"/>
+
+  <!-- Top Bevel Highlight -->
+  <path d="M50 11.5L82.5 29.5L50 47L17.5 29.5L50 11.5Z" fill="url(#ns3dShine)"/>
+
+  <!-- 3D Monogram Shadow -->
+  <path d="M27 63V36L45 58V35M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
+        stroke="#16040a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(1.5, 3)"/>
+
+  <!-- Crisp 3D Monogram Front -->
+  <path d="M27 63V36L45 58V35" stroke="#fff7f9" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
+        stroke="url(#ns3dGold)" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
 
 const defaultProducts = [
   {
-    "id": 11,
-    "name": "car",
-    "category": "car",
-    "price": 1000000,
-    "stock": 1,
-    "tag": "low price",
-    "desc": "good",
-    "images": [
-      "https://media.discordapp.net/attachments/1499065232528773231/1575576445726752860/IMG_0317.png?ex=6b09c969&is=6b0877e9&hm=5c36f56adb952edcc080526f66350629f4eaf88f755a6357f737c27d81a0990b&format=webp&quality=lossless&width=512&height=436",
-      "https://media.discordapp.net/attachments/1499065232528773231/1566962886256099388/temp_image_0A7D9FD5-1FF6-4859-A7CF-DB22382FAB98.webp?ex=6b096ea8&is=6b081d28&hm=9faccb71192b413ccbb5a32373395b3e6de8cf7f697bf4bb08c59f9b9589887f&format=webp&width=768&height=1024",
-      "https://media.discordapp.net/attachments/1499065232528773231/1566962883529547867/temp_image_6E636BF3-2AEB-49F5-9FBE-8505462B34B3.webp?ex=6b096ea8&is=6b081d28&hm=72d6aba463c5b9cb6bfbe2405d2158085ab50d1b3393dcef4d07e67d5f3f6c4f&format=webp&width=575&height=1024"
-    ]
-  },
-  {
-    "id": 10,
-    "name": "f",
-    "category": "f",
-    "price": 111,
-    "stock": 0,
-    "tag": "f",
-    "desc": "f",
-    "images": [
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971274461323284/temp_image_B179754C-C3CD-405D-B3FD-4AB636CAD2CF.webp?ex=6b097678&is=6b0824f8&hm=e1a080c934083542fce483ac04abafcc6247bff61b2b2dc6932fd9d4aa300ee7&format=webp&width=768&height=1024"
-    ]
-  },
-  {
-    "id": 9,
-    "name": "fff",
-    "category": "ff",
-    "price": 6000000,
-    "tag": "fff",
-    "desc": "jetta",
-    "images": [
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971273886564433/temp_image_FAF9E848-0A02-4AF5-9460-12AECDA97C27.webp?ex=6b097678&is=6b0824f8&hm=7bb5c079e0b28fd4c834dab1c63fdc0dcaf3d875e3e77ef9fd5cd51e9191a2d8&format=webp&width=768&height=1024",
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971274461323284/temp_image_B179754C-C3CD-405D-B3FD-4AB636CAD2CF.webp?ex=6b097678&is=6b0824f8&hm=e1a080c934083542fce483ac04abafcc6247bff61b2b2dc6932fd9d4aa300ee7&format=webp&width=768&height=1024",
-      "https://media.discordapp.net/attachments/1499065232528773231/1566971275132403773/temp_image_29534273-26CA-4690-AC81-345552E2338E.webp?ex=6b097678&is=6b0824f8&hm=7a813f8f9d7e780b8c1c41fa0aa878fd3633c239cd9dda6ab61d327725f5b179&format=webp&width=768&height=1024"
-    ],
-    "stock": 2
-  },
-  {
-    "id": 1,
-    "name": "سماعة لاسلكية",
-    "category": "إلكترونيات",
-    "price": 650,
-    "tag": "الأكثر طلباً",
-    "desc": "صوت واضح وتصميم مريح للاستخدام اليومي والمكالمات.",
-    "images": [
+    id: 1,
+    name: "سماعة لاسلكية",
+    category: "إلكترونيات",
+    price: 650,
+    stock: 12,
+    tag: "الأكثر طلباً",
+    desc: "صوت واضح وتصميم مريح للاستخدام اليومي والمكالمات.",
+    images: [
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   },
   {
-    "id": 2,
-    "name": "ساعة أنيقة",
-    "category": "إكسسوارات",
-    "price": 850,
-    "tag": "جديد",
-    "desc": "تصميم بسيط يناسب كل الأوقات والإطلالات.",
-    "images": [
+    id: 2,
+    name: "ساعة أنيقة",
+    category: "إكسسوارات",
+    price: 850,
+    stock: 6,
+    tag: "جديد",
+    desc: "تصميم بسيط يناسب كل الأوقات والإطلالات.",
+    images: [
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 9
+    ]
   },
   {
-    "id": 3,
-    "name": "شنطة يومية",
-    "category": "موضة",
-    "price": 520,
-    "tag": "",
-    "desc": "عملية وخفيفة ومناسبة للخروجات والعمل.",
-    "images": [
+    id: 3,
+    name: "شنطة يومية",
+    category: "موضة",
+    price: 520,
+    stock: 3,
+    tag: "",
+    desc: "عملية وخفيفة ومناسبة للخروجات والعمل.",
+    images: [
       "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   },
   {
-    "id": 4,
-    "name": "كوب حراري",
-    "category": "المنزل",
-    "price": 280,
-    "tag": "",
-    "desc": "يحافظ على حرارة مشروبك لفترة أطول أثناء التنقل.",
-    "images": [
+    id: 4,
+    name: "كوب حراري",
+    category: "المنزل",
+    price: 280,
+    stock: 15,
+    tag: "",
+    desc: "يحافظ على حرارة مشروبك لفترة أطول أثناء التنقل.",
+    images: [
       "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   },
   {
-    "id": 5,
-    "name": "نظارة شمس",
-    "category": "موضة",
-    "price": 390,
-    "tag": "",
-    "desc": "ستايل عصري وعدسات مريحة لإطلالة مميزة.",
-    "images": [
+    id: 5,
+    name: "نظارة شمس",
+    category: "موضة",
+    price: 390,
+    stock: 8,
+    tag: "",
+    desc: "ستايل عصري وعدسات مريحة لإطلالة مميزة.",
+    images: [
       "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1509695507497-903c140c43b0?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   },
   {
-    "id": 6,
-    "name": "باور بانك",
-    "category": "إلكترونيات",
-    "price": 720,
-    "tag": "",
-    "desc": "طاقة إضافية وسريعة لأجهزتك أثناء التنقل والسفر.",
-    "images": [
+    id: 6,
+    name: "باور بانك",
+    category: "إلكترونيات",
+    price: 720,
+    stock: 0,
+    tag: "",
+    desc: "طاقة إضافية وسريعة لأجهزتك أثناء التنقل والسفر.",
+    images: [
       "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1591290619762-c588f56e29b9?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   },
   {
-    "id": 7,
-    "name": "محفظة",
-    "category": "إكسسوارات",
-    "price": 300,
-    "tag": "",
-    "desc": "حجم مناسب وتنظيم عملي للبطاقات والنقدية.",
-    "images": [
+    id: 7,
+    name: "محفظة",
+    category: "إكسسوارات",
+    price: 300,
+    stock: 9,
+    tag: "",
+    desc: "حجم مناسب وتنظيم عملي للبطاقات والنقدية.",
+    images: [
       "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   },
   {
-    "id": 8,
-    "name": "مصباح مكتبي",
-    "category": "المنزل",
-    "price": 450,
-    "tag": "",
-    "desc": "إضاءة مريحة وواضحة للمذاكرة والعمل اليومي.",
-    "images": [
+    id: 8,
+    name: "مصباح مكتبي",
+    category: "المنزل",
+    price: 450,
+    stock: 5,
+    tag: "",
+    desc: "إضاءة مريحة وواضحة للمذاكرة والعمل اليومي.",
+    images: [
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=700&q=75"
-    ],
-    "stock": 8
+    ]
   }
 ];
 
+let logoValue = CUSTOM_LOGO_SRC.trim() || localStorage.getItem("ns_logo_custom") || "";
 let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => ({
   ...p,
   stock: Math.max(0, Number(p.stock ?? 10))
@@ -2005,6 +2070,86 @@ products.forEach(p => { cardIdxMap[p.id] = 0; });
 const money = n => Number(n).toLocaleString("en-US") + " " + CURRENCY;
 const getStock = p => Math.max(0, Number(p.stock ?? 0));
 const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice(0, 4) : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"];
+
+function renderLogoMarkup(src) {
+  const clean = (src || "").trim();
+  if (!clean) return LOGO_3D_SVG;
+  return `<img src="${escapeHtml(clean)}" alt="لوجو متجر NS">`;
+}
+
+function applyLogo(src, persist = true) {
+  const clean = (src || "").trim();
+  logoValue = clean;
+  const markup = renderLogoMarkup(clean);
+  const headerBox = document.getElementById("siteLogoBox");
+  const prevBox = document.getElementById("admLogoPreview");
+  const urlInput = document.getElementById("admLogoUrl");
+  if (headerBox) headerBox.innerHTML = markup;
+  if (prevBox) prevBox.innerHTML = markup;
+  if (urlInput && !clean.startsWith("data:")) urlInput.value = clean;
+  if (persist) {
+    try {
+      if (clean) localStorage.setItem("ns_logo_custom", clean);
+      else localStorage.removeItem("ns_logo_custom");
+    } catch (err) {
+      alert("حجم صورة اللوجو كبير على التخزين المحلي، جرّب صورة أصغر.");
+    }
+  }
+}
+
+function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image/jpeg") {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width, h = img.height;
+        if (w > maxSide || h > maxSide) {
+          if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
+          else { w = Math.round(w * maxSide / h); h = maxSide; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL(mime, quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleLogoUpload(e) {
+  const file = (e.target.files || [])[0];
+  if (!file) return;
+  const dataUrl = await resizeImageToDataUrl(file, 260, 0.9, "image/png");
+  applyLogo(dataUrl, true);
+  showToast("تم تطبيق الصورة كـ لوجو 3D بدون فريم ✓");
+}
+
+function handleLogoUrlInput(e) {
+  const val = e.target.value.trim();
+  const prevBox = document.getElementById("admLogoPreview");
+  if (prevBox) prevBox.innerHTML = renderLogoMarkup(val);
+}
+
+function saveLogoUrlFromInput() {
+  const val = document.getElementById("admLogoUrl").value.trim();
+  if (!val) {
+    alert("اكتب رابط صورة أولاً.");
+    return;
+  }
+  applyLogo(val, true);
+  showToast("تم حفظ صورة اللوجو ✓");
+}
+
+function resetDefaultLogo() {
+  document.getElementById("admLogoFile").value = "";
+  document.getElementById("admLogoUrl").value = "";
+  applyLogo("", true);
+  showToast("تمت استعادة اللوجو 3D المجسّم ✓");
+}
 
 function stockBadgeHtml(stock) {
   if (stock <= 0) return '<span class="stock-pill out">نفدت الكمية</span>';
@@ -2237,34 +2382,10 @@ function renderAdminOrders() {
   }).join("");
 }
 
-function compressImageFile(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const maxSide = 750;
-        let w = img.width, h = img.height;
-        if (w > maxSide || h > maxSide) {
-          if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
-          else { w = Math.round(w * maxSide / h); h = maxSide; }
-        }
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.78));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
 async function handleAdminImages(e) {
   const files = Array.from(e.target.files || []).slice(0, 4);
   if (!files.length) return;
-  uploadedAdminImgs = await Promise.all(files.map(compressImageFile));
+  uploadedAdminImgs = await Promise.all(files.map(f => resizeImageToDataUrl(f, 750, 0.78, "image/jpeg")));
   document.getElementById("admPreview").innerHTML = uploadedAdminImgs
     .map(src => `<img src="${src}" alt="معاينة">`)
     .join("");
@@ -2793,6 +2914,7 @@ function addReview() {
 }
 
 document.getElementById("year").textContent = new Date().getFullYear();
+applyLogo(logoValue, false);
 initInstaPayDisplay();
 renderFilters();
 renderProducts();

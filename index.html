@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#4a1525">
-<title>NS | تجربة تسوّق مختلفة</title>
+<title>NS | Everyday Shopping Made Simple</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f6f4f5;
@@ -43,7 +43,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   line-height: 1.65;
   overflow-x: hidden;
   padding-bottom: 84px;
@@ -162,9 +162,9 @@ header {
 }
 
 .brand-name {
-  font-weight: 900;
+  font-weight: 800;
   font-size: 22px;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.3px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 3px 6px rgba(46, 11, 22, 0.14);
 }
 
@@ -222,7 +222,7 @@ header {
   display: grid;
   place-items: center;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .container {
@@ -260,7 +260,7 @@ header {
 .admin-head h2 {
   margin: 0;
   font-size: 21px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--burgundy);
 }
 
@@ -304,7 +304,7 @@ header {
 .admin-card h3 {
   margin: 0 0 12px;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .admin-row-2 {
@@ -316,7 +316,7 @@ header {
 .admin-card label {
   display: block;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 4px;
 }
@@ -335,8 +335,34 @@ header {
 }
 
 .admin-card input:focus,
+.admin-card select:focus,
 .admin-card textarea:focus {
   border-color: var(--burgundy);
+}
+
+.sale-builder-box {
+  background: #fff9ec;
+  border: 1px solid rgba(200, 138, 43, 0.45);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.sale-builder-head {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.sale-live-calc {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--burgundy);
+  background: #fff;
+  border: 1px dashed rgba(200, 138, 43, 0.6);
+  border-radius: 8px;
+  padding: 6px 10px;
 }
 
 .logo-uploader-box {
@@ -410,6 +436,26 @@ header {
   height: 42px;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.manage-item-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.sale-edit-btn {
+  border: 1px solid rgba(200, 138, 43, 0.55);
+  background: #fff9ec;
+  color: #92400e;
+  padding: 5px 9px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.sale-edit-btn:hover {
+  background: #fef3c7;
 }
 
 .orders-list {
@@ -526,7 +572,7 @@ header {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   bottom: -90px;
-  left: -70px;
+  right: -70px;
   pointer-events: none;
 }
 
@@ -538,21 +584,21 @@ header {
   padding: 6px 14px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   width: fit-content;
 }
 
 .hero-main h1 {
   font-size: clamp(30px, 4.4vw, 48px);
-  font-weight: 900;
-  line-height: 1.22;
+  font-weight: 800;
+  line-height: 1.15;
   margin: 18px 0 12px;
 }
 
 .hero-main p {
   color: rgba(255, 255, 255, 0.85);
   font-size: 15px;
-  max-width: 470px;
+  max-width: 460px;
   margin: 0 0 24px;
 }
 
@@ -611,7 +657,7 @@ header {
 .tile-caption {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  left: 10px;
   background: rgba(24, 20, 22, 0.78);
   color: #fff;
   padding: 4px 12px;
@@ -634,7 +680,8 @@ header {
 .sec-top h2 {
   margin: 0;
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 800;
+  letter-spacing: -0.4px;
 }
 
 .sec-top p {
@@ -649,7 +696,7 @@ header {
   padding: 6px 14px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--burgundy);
 }
 
@@ -666,7 +713,7 @@ header {
   color: var(--muted);
   padding: 8px 18px;
   border-radius: 999px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 14px;
 }
 
@@ -699,6 +746,11 @@ header {
   transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
+.card.is-sale {
+  border-color: rgba(200, 138, 43, 0.55);
+  box-shadow: 0 14px 34px -12px rgba(200, 138, 43, 0.22);
+}
+
 .card:hover {
   transform: translateY(-5px);
   border-color: rgba(74, 21, 37, 0.35);
@@ -723,17 +775,37 @@ header {
   transform: scale(1.04);
 }
 
-.ribbon {
+.top-badges {
   position: absolute;
   top: 12px;
+  left: 12px;
   right: 12px;
   z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.ribbon {
   background: var(--burgundy);
   color: #fff;
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 800;
+}
+
+.sale-badge {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: #fff;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(180, 83, 9, 0.35);
+  letter-spacing: 0.2px;
 }
 
 .out-overlay {
@@ -743,7 +815,7 @@ header {
   color: #fff;
   display: grid;
   place-items: center;
-  font-weight: 900;
+  font-weight: 800;
   font-size: 14px;
   z-index: 2;
 }
@@ -751,7 +823,7 @@ header {
 .img-step {
   position: absolute;
   bottom: 10px;
-  left: 10px;
+  right: 10px;
   z-index: 2;
   background: rgba(24, 20, 22, 0.75);
   color: #fff;
@@ -764,7 +836,7 @@ header {
 .dots-row {
   position: absolute;
   bottom: 12px;
-  right: 12px;
+  left: 12px;
   z-index: 2;
   display: flex;
   gap: 5px;
@@ -805,6 +877,8 @@ header {
   font-size: 11px;
   font-weight: 800;
   color: var(--burgundy);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .stock-pill {
@@ -829,7 +903,7 @@ header {
 .card-title {
   margin: 0 0 6px;
   font-size: 17px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .card-desc {
@@ -839,10 +913,38 @@ header {
   flex: 1;
 }
 
+.price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
 .card-price {
   font-size: 18px;
-  font-weight: 900;
-  margin-bottom: 12px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.card-price.sale-active {
+  color: var(--burgundy);
+}
+
+.old-price {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.save-chip {
+  font-size: 11px;
+  font-weight: 800;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 2px 7px;
+  border-radius: 7px;
 }
 
 .card-actions {
@@ -970,14 +1072,14 @@ header {
 .rev-box h3 {
   margin: 0 0 12px;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--burgundy);
 }
 
 .rev-box label {
   display: block;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 4px;
 }
@@ -1019,7 +1121,7 @@ header {
 .about-banner {
   background: var(--paper);
   border: 1px solid var(--line);
-  border-right: 6px solid var(--burgundy);
+  border-left: 6px solid var(--burgundy);
   border-radius: var(--r-md);
   padding: 28px;
   box-shadow: var(--shadow);
@@ -1028,7 +1130,7 @@ header {
 .about-banner h2 {
   margin: 0 0 8px;
   font-size: 24px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .about-banner p {
@@ -1116,13 +1218,13 @@ footer p {
 .drawer {
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   height: 100dvh;
   max-height: 100dvh;
   width: min(445px, 100%);
   background: var(--paper);
   z-index: 32;
-  transform: translateX(-105%);
+  transform: translateX(105%);
   transition: transform 0.28s ease;
   padding: 18px 20px 104px;
   display: block;
@@ -1218,7 +1320,7 @@ footer p {
 .sum-bar {
   display: flex;
   justify-content: space-between;
-  font-weight: 900;
+  font-weight: 800;
   font-size: 16.5px;
   padding: 10px 0;
   border-top: 1px solid var(--line);
@@ -1232,7 +1334,7 @@ footer p {
 .order-box h3 {
   margin: 0 0 8px;
   font-size: 15.5px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .inp-group {
@@ -1242,7 +1344,7 @@ footer p {
 .inp-group label {
   display: block;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 3px;
 }
@@ -1362,7 +1464,7 @@ footer p {
   border-radius: 12px;
   background: var(--wa);
   color: #fff;
-  font-weight: 900;
+  font-weight: 800;
   font-size: 14px;
 }
 
@@ -1377,7 +1479,7 @@ footer p {
   border-radius: 12px;
   background: var(--burgundy);
   color: #fff;
-  font-weight: 900;
+  font-weight: 800;
   font-size: 14px;
 }
 
@@ -1473,13 +1575,13 @@ footer p {
   background: var(--burgundy);
 }
 
-.prev-pos { right: 12px; }
-.next-pos { left: 12px; }
+.prev-pos { left: 12px; }
+.next-pos { right: 12px; }
 
 .stage-tag {
   position: absolute;
   bottom: 12px;
-  left: 12px;
+  right: 12px;
   background: rgba(24, 20, 22, 0.78);
   color: #fff;
   padding: 3px 10px;
@@ -1533,7 +1635,7 @@ footer p {
   padding: 11px 18px;
   border-radius: 12px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   opacity: 0;
   transform: translateY(14px);
   pointer-events: none;
@@ -1576,12 +1678,12 @@ footer p {
 
 <!-- Admin Status Bar -->
 <div class="admin-strip" id="adminStrip">
-  <span>🔐 وضع الإدارة مفعّل — إدارة الأوردرات، الاستوك، والمنتجات</span>
+  <span>🔐 Admin Mode Active — Orders, Stock &amp; Sale Management</span>
   <div class="admin-strip-actions">
-    <button class="admin-mini-btn" onclick="switchAdminTab('orders');scrollToAdmin()">الأوردرات (<span id="stripPendingCount">0</span>)</button>
-    <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">المنتجات</button>
-    <button class="admin-mini-btn" onclick="copyExportCode()">نسخ كود المنتجات</button>
-    <button class="admin-mini-btn out" onclick="logoutAdmin()">تسجيل الخروج</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('orders');scrollToAdmin()">Orders (<span id="stripPendingCount">0</span>)</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">Products</button>
+    <button class="admin-mini-btn" onclick="copyExportCode()">Copy Products Code</button>
+    <button class="admin-mini-btn out" onclick="logoutAdmin()">Log Out</button>
   </div>
 </div>
 
@@ -1589,15 +1691,15 @@ footer p {
   <div class="nav">
     <a class="brand" href="#" onclick="handleBrandTripleClick(event)">
       <span class="logo-3d-wrap" id="siteLogoBox"></span>
-      <span class="brand-name">NS store</span>
+      <span class="brand-name">NS Store</span>
     </a>
     <nav class="links">
-      <a href="#products">المنتجات</a>
-      <a href="#reviews">آراء العملاء</a>
-      <a href="#about">عن المتجر</a>
+      <a href="#products">Products</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#about">About Us</a>
     </nav>
     <button class="cart-trigger" onclick="openCart()">
-      <span>السلة</span>
+      <span>Cart</span>
       <span class="badge-num" id="cartCount">0</span>
     </button>
   </div>
@@ -1607,16 +1709,16 @@ footer p {
   <!-- Admin Control Panel (Hidden until login) -->
   <section class="admin-panel" id="adminPanel">
     <div class="admin-head">
-      <h2>⚙️ لوحة تحكم الأدمن (NS Admin)</h2>
+      <h2>⚙️ NS Admin Dashboard</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-info" style="padding:7px 14px;border-radius:10px;font-size:12px" onclick="copyExportCode()">📋 نسخ كود المنتجات للملف</button>
-        <button class="del-btn" style="padding:7px 14px;border-radius:10px" onclick="logoutAdmin()">خروج</button>
+        <button class="btn-info" style="padding:7px 14px;border-radius:10px;font-size:12px" onclick="copyExportCode()">📋 Copy Products Code</button>
+        <button class="del-btn" style="padding:7px 14px;border-radius:10px" onclick="logoutAdmin()">Log Out</button>
       </div>
     </div>
 
     <div class="admin-tabs">
-      <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 الأوردرات (<span id="admOrdersTotal">0</span>)</button>
-      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ إضافة وإدارة المنتجات</button>
+      <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 Orders (<span id="admOrdersTotal">0</span>)</button>
+      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ Products &amp; Sale</button>
     </div>
 
     <!-- Orders Tab -->
@@ -1627,66 +1729,86 @@ footer p {
     <!-- Products Tab -->
     <div id="adminTabProducts" style="display:none">
       <div class="admin-card">
-        <h3>✦ لوجو 3D بدون فريم (أو صورة مخصصة من اختيارك)</h3>
+        <h3>✦ Frameless 3D Logo (or Custom Image)</h3>
         <div class="logo-uploader-box">
           <div class="logo-live-preview" id="admLogoPreview"></div>
           <div style="flex:1">
-            <label style="margin-bottom:4px">ارفع صورة من جهازك أو اترك اللوجو 3D المجسّم</label>
+            <label style="margin-bottom:4px">Upload an image or keep the 3D emblem</label>
             <input id="admLogoFile" type="file" accept="image/*" style="margin-bottom:0" onchange="handleLogoUpload(event)">
           </div>
         </div>
-        <label>أو ضع رابط صورة مباشرة</label>
+        <label>Or paste a direct image URL</label>
         <input id="admLogoUrl" placeholder="https://example.com/logo.png" oninput="handleLogoUrlInput(event)">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button type="button" class="btn-add" style="padding:8px 16px;border-radius:10px;font-size:12.5px" onclick="saveLogoUrlFromInput()">حفظ رابط الصورة</button>
-          <button type="button" class="btn-info" style="padding:8px 14px;border-radius:10px;font-size:12.5px" onclick="resetDefaultLogo()">استعادة اللوجو 3D الافتراضي</button>
+          <button type="button" class="btn-add" style="padding:8px 16px;border-radius:10px;font-size:12.5px" onclick="saveLogoUrlFromInput()">Save Logo URL</button>
+          <button type="button" class="btn-info" style="padding:8px 14px;border-radius:10px;font-size:12.5px" onclick="resetDefaultLogo()">Restore 3D Logo</button>
         </div>
       </div>
 
       <div class="admin-grid">
         <!-- Add New Product Form -->
         <div class="admin-card">
-          <h3>+ إضافة منتج جديد</h3>
+          <h3>+ Add New Product</h3>
           <div class="admin-row-2">
             <div>
-              <label>اسم المنتج *</label>
-              <input id="admName" placeholder="مثال: ساعة ذكية">
+              <label>Product Name *</label>
+              <input id="admName" placeholder="e.g. Smart Watch">
             </div>
             <div>
-              <label>القسم *</label>
-              <input id="admCat" placeholder="إلكترونيات / موضة / إكسسوارات">
+              <label>Category *</label>
+              <input id="admCat" placeholder="Electronics / Style / Accessories">
             </div>
           </div>
           <div class="admin-row-2">
             <div>
-              <label>السعر (ج.م) *</label>
-              <input id="admPrice" type="number" min="1" placeholder="550">
+              <label>Original Price (EGP) *</label>
+              <input id="admPrice" type="number" min="1" placeholder="550" oninput="updateSalePreviewCalc()">
             </div>
             <div>
-              <label>الاستوك / الكمية المتاحة *</label>
-              <input id="admStock" type="number" min="0" value="10" placeholder="مثال: 10">
+              <label>Available Stock *</label>
+              <input id="admStock" type="number" min="0" value="10" placeholder="e.g. 10">
             </div>
           </div>
-          <label>شارة اختيارية (Tag)</label>
-          <input id="admTag" placeholder="جديد / الأكثر طلباً">
-          <label>وصف المنتج *</label>
-          <textarea id="admDesc" rows="2" placeholder="اكتب مميزات المنتج باختصار..."></textarea>
 
-          <label>صور المنتج (اختار حتى 4 صور من جهازك)</label>
+          <div class="sale-builder-box">
+            <div class="sale-builder-head">🔥 Sale Discount Settings (% or Fixed Amount)</div>
+            <div class="admin-row-2">
+              <div>
+                <label>Sale Type</label>
+                <select id="admSaleType" style="margin-bottom:8px" onchange="updateSalePreviewCalc()">
+                  <option value="none">No Sale</option>
+                  <option value="percent">Percentage Sale (%)</option>
+                  <option value="amount">Fixed Amount Sale (EGP)</option>
+                </select>
+              </div>
+              <div>
+                <label id="admSaleValLabel">Sale Value</label>
+                <input id="admSaleVal" type="number" min="0" step="any" placeholder="e.g. 20 or 100" style="margin-bottom:8px" oninput="updateSalePreviewCalc()">
+              </div>
+            </div>
+            <div class="sale-live-calc" id="admSaleCalc">Final Price: No Sale</div>
+          </div>
+
+          <label>Optional Tag</label>
+          <input id="admTag" placeholder="New / Best Seller">
+          <label>Short Description *</label>
+          <textarea id="admDesc" rows="2" placeholder="Describe what makes this item great..."></textarea>
+
+          <label>Product Photos (up to 4 images)</label>
           <input id="admFiles" type="file" accept="image/*" multiple onchange="handleAdminImages(event)">
           <div class="preview-strip" id="admPreview"></div>
 
-          <label>أو ضع روابط صور مباشرة (رابط في كل سطر - اختياري)</label>
+          <label>Or paste image URLs (one per line - optional)</label>
           <textarea id="admUrls" rows="2" placeholder="https://example.com/img1.jpg"></textarea>
 
-          <button class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminAddProduct()">حفظ ونشر المنتج</button>
+          <button class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminAddProduct()">Save &amp; Publish Product</button>
         </div>
 
         <!-- Manage Existing Products -->
         <div class="admin-card">
-          <h3>إدارة المنتجات الحالية (<span id="admProdCount">0</span>)</h3>
+          <h3>Existing Products (<span id="admProdCount">0</span>)</h3>
           <div class="admin-manage-list" id="admProdList"></div>
-          <p class="note-txt" style="margin-top:10px">لحذف أي ريفيو: انزل لقسم "آراء العملاء" واضغط على زر <b>حذف</b> الأحمر داخل الكارت.</p>
+          <p class="note-txt" style="margin-top:10px">Click <b>Sale</b> on any item to set or clear a Sale discount anytime, or <b>Delete</b> to remove it.</p>
         </div>
       </div>
     </div>
@@ -1695,26 +1817,26 @@ footer p {
   <section class="bento-hero">
     <div class="hero-main">
       <div>
-        <div class="hero-kicker">✦ نظام عرض متجدد • صور متعددة لكل منتج</div>
-        <h1>تجربة تسوّق مختلفة،<br>وتفاصيل واضحة قبل الشراء.</h1>
-        <p>تصفّح المنتجات بواجهات مرنة وصور تتبدّل تلقائياً، افتح أي منتج للتفرج على صوره كاملة، وأرسل طلبك بضغطة واحدة عبر واتساب.</p>
+        <div class="hero-kicker">✦ Multi-angle photos • Clear details • Instant checkout</div>
+        <h1>Everyday favorites,<br>made easy to shop.</h1>
+        <p>Browse quality picks with smooth photo previews, check every detail up close, and send your order straight to WhatsApp in seconds.</p>
       </div>
-      <a class="cta-light" href="#products">ابدأ التصفح الآن ↓</a>
+      <a class="cta-light" href="#products">Shop Products ↓</a>
     </div>
 
     <div class="bento-side" aria-hidden="true">
       <div class="bento-tile">
-        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=650&q=75" alt="إلكترونيات">
-        <span class="tile-caption">إلكترونيات يومية</span>
+        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=650&q=75" alt="Electronics">
+        <span class="tile-caption">Daily Tech</span>
       </div>
       <div class="bento-mini-grid">
         <div class="bento-tile">
-          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=450&q=75" alt="إكسسوارات">
-          <span class="tile-caption">إكسسوارات</span>
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=450&q=75" alt="Accessories">
+          <span class="tile-caption">Accessories</span>
         </div>
         <div class="bento-tile">
-          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=450&q=75" alt="موضة">
-          <span class="tile-caption">موضة</span>
+          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=450&q=75" alt="Style">
+          <span class="tile-caption">Style</span>
         </div>
       </div>
     </div>
@@ -1723,8 +1845,8 @@ footer p {
   <section id="products">
     <div class="sec-top">
       <div>
-        <h2>المنتجات المتاحة</h2>
-        <p>الصور تتبدّل تلقائياً — ومرّر الماوس لتثبيتها أو اضغط للتفاصيل</p>
+        <h2>Products</h2>
+        <p>Photos rotate automatically — hover to pause or click to view details</p>
       </div>
       <span class="sec-meta" id="productTotal"></span>
     </div>
@@ -1735,51 +1857,51 @@ footer p {
   <section class="block-sec" id="reviews">
     <div class="sec-top">
       <div>
-        <h2>آراء العملاء</h2>
-        <p>انطباعات حقيقية عن تجربة الطلب والمنتجات</p>
+        <h2>Customer Reviews</h2>
+        <p>Real feedback from shoppers on product quality and fast delivery</p>
       </div>
     </div>
     <div class="reviews-3" id="reviewGrid"></div>
 
     <div class="rev-box">
-      <h3>أضف تقييمك</h3>
-      <label>الاسم</label>
-      <input id="reviewName" placeholder="اكتب اسمك">
-      <label>التقييم</label>
+      <h3>Leave a Review</h3>
+      <label>Your Name</label>
+      <input id="reviewName" placeholder="Enter your name">
+      <label>Rating</label>
       <select id="reviewStars">
-        <option value="5">★★★★★ - ممتاز</option>
-        <option value="4">★★★★☆ - جيد جداً</option>
-        <option value="3">★★★☆☆ - جيد</option>
-        <option value="2">★★☆☆☆ - مقبول</option>
-        <option value="1">★☆☆☆☆ - ضعيف</option>
+        <option value="5">★★★★★ - Excellent</option>
+        <option value="4">★★★★☆ - Very Good</option>
+        <option value="3">★★★☆☆ - Good</option>
+        <option value="2">★★☆☆☆ - Fair</option>
+        <option value="1">★☆☆☆☆ - Poor</option>
       </select>
-      <label>تعليقك</label>
-      <textarea id="reviewText" rows="2" placeholder="اكتب رأيك في المنتج أو الخدمة..."></textarea>
-      <button class="rev-submit" onclick="addReview()">نشر التقييم</button>
-      <p class="note-txt">التقييمات المضافة تظهر على هذا الجهاز فقط محلياً.</p>
+      <label>Your Comment</label>
+      <textarea id="reviewText" rows="2" placeholder="Share your experience with the item or service..."></textarea>
+      <button class="rev-submit" onclick="addReview()">Post Review</button>
+      <p class="note-txt">Added reviews are saved locally on this device.</p>
     </div>
   </section>
 
   <section class="block-sec" id="about">
     <div class="about-banner">
-      <h2>عن NS</h2>
-      <p>مساحة تسوّق بسيطة وسريعة تجمع اختيارات متنوعة وتتيح لك معاينة المنتج من أكثر من زاوية وإتمام طلبك مباشرة مع فريقنا عبر واتساب.</p>
+      <h2>About NS</h2>
+      <p>A clean, straightforward shopping space bringing together everyday essentials and standout finds so you can inspect every angle and order directly via WhatsApp.</p>
     </div>
   </section>
 </main>
 
 <footer>
-  <div style="font-weight:900;font-size:22px">NS STORE</div>
-  <p>تصميم عصري وتجربة طلب مباشرة.</p>
-  <p>© <span id="year"></span> NS. جميع الحقوق محفوظة.</p>
+  <div style="font-weight:800;font-size:22px">NS STORE</div>
+  <p>Clean design and direct WhatsApp ordering.</p>
+  <p>© <span id="year"></span> NS. All rights reserved.</p>
 </footer>
 
-<div class="dock" aria-label="تنقل سريع">
-  <a href="#products">المنتجات</a>
-  <a href="#reviews">التقييمات</a>
-  <a href="#about">عن NS</a>
+<div class="dock" aria-label="Quick navigation">
+  <a href="#products">Products</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#about">About</a>
   <button class="dock-cart" onclick="openCart()">
-    <span>السلة</span>
+    <span>Cart</span>
     <span class="badge-num" id="dockCartCount">0</span>
   </button>
 </div>
@@ -1788,56 +1910,56 @@ footer p {
 
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <h2 style="margin:0;font-size:19px;font-weight:900">سلة التسوق</h2>
+    <h2 style="margin:0;font-size:19px;font-weight:800">Shopping Cart</h2>
     <button class="x-btn" onclick="closeCart()">×</button>
   </div>
   <div class="cart-list" id="cartItems"></div>
   <div class="sum-bar">
-    <span>الإجمالي</span>
-    <span id="cartTotal">0 ج.م</span>
+    <span>Total</span>
+    <span id="cartTotal">0 EGP</span>
   </div>
   <div class="order-box">
-    <h3>بيانات الطلب والدفع</h3>
+    <h3>Order &amp; Payment Details</h3>
     <div class="inp-group">
-      <label for="customerName">الاسم بالكامل *</label>
-      <input id="customerName" placeholder="اسمك بالكامل" autocomplete="name" oninput="resetOrderConfirmation()">
+      <label for="customerName">Full Name *</label>
+      <input id="customerName" placeholder="Your full name" autocomplete="name" oninput="resetOrderConfirmation()">
     </div>
     <div class="inp-group">
-      <label for="customerPhone">رقم الموبايل *</label>
+      <label for="customerPhone">Phone Number *</label>
       <input id="customerPhone" type="tel" placeholder="01xxxxxxxxx" autocomplete="tel" oninput="resetOrderConfirmation()">
     </div>
     <div class="inp-group">
-      <label for="customerAddress">العنوان بالتفصيل *</label>
-      <textarea id="customerAddress" rows="2" placeholder="المحافظة، المنطقة، الشارع، رقم العمارة والشقة" oninput="resetOrderConfirmation()"></textarea>
+      <label for="customerAddress">Delivery Address *</label>
+      <textarea id="customerAddress" rows="2" placeholder="City, area, street, building &amp; apartment" oninput="resetOrderConfirmation()"></textarea>
     </div>
 
-    <label style="display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:5px">اختر طريقة الدفع *</label>
-    <div class="pay-methods" role="group" aria-label="اختيارات الدفع">
-      <button type="button" class="pay-opt active" id="pay-cod" onclick="selectPayment('cod')">💵 عند الاستلام</button>
-      <button type="button" class="pay-opt" id="pay-instapay" onclick="selectPayment('instapay')">⚡ رابط InstaPay الثابت</button>
+    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px">Payment Method *</label>
+    <div class="pay-methods" role="group" aria-label="Payment options">
+      <button type="button" class="pay-opt active" id="pay-cod" onclick="selectPayment('cod')">💵 Cash on Delivery</button>
+      <button type="button" class="pay-opt" id="pay-instapay" onclick="selectPayment('instapay')">⚡ InstaPay / Telda Link</button>
     </div>
 
     <div class="instapay-box" id="instapayBox">
-      <div style="font-size:12.5px;font-weight:900;color:var(--burgundy);margin-bottom:4px">حوّل عبر رابط InstaPay الثابت التالي:</div>
-      <div style="font-size:12px;color:var(--ink);font-weight:800;word-break:break-all;background:#fff;padding:7px 9px;border-radius:8px;border:1px solid var(--line)" id="instapayLinkText"></div>
+      <div style="font-size:12.5px;font-weight:800;color:var(--burgundy);margin-bottom:4px">Pay using our official InstaPay / Telda link:</div>
+      <div style="font-size:12px;color:var(--ink);font-weight:700;word-break:break-all;background:#fff;padding:7px 9px;border-radius:8px;border:1px solid var(--line)" id="instapayLinkText"></div>
       <div class="instapay-link-row">
-        <a class="instapay-open-btn" id="instapayOpenLink" href="#" target="_blank" rel="noopener">فتح رابط InstaPay</a>
-        <button type="button" class="instapay-copy-btn" onclick="copyInstaPayLink()">نسخ الرابط</button>
+        <a class="instapay-open-btn" id="instapayOpenLink" href="#" target="_blank" rel="noopener">Open Payment Link</a>
+        <button type="button" class="instapay-copy-btn" onclick="copyInstaPayLink()">Copy Link</button>
       </div>
-      <p class="note-txt">بعد التحويل أو مراجعة البيانات، أكّد الأوردر لإرساله برقم الطلب على واتساب.</p>
+      <p class="note-txt">After transferring or checking your details, confirm your order to send it with your order number on WhatsApp.</p>
     </div>
 
     <div class="confirm-box" id="confirmBox">
-      <div style="font-weight:900;color:#92400e;margin-bottom:4px">✅ تأكيد تفاصيل الأوردر قبل واتساب</div>
+      <div style="font-weight:800;color:#92400e;margin-bottom:4px">✅ Confirm Order Before WhatsApp</div>
       <div id="confirmSummary"></div>
       <div class="confirm-actions">
-        <button type="button" class="wa-btn" onclick="finalizeAndSendWhatsApp()">تأكيد وإرسال إلى WhatsApp</button>
-        <button type="button" class="btn-info" style="padding:10px 12px;border-radius:12px" onclick="resetOrderConfirmation()">تعديل</button>
+        <button type="button" class="wa-btn" onclick="finalizeAndSendWhatsApp()">Confirm &amp; Send on WhatsApp</button>
+        <button type="button" class="btn-info" style="padding:10px 12px;border-radius:12px" onclick="resetOrderConfirmation()">Edit</button>
       </div>
     </div>
 
-    <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">تأكيد الأوردر وترقيمه</button>
-    <p class="note-txt">يتم تسجيل الأوردر وتأكيده قبل واتساب، ويُخصم الاستوك بعد تأكيدك للأوردر من لوحة الإدارة.</p>
+    <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">Confirm &amp; Generate Order #</button>
+    <p class="note-txt">Your order is numbered and logged first; stock is deducted once confirmed in the Admin panel.</p>
   </div>
 </aside>
 
@@ -1846,29 +1968,57 @@ footer p {
   <div class="modal-card" id="modal"></div>
 </div>
 
-<!-- Admin Login Modal -->
-<div class="modal-layer" id="loginWrap" onclick="if(event.target===this)closeAdminLogin()">
-  <div class="login-card">
-    <button class="x-btn" style="position:absolute;left:14px;top:14px" onclick="closeAdminLogin()">×</button>
-    <div class="login-icon">🔐</div>
-    <h3 style="margin:0 0 6px;font-size:20px;font-weight:900">تسجيل دخول الإدارة</h3>
-    <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">أدخل كلمة المرور الخاصة بصاحب المتجر</p>
-    <div class="inp-group" style="text-align:right">
-      <label for="adminPassInput">كلمة المرور</label>
-      <input id="adminPassInput" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')submitAdminLogin()">
+<!-- Admin Edit Product Sale Modal -->
+<div class="modal-layer" id="saleModalWrap" onclick="if(event.target===this)closeSaleModal()">
+  <div class="modal-card" style="width:min(420px,100%)">
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeSaleModal()">×</button>
+    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--burgundy)">🔥 Edit Product Sale</h3>
+    <div id="saleEditProdTitle" style="font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px"></div>
+
+    <div class="inp-group">
+      <label for="editSaleType">Sale Type</label>
+      <select id="editSaleType" onchange="updateEditSaleCalc()">
+        <option value="none">No Sale (Original Price)</option>
+        <option value="percent">Percentage Sale (%)</option>
+        <option value="amount">Fixed Amount Sale (EGP)</option>
+      </select>
     </div>
-    <button class="btn-add" style="width:100%;padding:11px;border-radius:11px;margin-top:4px" onclick="submitAdminLogin()">دخول</button>
+
+    <div class="inp-group">
+      <label for="editSaleVal" id="editSaleValLabel">Sale Value</label>
+      <input id="editSaleVal" type="number" min="0" step="any" placeholder="e.g. 15 or 100" oninput="updateEditSaleCalc()">
+    </div>
+
+    <div class="sale-live-calc" id="editSaleCalc" style="margin-bottom:14px"></div>
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="btn-add" style="padding:10px;border-radius:11px" onclick="saveEditedProductSale()">Save Sale</button>
+      <button type="button" class="del-btn" style="padding:10px 14px;border-radius:11px" onclick="clearEditedProductSale()">Remove Sale</button>
+    </div>
   </div>
 </div>
 
-<div class="toast" id="toast">تمت الإضافة للسلة ✓</div>
+<!-- Admin Login Modal -->
+<div class="modal-layer" id="loginWrap" onclick="if(event.target===this)closeAdminLogin()">
+  <div class="login-card">
+    <button class="x-btn" style="position:absolute;right:14px;top:14px" onclick="closeAdminLogin()">×</button>
+    <div class="login-icon">🔐</div>
+    <h3 style="margin:0 0 6px;font-size:20px;font-weight:800">Admin Sign In</h3>
+    <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">Enter the store Admin password</p>
+    <div class="inp-group" style="text-align:left">
+      <label for="adminPassInput">Password</label>
+      <input id="adminPassInput" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')submitAdminLogin()">
+    </div>
+    <button class="btn-add" style="width:100%;padding:11px;border-radius:11px;margin-top:4px" onclick="submitAdminLogin()">Sign In</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Added to Cart ✓</div>
 
 <script>
-// عدّل رقم الواتساب وكلمة مرور الأدمن ورابط InstaPay الثابت هنا
-// لو عاوز تحط رابط صورة مخصصة للوجو بدل اللوجو 3D المجسّم اكتب الرابط في CUSTOM_LOGO_SRC
 const WHATSAPP_NUMBER = "201128887442";
 const ADMIN_PASS = "admin123";
-const CURRENCY = "ج.م";
+const CURRENCY = "EGP";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
 const CUSTOM_LOGO_SRC = "";
 
@@ -1895,20 +2045,11 @@ const LOGO_3D_SVG = `
     </linearGradient>
   </defs>
 
-  <!-- 3D Extruded Base Layer -->
   <path d="M50 11L85 30V70L50 89L15 70V30L50 11Z" fill="url(#ns3dDepth)" transform="translate(0, 4.5)"/>
-
-  <!-- Main 3D Faceted Emblem -->
   <path d="M50 9L85 28V68L50 87L15 68V28L50 9Z" fill="url(#ns3dBody)" stroke="url(#ns3dGold)" stroke-width="2.4"/>
-
-  <!-- Top Bevel Highlight -->
   <path d="M50 11.5L82.5 29.5L50 47L17.5 29.5L50 11.5Z" fill="url(#ns3dShine)"/>
-
-  <!-- 3D Monogram Shadow -->
   <path d="M27 63V36L45 58V35M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
         stroke="#16040a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(1.5, 3)"/>
-
-  <!-- Crisp 3D Monogram Front -->
   <path d="M27 63V36L45 58V35" stroke="#fff7f9" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
         stroke="url(#ns3dGold)" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1916,6 +2057,21 @@ const LOGO_3D_SVG = `
 `;
 
 const defaultProducts = [
+  {
+    "id": 12,
+    "name": "wdwd",
+    "category": "wd",
+    "price": 1000,
+    "saleType": "percent",
+    "saleValue": 20,
+    "stock": 8,
+    "tag": "nice",
+    "desc": "dsdsds",
+    "images": [
+      "https://media.discordapp.net/attachments/1499065232528773231/1566962883529547867/temp_image_6E636BF3-2AEB-49F5-9FBE-8505462B34B3.webp?ex=6b096ea8&is=6b081d28&hm=72d6aba463c5b9cb6bfbe2405d2158085ab50d1b3393dcef4d07e67d5f3f6c4f&format=webp&width=575&height=1024",
+      "https://media.discordapp.net/attachments/1499065232528773231/1566962886256099388/temp_image_0A7D9FD5-1FF6-4859-A7CF-DB22382FAB98.webp?ex=6b096ea8&is=6b081d28&hm=9faccb71192b413ccbb5a32373395b3e6de8cf7f697bf4bb08c59f9b9589887f&format=webp&width=768&height=1024"
+    ]
+  },
   {
     "id": 11,
     "name": "car",
@@ -1928,7 +2084,9 @@ const defaultProducts = [
       "https://media.discordapp.net/attachments/1499065232528773231/1575576445726752860/IMG_0317.png?ex=6b09c969&is=6b0877e9&hm=5c36f56adb952edcc080526f66350629f4eaf88f755a6357f737c27d81a0990b&format=webp&quality=lossless&width=512&height=436",
       "https://media.discordapp.net/attachments/1499065232528773231/1566962886256099388/temp_image_0A7D9FD5-1FF6-4859-A7CF-DB22382FAB98.webp?ex=6b096ea8&is=6b081d28&hm=9faccb71192b413ccbb5a32373395b3e6de8cf7f697bf4bb08c59f9b9589887f&format=webp&width=768&height=1024",
       "https://media.discordapp.net/attachments/1499065232528773231/1566962883529547867/temp_image_6E636BF3-2AEB-49F5-9FBE-8505462B34B3.webp?ex=6b096ea8&is=6b081d28&hm=72d6aba463c5b9cb6bfbe2405d2158085ab50d1b3393dcef4d07e67d5f3f6c4f&format=webp&width=575&height=1024"
-    ]
+    ],
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 10,
@@ -1940,7 +2098,9 @@ const defaultProducts = [
     "desc": "f",
     "images": [
       "https://media.discordapp.net/attachments/1499065232528773231/1566971274461323284/temp_image_B179754C-C3CD-405D-B3FD-4AB636CAD2CF.webp?ex=6b097678&is=6b0824f8&hm=e1a080c934083542fce483ac04abafcc6247bff61b2b2dc6932fd9d4aa300ee7&format=webp&width=768&height=1024"
-    ]
+    ],
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 9,
@@ -1954,7 +2114,9 @@ const defaultProducts = [
       "https://media.discordapp.net/attachments/1499065232528773231/1566971274461323284/temp_image_B179754C-C3CD-405D-B3FD-4AB636CAD2CF.webp?ex=6b097678&is=6b0824f8&hm=e1a080c934083542fce483ac04abafcc6247bff61b2b2dc6932fd9d4aa300ee7&format=webp&width=768&height=1024",
       "https://media.discordapp.net/attachments/1499065232528773231/1566971275132403773/temp_image_29534273-26CA-4690-AC81-345552E2338E.webp?ex=6b097678&is=6b0824f8&hm=7a813f8f9d7e780b8c1c41fa0aa878fd3633c239cd9dda6ab61d327725f5b179&format=webp&width=768&height=1024"
     ],
-    "stock": 2
+    "stock": 2,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 1,
@@ -1969,7 +2131,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 2,
@@ -1984,7 +2148,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 9
+    "stock": 9,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 3,
@@ -1999,7 +2165,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 4,
@@ -2014,7 +2182,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 5,
@@ -2029,7 +2199,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1509695507497-903c140c43b0?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 6,
@@ -2044,7 +2216,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1591290619762-c588f56e29b9?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 7,
@@ -2059,7 +2233,9 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   },
   {
     "id": 8,
@@ -2074,30 +2250,116 @@ const defaultProducts = [
       "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&w=700&q=75",
       "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=700&q=75"
     ],
-    "stock": 8
+    "stock": 8,
+    "saleType": "none",
+    "saleValue": 0
   }
 ];
-  
+
+function normalizeSaleFields(p) {
+  const basePrice = Math.max(1, Number(p.price) || 1);
+  const rawType = p.saleType || "none";
+  const rawVal = Math.max(0, Number(p.saleValue) || 0);
+  if (rawType === "percent" && rawVal > 0) {
+    const pct = Math.min(95, rawVal);
+    return { ...p, price: basePrice, saleType: "percent", saleValue: pct };
+  }
+  if (rawType === "amount" && rawVal > 0) {
+    const amt = Math.min(basePrice - 1, rawVal);
+    return amt > 0
+      ? { ...p, price: basePrice, saleType: "amount", saleValue: amt }
+      : { ...p, price: basePrice, saleType: "none", saleValue: 0 };
+  }
+  return { ...p, price: basePrice, saleType: "none", saleValue: 0 };
+}
+
+function computeSaleInfo(basePrice, saleType, saleValue) {
+  const original = Math.max(1, Number(basePrice) || 1);
+  const type = saleType || "none";
+  const val = Math.max(0, Number(saleValue) || 0);
+
+  if (type === "percent" && val > 0) {
+    const pct = Math.min(95, val);
+    const discountAmt = Math.round((original * pct) / 100);
+    const finalPrice = Math.max(1, original - discountAmt);
+    const actualSaved = Math.max(0, original - finalPrice);
+    if (actualSaved > 0) {
+      return {
+        hasSale: true,
+        originalPrice: original,
+        finalPrice,
+        savedAmount: actualSaved,
+        badgeText: `🔥 SALE -${pct}%`,
+        labelText: `Sale -${pct}%`
+      };
+    }
+  }
+
+  if (type === "amount" && val > 0) {
+    const discountAmt = Math.min(original - 1, val);
+    const finalPrice = Math.max(1, original - discountAmt);
+    const actualSaved = Math.max(0, original - finalPrice);
+    if (actualSaved > 0) {
+      return {
+        hasSale: true,
+        originalPrice: original,
+        finalPrice,
+        savedAmount: actualSaved,
+        badgeText: `🔥 SALE -${money(actualSaved)}`,
+        labelText: `Sale -${money(actualSaved)}`
+      };
+    }
+  }
+
+  return {
+    hasSale: false,
+    originalPrice: original,
+    finalPrice: original,
+    savedAmount: 0,
+    badgeText: "",
+    labelText: ""
+  };
+}
+
+function getSaleInfo(p) {
+  return computeSaleInfo(p.price, p.saleType, p.saleValue);
+}
+
+function priceHtml(p, large = false) {
+  const s = getSaleInfo(p);
+  if (!s.hasSale) {
+    return `<div class="price-box"><span class="card-price" style="${large ? 'font-size:21px' : ''}">${money(s.finalPrice)}</span></div>`;
+  }
+  return `
+    <div class="price-box">
+      <span class="card-price sale-active" style="${large ? 'font-size:22px' : ''}">${money(s.finalPrice)}</span>
+      <span class="old-price">${money(s.originalPrice)}</span>
+      <span class="save-chip">Save ${money(s.savedAmount)}</span>
+    </div>
+  `;
+}
+
 let logoValue = CUSTOM_LOGO_SRC.trim() || localStorage.getItem("ns_logo_custom") || "";
-let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => ({
+let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => normalizeSaleFields({
   ...p,
   stock: Math.max(0, Number(p.stock ?? 10))
 }));
 let cart = JSON.parse(localStorage.getItem("ns_cart") || "[]");
 let orders = JSON.parse(localStorage.getItem("ns_orders") || "[]");
-let activeCategory = "الكل";
+let activeCategory = "All";
 let isAdmin = sessionStorage.getItem("ns_admin") === "1";
 let activeAdminTab = "orders";
 let uploadedAdminImgs = [];
+let editingSaleProductId = null;
 let selectedPayment = "cod";
 let pendingOrderData = null;
 let brandClickCount = 0;
 let brandClickTimer = null;
 
 let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || [
-  {name: "مريم", stars: 5, text: "التجربة كانت سهلة والمنتج وصل بحالة ممتازة. شكراً NS!"},
-  {name: "عمر", stars: 5, text: "التعامل محترم والطلب اتأكد بسرعة على واتساب."},
-  {name: "سارة", stars: 4, text: "تنوع حلو في المنتجات والموقع سهل الاستخدام."}
+  {name: "Mariam", stars: 5, text: "Smooth ordering and my item arrived in great shape. Thanks NS!"},
+  {name: "Omar", stars: 5, text: "Helpful service and quick confirmation on WhatsApp."},
+  {name: "Sara", stars: 4, text: "Nice variety of everyday products and easy to browse."}
 ];
 
 const cardIdxMap = {};
@@ -2114,7 +2376,7 @@ const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice
 function renderLogoMarkup(src) {
   const clean = (src || "").trim();
   if (!clean) return LOGO_3D_SVG;
-  return `<img src="${escapeHtml(clean)}" alt="لوجو متجر NS">`;
+  return `<img src="${escapeHtml(clean)}" alt="NS Store logo">`;
 }
 
 function applyLogo(src, persist = true) {
@@ -2132,7 +2394,7 @@ function applyLogo(src, persist = true) {
       if (clean) localStorage.setItem("ns_logo_custom", clean);
       else localStorage.removeItem("ns_logo_custom");
     } catch (err) {
-      alert("حجم صورة اللوجو كبير على التخزين المحلي، جرّب صورة أصغر.");
+      alert("Logo image is too large for local storage. Try a smaller image.");
     }
   }
 }
@@ -2165,7 +2427,7 @@ async function handleLogoUpload(e) {
   if (!file) return;
   const dataUrl = await resizeImageToDataUrl(file, 260, 0.9, "image/png");
   applyLogo(dataUrl, true);
-  showToast("تم تطبيق الصورة كـ لوجو 3D بدون فريم ✓");
+  showToast("Frameless 3D logo updated ✓");
 }
 
 function handleLogoUrlInput(e) {
@@ -2177,24 +2439,120 @@ function handleLogoUrlInput(e) {
 function saveLogoUrlFromInput() {
   const val = document.getElementById("admLogoUrl").value.trim();
   if (!val) {
-    alert("اكتب رابط صورة أولاً.");
+    alert("Enter an image URL first.");
     return;
   }
   applyLogo(val, true);
-  showToast("تم حفظ صورة اللوجو ✓");
+  showToast("Logo URL saved ✓");
 }
 
 function resetDefaultLogo() {
   document.getElementById("admLogoFile").value = "";
   document.getElementById("admLogoUrl").value = "";
   applyLogo("", true);
-  showToast("تمت استعادة اللوجو 3D المجسّم ✓");
+  showToast("Default 3D logo restored ✓");
+}
+
+function updateSalePreviewCalc() {
+  const price = Number(document.getElementById("admPrice").value) || 0;
+  const type = document.getElementById("admSaleType").value;
+  const val = Number(document.getElementById("admSaleVal").value) || 0;
+  const labelEl = document.getElementById("admSaleValLabel");
+  const calcEl = document.getElementById("admSaleCalc");
+
+  if (type === "percent") {
+    labelEl.textContent = "Sale Percentage (%)";
+    document.getElementById("admSaleVal").placeholder = "e.g. 20";
+  } else if (type === "amount") {
+    labelEl.textContent = "Sale Amount (EGP)";
+    document.getElementById("admSaleVal").placeholder = "e.g. 100";
+  } else {
+    labelEl.textContent = "Sale Value";
+  }
+
+  if (!price || type === "none" || val <= 0) {
+    calcEl.textContent = price > 0 ? `Final Price: ${money(price)} (No Sale)` : "Final Price: No Sale";
+    return;
+  }
+
+  const info = computeSaleInfo(price, type, val);
+  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
+}
+
+function openSaleModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editingSaleProductId = id;
+  document.getElementById("saleEditProdTitle").textContent = `${p.name} — Original Price: ${money(p.price)}`;
+  document.getElementById("editSaleType").value = p.saleType || "none";
+  document.getElementById("editSaleVal").value = p.saleType && p.saleType !== "none" ? (p.saleValue || "") : "";
+  updateEditSaleCalc();
+  document.getElementById("saleModalWrap").classList.add("show");
+}
+
+function closeSaleModal() {
+  editingSaleProductId = null;
+  document.getElementById("saleModalWrap").classList.remove("show");
+}
+
+function updateEditSaleCalc() {
+  const p = products.find(x => x.id === editingSaleProductId);
+  if (!p) return;
+  const type = document.getElementById("editSaleType").value;
+  const val = Number(document.getElementById("editSaleVal").value) || 0;
+  const labelEl = document.getElementById("editSaleValLabel");
+  const calcEl = document.getElementById("editSaleCalc");
+
+  if (type === "percent") labelEl.textContent = "Sale Percentage (%)";
+  else if (type === "amount") labelEl.textContent = "Sale Amount (EGP)";
+  else labelEl.textContent = "Sale Value";
+
+  if (type === "none" || val <= 0) {
+    calcEl.textContent = `Final Price: ${money(p.price)} (No Sale)`;
+    return;
+  }
+  const info = computeSaleInfo(p.price, type, val);
+  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
+}
+
+function saveEditedProductSale() {
+  const p = products.find(x => x.id === editingSaleProductId);
+  if (!p) return;
+  const type = document.getElementById("editSaleType").value;
+  const val = Number(document.getElementById("editSaleVal").value) || 0;
+
+  if (type !== "none" && val <= 0) {
+    alert("Enter a Sale value greater than 0 or choose No Sale.");
+    return;
+  }
+  if (type === "percent" && val > 95) {
+    alert("Maximum Sale discount is 95%.");
+    return;
+  }
+  if (type === "amount" && val >= p.price) {
+    alert("Sale amount must be less than the original price.");
+    return;
+  }
+
+  Object.assign(p, normalizeSaleFields({ ...p, saleType: type, saleValue: val }));
+  localStorage.setItem("ns_products", JSON.stringify(products));
+  closeSaleModal();
+  renderProducts();
+  renderCart();
+  renderAdminManageList();
+  showToast("Sale updated ✓");
+}
+
+function clearEditedProductSale() {
+  document.getElementById("editSaleType").value = "none";
+  document.getElementById("editSaleVal").value = "";
+  saveEditedProductSale();
 }
 
 function stockBadgeHtml(stock) {
-  if (stock <= 0) return '<span class="stock-pill out">نفدت الكمية</span>';
-  if (stock <= 3) return `<span class="stock-pill low">متبقي ${stock} فقط</span>`;
-  return `<span class="stock-pill">متاح: ${stock}</span>`;
+  if (stock <= 0) return '<span class="stock-pill out">Sold Out</span>';
+  if (stock <= 3) return `<span class="stock-pill low">Only ${stock} left</span>`;
+  return `<span class="stock-pill">In Stock: ${stock}</span>`;
 }
 
 function escapeHtml(s) {
@@ -2218,9 +2576,9 @@ function initInstaPayDisplay() {
 
 function copyInstaPayLink() {
   navigator.clipboard.writeText(INSTAPAY_LINK).then(() => {
-    showToast("تم نسخ رابط InstaPay ✓");
+    showToast("Payment link copied ✓");
   }).catch(() => {
-    alert("تعذر النسخ التلقائي.");
+    alert("Unable to copy automatically.");
   });
 }
 
@@ -2264,10 +2622,10 @@ function submitAdminLogin() {
     sessionStorage.setItem("ns_admin", "1");
     closeAdminLogin();
     syncAdminUI();
-    showToast("تم تسجيل الدخول كأدمن بنجاح ✓");
+    showToast("Signed in as Admin ✓");
     scrollToAdmin();
   } else {
-    alert("كلمة المرور غير صحيحة.");
+    alert("Incorrect password.");
   }
 }
 
@@ -2275,7 +2633,7 @@ function logoutAdmin() {
   isAdmin = false;
   sessionStorage.removeItem("ns_admin");
   syncAdminUI();
-  showToast("تم تسجيل الخروج من الإدارة");
+  showToast("Signed out of Admin");
 }
 
 function scrollToAdmin() {
@@ -2289,7 +2647,10 @@ function switchAdminTab(tab) {
   document.getElementById("adminTabOrders").style.display = tab === "orders" ? "block" : "none";
   document.getElementById("adminTabProducts").style.display = tab === "products" ? "block" : "none";
   if (tab === "orders") renderAdminOrders();
-  if (tab === "products") renderAdminManageList();
+  if (tab === "products") {
+    updateSalePreviewCalc();
+    renderAdminManageList();
+  }
 }
 
 function syncAdminUI() {
@@ -2319,7 +2680,7 @@ function confirmOrderAndDeductStock(orderNumber) {
     const p = products.find(y => y.id === item.id);
     const available = p ? getStock(p) : 0;
     if (!p || available < item.qty) {
-      alert(`لا يمكن تأكيد الأوردر: الاستوك المتاح من "${item.name}" هو ${available} فقط والمطلوب ${item.qty}.`);
+      alert(`Cannot confirm order: only ${available} of "${item.name}" in stock (${item.qty} requested).`);
       return;
     }
   }
@@ -2339,13 +2700,13 @@ function confirmOrderAndDeductStock(orderNumber) {
   renderCart();
   renderAdminOrders();
   renderAdminManageList();
-  showToast(`تم تأكيد الأوردر #${orderNumber} وخصم الاستوك ✓`);
+  showToast(`Order #${orderNumber} confirmed & stock updated ✓`);
 }
 
 function cancelOrderInAdmin(orderNumber) {
   const order = orders.find(o => o.orderNumber === orderNumber);
   if (!order || order.status === "cancelled") return;
-  if (!confirm(`إلغاء الأوردر #${orderNumber}؟`)) return;
+  if (!confirm(`Cancel order #${orderNumber}?`)) return;
 
   if (order.stockDeducted) {
     order.items.forEach(item => {
@@ -2364,15 +2725,15 @@ function cancelOrderInAdmin(orderNumber) {
   renderCart();
   renderAdminOrders();
   renderAdminManageList();
-  showToast(`تم إلغاء الأوردر #${orderNumber}`);
+  showToast(`Order #${orderNumber} cancelled`);
 }
 
 function deleteOrderFromHistory(orderNumber) {
-  if (!confirm(`حذف سجل الأوردر #${orderNumber} نهائياً؟`)) return;
+  if (!confirm(`Permanently delete order #${orderNumber} from history?`)) return;
   orders = orders.filter(o => o.orderNumber !== orderNumber);
   saveOrders();
   renderAdminOrders();
-  showToast("تم حذف سجل الأوردر");
+  showToast("Order removed from log");
 }
 
 function renderAdminOrders() {
@@ -2381,41 +2742,41 @@ function renderAdminOrders() {
 
   const box = document.getElementById("admOrdersList");
   if (!orders.length) {
-    box.innerHTML = '<div class="empty-msg">لا توجد أوردرات مسجلة بعد.</div>';
+    box.innerHTML = '<div class="empty-msg">No orders logged yet.</div>';
     return;
   }
 
   box.innerHTML = orders.map(o => {
     let badgeClass = "pending";
-    let badgeText = "بانتظار تأكيدك (لم يُخصم الاستوك)";
+    let badgeText = "Pending Admin Confirm (Stock Not Deducted)";
     if (o.status === "confirmed") {
       badgeClass = "confirmed";
-      badgeText = "مؤكد وتم خصم الاستوك ✓";
+      badgeText = "Confirmed & Stock Deducted ✓";
     } else if (o.status === "cancelled") {
       badgeClass = "cancelled";
-      badgeText = "ملغي";
+      badgeText = "Cancelled";
     }
 
     return `
       <div class="order-card">
         <div class="order-card-head">
           <div>
-            <strong style="font-size:15px">أوردر #${escapeHtml(o.orderNumber)}</strong>
-            <span style="font-size:11.5px;color:var(--muted);margin-right:8px">${escapeHtml(o.createdAt || "")}</span>
+            <strong style="font-size:15px">Order #${escapeHtml(o.orderNumber)}</strong>
+            <span style="font-size:11.5px;color:var(--muted);margin-left:8px">${escapeHtml(o.createdAt || "")}</span>
           </div>
           <span class="status-pill ${badgeClass}">${badgeText}</span>
         </div>
-        <div style="font-size:13px"><b>العميل:</b> ${escapeHtml(o.name)} — <b>موبايل:</b> ${escapeHtml(o.phone)}</div>
-        <div style="font-size:12.5px;color:var(--muted)"><b>العنوان:</b> ${escapeHtml(o.address)}</div>
-        <div style="font-size:12.5px;margin-top:4px"><b>الدفع:</b> ${escapeHtml(o.paymentText)}</div>
+        <div style="font-size:13px"><b>Customer:</b> ${escapeHtml(o.name)} — <b>Phone:</b> ${escapeHtml(o.phone)}</div>
+        <div style="font-size:12.5px;color:var(--muted)"><b>Address:</b> ${escapeHtml(o.address)}</div>
+        <div style="font-size:12.5px;margin-top:4px"><b>Payment:</b> ${escapeHtml(o.paymentText)}</div>
         <div class="order-items-box">
           ${o.items.map(it => `<div>• ${escapeHtml(it.name)} × ${it.qty} = ${money(it.price * it.qty)}</div>`).join("")}
-          <div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-weight:900">الإجمالي: ${money(o.total)}</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-weight:800">Total: ${money(o.total)}</div>
         </div>
         <div class="order-actions">
-          ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">✓ كونفيرم وخصم الاستوك</button>` : ""}
-          ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">إلغاء الأوردر</button>` : ""}
-          <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">حذف من السجل</button>
+          ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">✓ Confirm &amp; Deduct Stock</button>` : ""}
+          ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">Cancel Order</button>` : ""}
+          <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">Delete</button>
         </div>
       </div>
     `;
@@ -2427,7 +2788,7 @@ async function handleAdminImages(e) {
   if (!files.length) return;
   uploadedAdminImgs = await Promise.all(files.map(f => resizeImageToDataUrl(f, 750, 0.78, "image/jpeg")));
   document.getElementById("admPreview").innerHTML = uploadedAdminImgs
-    .map(src => `<img src="${src}" alt="معاينة">`)
+    .map(src => `<img src="${src}" alt="Preview">`)
     .join("");
 }
 
@@ -2437,6 +2798,8 @@ function adminAddProduct() {
   const price = Number(document.getElementById("admPrice").value);
   const stockRaw = document.getElementById("admStock").value;
   const stock = Math.max(0, Number(stockRaw));
+  const saleType = document.getElementById("admSaleType").value;
+  const saleValue = Number(document.getElementById("admSaleVal").value) || 0;
   const tag = document.getElementById("admTag").value.trim();
   const desc = document.getElementById("admDesc").value.trim();
   const urlLines = document.getElementById("admUrls").value
@@ -2447,23 +2810,35 @@ function adminAddProduct() {
   const finalImages = [...uploadedAdminImgs, ...urlLines].slice(0, 4);
 
   if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) {
-    alert("من فضلك املأ الاسم والقسم والسعر والاستوك والوصف.");
+    alert("Please fill in Name, Category, Original Price, Stock, and Description.");
+    return;
+  }
+  if (saleType !== "none" && saleValue <= 0) {
+    alert("Enter a Sale value greater than 0 or select No Sale.");
+    return;
+  }
+  if (saleType === "percent" && saleValue > 95) {
+    alert("Maximum Sale discount is 95%.");
+    return;
+  }
+  if (saleType === "amount" && saleValue >= price) {
+    alert("Sale amount must be less than the original price.");
     return;
   }
   if (!finalImages.length) {
-    alert("ارفع صورة واحدة على الأقل أو حط رابط صورة.");
+    alert("Upload at least one image or add an image URL.");
     return;
   }
 
   const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-  const newProd = { id: newId, name, category, price, stock, tag, desc, images: finalImages };
+  const newProd = normalizeSaleFields({ id: newId, name, category, price, saleType, saleValue, stock, tag, desc, images: finalImages });
   products.unshift(newProd);
   cardIdxMap[newId] = 0;
 
   try {
     localStorage.setItem("ns_products", JSON.stringify(products));
   } catch (err) {
-    alert("مساحة التخزين ممتلئة، جرب صور أقل حجماً أو روابط صور.");
+    alert("Storage is full. Try fewer/smaller photos or image URLs.");
     products.shift();
     return;
   }
@@ -2472,21 +2847,24 @@ function adminAddProduct() {
   document.getElementById("admCat").value = "";
   document.getElementById("admPrice").value = "";
   document.getElementById("admStock").value = "10";
+  document.getElementById("admSaleType").value = "none";
+  document.getElementById("admSaleVal").value = "";
   document.getElementById("admTag").value = "";
   document.getElementById("admDesc").value = "";
   document.getElementById("admFiles").value = "";
   document.getElementById("admUrls").value = "";
   document.getElementById("admPreview").innerHTML = "";
   uploadedAdminImgs = [];
+  updateSalePreviewCalc();
 
   renderFilters();
   renderProducts();
   renderAdminManageList();
-  showToast("تمت إضافة المنتج بنجاح ✓");
+  showToast("Product published ✓");
 }
 
 function adminDeleteProduct(id) {
-  if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
+  if (!confirm("Delete this product?")) return;
   products = products.filter(p => p.id !== id);
   cart = cart.filter(c => c.id !== id);
   localStorage.setItem("ns_products", JSON.stringify(products));
@@ -2494,31 +2872,38 @@ function adminDeleteProduct(id) {
   renderFilters();
   renderProducts();
   renderAdminManageList();
-  showToast("تم حذف المنتج");
+  showToast("Product deleted");
 }
 
 function renderAdminManageList() {
   document.getElementById("admProdCount").textContent = products.length;
-  document.getElementById("admProdList").innerHTML = products.map(p => `
-    <div class="manage-item">
-      <div class="manage-item-info">
-        <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
-        <div>
-          <div style="font-weight:800;font-size:13px">${escapeHtml(p.name)}</div>
-          <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • استوك: ${getStock(p)}</div>
+  document.getElementById("admProdList").innerHTML = products.map(p => {
+    const s = getSaleInfo(p);
+    const saleTag = s.hasSale ? ` • <b style="color:#b45309">${escapeHtml(s.badgeText)} (${money(s.finalPrice)})</b>` : "";
+    return `
+      <div class="manage-item">
+        <div class="manage-item-info">
+          <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
+          <div>
+            <div style="font-weight:800;font-size:13px">${escapeHtml(p.name)}</div>
+            <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • Stock: ${getStock(p)}${saleTag}</div>
+          </div>
+        </div>
+        <div class="manage-item-actions">
+          <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">Sale</button>
+          <button type="button" class="del-btn" onclick="adminDeleteProduct(${p.id})">Delete</button>
         </div>
       </div>
-      <button class="del-btn" onclick="adminDeleteProduct(${p.id})">حذف</button>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function copyExportCode() {
   const code = "const defaultProducts = " + JSON.stringify(products, null, 2) + ";";
   navigator.clipboard.writeText(code).then(() => {
-    showToast("تم نسخ كود المنتجات! الصقه في الكود الأساسي ✓");
+    showToast("Products code copied! Paste it into defaultProducts ✓");
   }).catch(() => {
-    alert("تعذر النسخ التلقائي.");
+    alert("Unable to copy automatically.");
   });
 }
 
@@ -2530,8 +2915,8 @@ function saveCart() {
 }
 
 function renderFilters() {
-  const cats = ["الكل", ...new Set(products.map(p => p.category))];
-  if (!cats.includes(activeCategory)) activeCategory = "الكل";
+  const cats = ["All", ...new Set(products.map(p => p.category))];
+  if (!cats.includes(activeCategory)) activeCategory = "All";
   document.getElementById("filters").innerHTML = cats.map(c =>
     `<button class="cat-btn ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
   ).join("");
@@ -2544,25 +2929,29 @@ function setCategory(c) {
 }
 
 function visibleProducts() {
-  return activeCategory === "الكل" ? products : products.filter(p => p.category === activeCategory);
+  return activeCategory === "All" ? products : products.filter(p => p.category === activeCategory);
 }
 
 function renderProducts() {
   const list = visibleProducts();
-  document.getElementById("productTotal").textContent = list.length + " منتجات";
+  document.getElementById("productTotal").textContent = list.length + (list.length === 1 ? " item" : " items");
   document.getElementById("productGrid").innerHTML = list.map((p, idx) => {
     const imgs = getImgs(p);
     const cur = (cardIdxMap[p.id] || 0) % imgs.length;
     const stock = getStock(p);
+    const sale = getSaleInfo(p);
     const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
     const canAddMore = stock > 0 && inCartQty < stock;
 
     return `
-      <article class="card" onmouseenter="hoveredSet.add(${p.id})" onmouseleave="hoveredSet.delete(${p.id})">
+      <article class="card ${sale.hasSale ? 'is-sale' : ''}" onmouseenter="hoveredSet.add(${p.id})" onmouseleave="hoveredSet.delete(${p.id})">
         <div class="card-media" onclick="showDetails(${p.id})">
           <img id="p-img-${p.id}" src="${imgs[cur]}" alt="${escapeHtml(p.name)}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async">
-          ${p.tag ? `<span class="ribbon">${escapeHtml(p.tag)}</span>` : ""}
-          ${stock <= 0 ? `<div class="out-overlay">نفدت الكمية</div>` : ""}
+          <div class="top-badges">
+            ${p.tag ? `<span class="ribbon">${escapeHtml(p.tag)}</span>` : "<span></span>"}
+            ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ""}
+          </div>
+          ${stock <= 0 ? `<div class="out-overlay">Sold Out</div>` : ""}
           <span class="img-step" id="p-step-${p.id}">${cur + 1}/${imgs.length}</span>
           ${imgs.length > 1 ? `<div class="dots-row" id="p-dots-${p.id}">${imgs.map((_, i) => `<span class="dot-item ${i === cur ? 'active' : ''}"></span>`).join("")}</div>` : ""}
         </div>
@@ -2573,10 +2962,10 @@ function renderProducts() {
           </div>
           <h3 class="card-title">${escapeHtml(p.name)}</h3>
           <p class="card-desc">${escapeHtml(p.desc)}</p>
-          <div class="card-price">${money(p.price)}</div>
+          ${priceHtml(p, false)}
           <div class="card-actions">
-            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "غير متاح" : (canAddMore ? "أضف للسلة" : "الحد الأقصى في السلة")}</button>
-            <button class="btn-info" onclick="showDetails(${p.id})">التفاصيل</button>
+            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
+            <button class="btn-info" onclick="showDetails(${p.id})">Details</button>
           </div>
         </div>
       </article>
@@ -2612,20 +3001,20 @@ function addToCart(id) {
   if (!p) return;
   const stock = getStock(p);
   if (stock <= 0) {
-    alert("هذا المنتج نفد من الاستوك حالياً.");
+    alert("This product is currently out of stock.");
     return;
   }
   const found = cart.find(x => x.id === id);
   const currentQty = found ? found.qty : 0;
   if (currentQty + 1 > stock) {
-    alert(`الحد الأقصى المتاح من هذا المنتج هو ${stock} فقط.`);
+    alert(`Only ${stock} available in stock.`);
     return;
   }
   if (found) found.qty++;
   else cart.push({id, qty: 1});
   saveCart();
   renderProducts();
-  showToast("تمت إضافة المنتج للسلة ✓");
+  showToast("Added to Cart ✓");
   openCart();
 }
 
@@ -2636,7 +3025,7 @@ function changeQty(id, delta) {
   const stock = getStock(p);
   const nextQty = found.qty + delta;
   if (delta > 0 && nextQty > stock) {
-    alert(`الكمية المتاحة في الاستوك هي ${stock} فقط.`);
+    alert(`Only ${stock} available in stock.`);
     return;
   }
   found.qty = nextQty;
@@ -2663,7 +3052,7 @@ function renderCart() {
   const count = cart.reduce((s, x) => s + x.qty, 0);
   const total = cart.reduce((s, x) => {
     const p = products.find(y => y.id === x.id);
-    return s + (p ? x.qty * p.price : 0);
+    return s + (p ? x.qty * getSaleInfo(p).finalPrice : 0);
   }, 0);
   document.getElementById("cartCount").textContent = count;
   document.getElementById("dockCartCount").textContent = count;
@@ -2673,22 +3062,26 @@ function renderCart() {
     const p = products.find(y => y.id === x.id);
     if (!p) return "";
     const stock = getStock(p);
+    const sale = getSaleInfo(p);
+    const unitPriceLine = sale.hasSale
+      ? `<span style="font-weight:800;color:var(--burgundy)">${money(sale.finalPrice)}</span> <s style="font-size:11.5px;color:var(--muted)">${money(sale.originalPrice)}</s>`
+      : `<span style="font-weight:700;color:var(--muted)">${money(sale.finalPrice)}</span>`;
     return `
       <div class="cart-row">
         <div class="cart-thumb"><img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
         <div>
-          <div style="font-weight:800">${escapeHtml(p.name)}</div>
-          <div style="font-size:13px;color:var(--muted);font-weight:700">${money(p.price)} • متاح: ${stock}</div>
+          <div style="font-weight:800">${escapeHtml(p.name)} ${sale.hasSale ? `<span class="save-chip">${escapeHtml(sale.labelText)}</span>` : ""}</div>
+          <div style="font-size:13px">${unitPriceLine} • <span style="font-size:11.5px;color:var(--muted)">In stock: ${stock}</span></div>
           <div class="qty-box">
             <button onclick="changeQty(${p.id},-1)">−</button>
             <span style="font-weight:800">${x.qty}</span>
             <button ${x.qty >= stock ? "disabled" : ""} onclick="changeQty(${p.id},1)">+</button>
           </div>
         </div>
-        <button class="del-btn" onclick="removeItem(${p.id})">حذف</button>
+        <button class="del-btn" onclick="removeItem(${p.id})">Remove</button>
       </div>
     `;
-  }).join("") : '<div class="empty-msg">السلة لسه فاضية 🛍️<br>أضف منتجات لتبدأ طلبك</div>';
+  }).join("") : '<div class="empty-msg">Your Cart is empty 🛍️<br>Add items to get started</div>';
   localStorage.setItem("ns_cart", JSON.stringify(cart));
 }
 
@@ -2729,14 +3122,14 @@ function generateNextOrderNumber() {
 
 function getPaymentLabel() {
   if (selectedPayment === "instapay") {
-    return `InstaPay (${INSTAPAY_LINK})`;
+    return `InstaPay / Telda (${INSTAPAY_LINK})`;
   }
-  return "الدفع عند الاستلام (Cash)";
+  return "Cash on Delivery";
 }
 
 function prepareOrderConfirmation() {
   if (!cart.length) {
-    alert("السلة فاضية. أضف منتج واحد على الأقل.");
+    alert("Your Cart is empty. Add at least one item first.");
     return;
   }
 
@@ -2745,28 +3138,34 @@ function prepareOrderConfirmation() {
     const p = products.find(y => y.id === item.id);
     const stock = p ? getStock(p) : 0;
     if (!p || stock <= 0) {
-      alert(`المنتج "${p ? p.name : "المحدد"}" نفد من الاستوك. احذفه من السلة أولاً.`);
+      alert(`"${p ? p.name : "Selected item"}" is sold out. Please remove it from your Cart.`);
       renderCart();
       renderProducts();
       return;
     }
     if (item.qty > stock) {
-      alert(`الكمية المطلوبة من "${p.name}" (${item.qty}) أكبر من الاستوك المتاح (${stock}).`);
+      alert(`Requested quantity for "${p.name}" (${item.qty}) exceeds available stock (${stock}).`);
       renderCart();
       return;
     }
-    orderItems.push({ id: p.id, name: p.name, price: p.price, qty: item.qty });
+    const sale = getSaleInfo(p);
+    orderItems.push({
+      id: p.id,
+      name: sale.hasSale ? `${p.name} (${sale.labelText})` : p.name,
+      price: sale.finalPrice,
+      qty: item.qty
+    });
   }
 
   const name = document.getElementById("customerName").value.trim();
   const phone = document.getElementById("customerPhone").value.trim();
   const address = document.getElementById("customerAddress").value.trim();
   if (!name || !phone || !address) {
-    alert("من فضلك اكتب الاسم ورقم الموبايل والعنوان.");
+    alert("Please enter your full name, phone number, and delivery address.");
     return;
   }
   if (!/^(\+?20|0)?1[0125][0-9]{8}$/.test(phone.replace(/[\s-]/g, ""))) {
-    if (!confirm("رقم الموبايل شكله غير معتاد. هل تريد المتابعة؟")) return;
+    if (!confirm("That phone number looks unusual. Continue anyway?")) return;
   }
 
   const lines = orderItems.map(it => `• ${it.name} × ${it.qty} = ${money(it.price * it.qty)}`);
@@ -2783,18 +3182,18 @@ function prepareOrderConfirmation() {
     total,
     paymentText,
     items: orderItems,
-    createdAt: new Date().toLocaleString("ar-EG")
+    createdAt: new Date().toLocaleString("en-US")
   };
 
   document.getElementById("confirmSummary").innerHTML = `
-    <div><b>رقم الأوردر:</b> #${escapeHtml(orderNumber)}</div>
-    <div><b>العميل:</b> ${escapeHtml(name)} (${escapeHtml(phone)})</div>
-    <div><b>طريقة الدفع:</b> ${escapeHtml(paymentText)}</div>
-    <div><b>الإجمالي:</b> ${money(total)}</div>
+    <div><b>Order #:</b> #${escapeHtml(orderNumber)}</div>
+    <div><b>Name:</b> ${escapeHtml(name)} (${escapeHtml(phone)})</div>
+    <div><b>Payment:</b> ${escapeHtml(paymentText)}</div>
+    <div><b>Total:</b> ${money(total)}</div>
   `;
   document.getElementById("confirmBox").classList.add("show");
   document.getElementById("prepareOrderBtn").style.display = "none";
-  showToast(`تم ترقيم الأوردر #${orderNumber} — راجع وأكّد الإرسال`);
+  showToast(`Order #${orderNumber} ready — review and send`);
   setTimeout(() => {
     document.getElementById("confirmBox").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, 60);
@@ -2834,12 +3233,8 @@ function finalizeAndSendWhatsApp() {
   resetOrderConfirmation();
   closeCart();
 
-  const msg = `طلب جديد من متجر NS\nرقم الأوردر: #${orderNumber}\n\nالاسم: ${name}\nرقم الموبايل: ${phone}\nالعنوان: ${address}\nطريقة الدفع: ${paymentText}\n\nالمنتجات:\n${lines.join("\n")}\n\nالإجمالي: ${money(total)}\n\nتم تسجيل الطلب وجاهز لتأكيد الأدمن.`;
+  const msg = `New Order — NS Store\nOrder #: #${orderNumber}\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentText}\n\nItems:\n${lines.join("\n")}\n\nTotal: ${money(total)}\n\nLogged and awaiting Admin confirmation.`;
   const number = WHATSAPP_NUMBER.replace(/\D/g, "");
-  if (number === "201000000000") {
-    alert("تم تسجيل الأوردر في لوحة الأدمن، ولتفعيل إرسال واتساب غيّر رقم WHATSAPP_NUMBER في الكود.");
-    return;
-  }
   window.open(`https://wa.me/${number}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
@@ -2858,30 +3253,34 @@ function paintModal() {
   const imgs = getImgs(p);
   const idx = activeModalImg % imgs.length;
   const stock = getStock(p);
+  const sale = getSaleInfo(p);
   const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
   const canAddMore = stock > 0 && inCartQty < stock;
 
   document.getElementById("modal").innerHTML = `
-    <button class="x-btn" style="position:absolute;left:16px;top:16px;z-index:4" onclick="closeDetails()">×</button>
+    <button class="x-btn" style="position:absolute;right:16px;top:16px;z-index:4" onclick="closeDetails()">×</button>
     <div class="stage">
       <img src="${imgs[idx]}" alt="${escapeHtml(p.name)} - ${idx + 1}" decoding="async">
       ${imgs.length > 1 ? `
-        <button class="arrow-btn prev-pos" onclick="stepModal(-1)" aria-label="السابق">›</button>
-        <button class="arrow-btn next-pos" onclick="stepModal(1)" aria-label="التالي">‹</button>
+        <button class="arrow-btn prev-pos" onclick="stepModal(-1)" aria-label="Previous">‹</button>
+        <button class="arrow-btn next-pos" onclick="stepModal(1)" aria-label="Next">›</button>
       ` : ""}
       <span class="stage-tag">${idx + 1} / ${imgs.length}</span>
     </div>
     <div class="strip">
-      ${imgs.map((u, i) => `<button class="${i === idx ? 'active' : ''}" onclick="pickModal(${i})"><img src="${u}" alt="صورة ${i + 1}" loading="lazy"></button>`).join("")}
+      ${imgs.map((u, i) => `<button class="${i === idx ? 'active' : ''}" onclick="pickModal(${i})"><img src="${u}" alt="Photo ${i + 1}" loading="lazy"></button>`).join("")}
     </div>
     <div class="card-meta-line">
-      <span class="card-cat">${escapeHtml(p.category)}</span>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span class="card-cat">${escapeHtml(p.category)}</span>
+        ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ""}
+      </div>
       ${stockBadgeHtml(stock)}
     </div>
-    <h3 style="margin:4px 0 6px;font-size:21px;font-weight:900">${escapeHtml(p.name)}</h3>
+    <h3 style="margin:4px 0 6px;font-size:21px;font-weight:800">${escapeHtml(p.name)}</h3>
     <p style="margin:0 0 12px;color:var(--muted);font-size:14px">${escapeHtml(p.desc)}</p>
-    <div class="card-price" style="font-size:21px">${money(p.price)}</div>
-    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "نفدت الكمية" : (canAddMore ? "أضف للسلة" : "الحد الأقصى المتاح في السلة")}</button>
+    ${priceHtml(p, true)}
+    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
   `;
 }
 
@@ -2907,10 +3306,11 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeDetails();
     closeAdminLogin();
+    closeSaleModal();
   }
   if (activeModalId === null) return;
-  if (e.key === "ArrowLeft") stepModal(1);
-  else if (e.key === "ArrowRight") stepModal(-1);
+  if (e.key === "ArrowLeft") stepModal(-1);
+  else if (e.key === "ArrowRight") stepModal(1);
 });
 
 function renderReviews() {
@@ -2919,7 +3319,7 @@ function renderReviews() {
       <div>
         <div class="rev-top-row">
           <div class="stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div>
-          ${isAdmin ? `<button class="rev-del-btn" onclick="deleteReview(${index})">حذف</button>` : ""}
+          ${isAdmin ? `<button class="rev-del-btn" onclick="deleteReview(${index})">Delete</button>` : ""}
         </div>
         <p>“${escapeHtml(r.text)}”</p>
       </div>
@@ -2930,11 +3330,11 @@ function renderReviews() {
 
 function deleteReview(index) {
   if (!isAdmin) return;
-  if (!confirm("حذف هذا التقييم؟")) return;
+  if (!confirm("Delete this review?")) return;
   reviews.splice(index, 1);
   localStorage.setItem("ns_reviews", JSON.stringify(reviews));
   renderReviews();
-  showToast("تم حذف التقييم ✓");
+  showToast("Review deleted ✓");
 }
 
 function addReview() {
@@ -2942,7 +3342,7 @@ function addReview() {
   const text = document.getElementById("reviewText").value.trim();
   const stars = Number(document.getElementById("reviewStars").value);
   if (!name || !text) {
-    alert("اكتب اسمك ورأيك الأول.");
+    alert("Please enter your name and review first.");
     return;
   }
   reviews.unshift({name, text, stars});
@@ -2950,7 +3350,7 @@ function addReview() {
   renderReviews();
   document.getElementById("reviewName").value = "";
   document.getElementById("reviewText").value = "";
-  showToast("شكراً لتقييمك! ★");
+  showToast("Thanks for your review! ★");
 }
 
 document.getElementById("year").textContent = new Date().getFullYear();

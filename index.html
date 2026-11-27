@@ -4551,6 +4551,9 @@ function subscribeRealtime() {
       const nextLogo = payload.new?.logo_url ?? "";
       applyLogo(nextLogo);
     })
+    .on("postgres_changes", { event: "*", schema: "public", table: "ns_konsowah_info" }, () => {
+      loadSharedConsoleInfo();
+    })
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
       if (isAdmin) loadOrders();
     })
@@ -4586,8 +4589,6 @@ window.addEventListener("hashchange", () => {
 });
 
 
-const NS_SOCIAL_STORAGE_KEY = "ns_footer_social_links";
-const NS_CONTACT_STORAGE_KEY = "ns_footer_contact_info";
 const SOCIAL_META = {
   facebook: { label: "Facebook", placeholder: "https://facebook.com/yourpage" },
   whatsapp: { label: "WhatsApp", placeholder: "https://wa.me/201xxxxxxxxx" },
@@ -4595,21 +4596,27 @@ const SOCIAL_META = {
   instagram: { label: "Instagram", placeholder: "https://instagram.com/yourpage" }
 };
 let activeSocialPlatform = null;
+let sharedConsoleData = {
+  name: "",
+  role: "",
+  phone: "",
+  website: "",
+  note: "",
+  links: {}
+};
 
 function getSocialLinks() {
-  try {
-    return JSON.parse(localStorage.getItem(NS_SOCIAL_STORAGE_KEY) || "{}") || {};
-  } catch (e) {
-    return {};
-  }
+  return sharedConsoleData.links || {};
 }
 
 function getContactInfo() {
-  try {
-    return JSON.parse(localStorage.getItem(NS_CONTACT_STORAGE_KEY) || "{}") || {};
-  } catch (e) {
-    return {};
-  }
+  return {
+    name: sharedConsoleData.name || "",
+    role: sharedConsoleData.role || "",
+    phone: sharedConsoleData.phone || "",
+    website: sharedConsoleData.website || "",
+    note: sharedConsoleData.note || ""
+  };
 }
 
 function normalizeSocialUrl(raw) {
@@ -4617,6 +4624,53 @@ function normalizeSocialUrl(raw) {
   if (!val) return "";
   if (/^https?:\/\//i.test(val)) return val;
   return "https://" + val;
+}
+
+async function loadSharedConsoleInfo() {
+  const { data, error } = await sb.from("ns_konsowah_info").select("*").eq("id", "main").maybeSingle();
+  if (error) {
+    console.warn("Could not load ns_konsowah_info:", error.message);
+    return;
+  }
+  if (data) {
+    sharedConsoleData = {
+      name: data.name || "",
+      role: data.role || "",
+      phone: data.phone || "",
+      website: data.website || "",
+      note: data.note || "",
+      links: typeof data.social_links === "object" && data.social_links ? data.social_links : {}
+    };
+  }
+  syncFooterSocialUI();
+  renderSavedContactSummary();
+  if (isAdmin) populateAdminConsoleForm();
+}
+
+async function persistSharedConsoleInfo(nextData) {
+  if (!isAdmin) throw new Error("Sign in as Admin first.");
+  const payload = {
+    id: "main",
+    name: nextData.name || "",
+    role: nextData.role || "",
+    phone: nextData.phone || "",
+    website: nextData.website || "",
+    note: nextData.note || "",
+    social_links: nextData.links || {}
+  };
+  const { error } = await sb.from("ns_konsowah_info").upsert(payload, { onConflict: "id" });
+  if (error) throw error;
+  sharedConsoleData = {
+    name: payload.name,
+    role: payload.role,
+    phone: payload.phone,
+    website: payload.website,
+    note: payload.note,
+    links: payload.social_links
+  };
+  syncFooterSocialUI();
+  renderSavedContactSummary();
+  if (isAdmin) populateAdminConsoleForm();
 }
 
 function syncFooterSocialUI() {
@@ -4642,7 +4696,7 @@ function syncFooterSocialUI() {
   if (hintEl) {
     if (isAdmin) {
       hintEl.textContent = configuredCount
-        ? `Admin: ${configuredCount} link${configuredCount > 1 ? "s" : ""} saved. Click any icon to edit.`
+        ? `Admin: ${configuredCount} link${configuredCount > 1 ? "s" : ""} saved for everyone. Click any icon to edit.`
         : "Admin: Click any icon to add your page link.";
     } else {
       hintEl.textContent = configuredCount ? "Follow us on our official pages." : "";
@@ -4673,7 +4727,7 @@ function openSocialLinkModal(platform) {
   const links = getSocialLinks();
   const currentVal = links[platform] || "";
   document.getElementById("socialModalTitle").textContent = `${meta.label} Page Link`;
-  document.getElementById("socialModalSubtitle").textContent = `Add or update your ${meta.label} link.`;
+  document.getElementById("socialModalSubtitle").textContent = `Add or update your ${meta.label} link for everyone.`;
   const inp = document.getElementById("socialModalInput");
   inp.placeholder = meta.placeholder;
   inp.value = currentVal;
@@ -4693,29 +4747,33 @@ function closeSocialLinkModal() {
   document.getElementById("socialLinkModalWrap").classList.remove("show");
 }
 
-function saveSocialLinkFromModal() {
+async function saveSocialLinkFromModal() {
   if (!activeSocialPlatform) return;
   const val = document.getElementById("socialModalInput").value.trim();
-  const links = getSocialLinks();
-  if (val) links[activeSocialPlatform] = normalizeSocialUrl(val);
-  else delete links[activeSocialPlatform];
-  localStorage.setItem(NS_SOCIAL_STORAGE_KEY, JSON.stringify(links));
-  syncFooterSocialUI();
-  renderSavedContactSummary();
-  closeSocialLinkModal();
-  showToast("Social link saved ✓");
+  const nextLinks = { ...getSocialLinks() };
+  if (val) nextLinks[activeSocialPlatform] = normalizeSocialUrl(val);
+  else delete nextLinks[activeSocialPlatform];
+  try {
+    await persistSharedConsoleInfo({ ...getContactInfo(), links: nextLinks });
+    closeSocialLinkModal();
+    showToast("Social link saved for everyone ✓");
+  } catch (err) {
+    alert("Could not save link: " + (err.message || err));
+  }
 }
 
-function clearSocialLinkFromModal() {
+async function clearSocialLinkFromModal() {
   if (!activeSocialPlatform) return;
-  const links = getSocialLinks();
-  delete links[activeSocialPlatform];
-  localStorage.setItem(NS_SOCIAL_STORAGE_KEY, JSON.stringify(links));
-  document.getElementById("socialModalInput").value = "";
-  document.getElementById("socialModalOpenBtn").style.display = "none";
-  syncFooterSocialUI();
-  renderSavedContactSummary();
-  showToast("Social link removed");
+  const nextLinks = { ...getSocialLinks() };
+  delete nextLinks[activeSocialPlatform];
+  try {
+    await persistSharedConsoleInfo({ ...getContactInfo(), links: nextLinks });
+    document.getElementById("socialModalInput").value = "";
+    document.getElementById("socialModalOpenBtn").style.display = "none";
+    showToast("Social link removed");
+  } catch (err) {
+    alert("Could not remove link: " + (err.message || err));
+  }
 }
 
 function populateAdminConsoleForm() {
@@ -4734,7 +4792,7 @@ function populateAdminConsoleForm() {
   }
 }
 
-function saveConsoleInfoFromAdmin() {
+async function saveConsoleInfoFromAdmin() {
   if (!isAdmin) { alert("Sign in as Admin first."); return; }
   const name = document.getElementById("admConsoleName").value.trim();
   const role = document.getElementById("admConsoleRole").value.trim();
@@ -4753,17 +4811,19 @@ function saveConsoleInfoFromAdmin() {
     if (mapInputs[k]) links[k] = normalizeSocialUrl(mapInputs[k]);
   });
 
-  localStorage.setItem(NS_CONTACT_STORAGE_KEY, JSON.stringify({
-    name,
-    role,
-    phone,
-    website: websiteRaw ? normalizeSocialUrl(websiteRaw) : "",
-    note
-  }));
-  localStorage.setItem(NS_SOCIAL_STORAGE_KEY, JSON.stringify(links));
-  syncFooterSocialUI();
-  renderSavedContactSummary();
-  showToast("Console Info saved ✓");
+  try {
+    await persistSharedConsoleInfo({
+      name,
+      role,
+      phone,
+      website: websiteRaw ? normalizeSocialUrl(websiteRaw) : "",
+      note,
+      links
+    });
+    showToast("Info & links saved for all visitors ✓");
+  } catch (err) {
+    alert("Could not save info: " + (err.message || err));
+  }
 }
 
 function openContactInfoPage(ev) {
@@ -4828,7 +4888,7 @@ renderReviews();
 renderCart();
 checkInitialTrackingRoute();
 (async () => {
-  await Promise.all([loadSharedLogo(), loadCategoriesFromDatabase(), loadProductsFromDatabase(), initAuthSession()]);
+  await Promise.all([loadSharedLogo(), loadSharedConsoleInfo(), loadCategoriesFromDatabase(), loadProductsFromDatabase(), initAuthSession()]);
   subscribeRealtime();
 })();
 </script>

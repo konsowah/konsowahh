@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
@@ -408,6 +407,7 @@ header {
 @media (max-width: 620px) {
   .orders-stats-grid { grid-template-columns: 1fr; }
 }
+
 .orders-list { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
 .order-card { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
 .order-card-head {
@@ -1447,7 +1447,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       <button type="button" class="adm-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')">🎟️ Coupons (<span id="admCouponsCount">0</span>)</button>
     </div>
 
-   <div id="adminTabOrders">
+    <div id="adminTabOrders">
       <div class="orders-stats-grid">
         <div class="order-stat-box">
           <div class="order-stat-num" id="statTotalOrders">0</div>
@@ -2279,7 +2279,6 @@ function clearEditedProductSale() {
   saveEditedProductSale();
 }
 
-/* Product Images Editor Modal */
 function openImgEditModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
@@ -2761,17 +2760,19 @@ function renderAdminOrders() {
   const list = document.getElementById("admOrdersList");
   const totalEl = document.getElementById("admOrdersTotal");
   const stripPendingEl = document.getElementById("stripPendingCount");
+  if (!list) return;
+
+  const pendingCount = orders.filter(o => o.status === "pending").length;
   const shippedCount = orders.filter(o => o.status === "shipped").length;
   const deliveredCount = orders.filter(o => o.status === "delivered").length;
+
   const statTotalEl = document.getElementById("statTotalOrders");
   const statShippedEl = document.getElementById("statShippedOrders");
   const statDeliveredEl = document.getElementById("statDeliveredOrders");
   if (statTotalEl) statTotalEl.textContent = orders.length;
   if (statShippedEl) statShippedEl.textContent = shippedCount;
   if (statDeliveredEl) statDeliveredEl.textContent = deliveredCount;
-  if (!list) return;
 
-  const pendingCount = orders.filter(o => o.status === "pending").length;
   if (totalEl) totalEl.textContent = orders.length;
   if (stripPendingEl) stripPendingEl.textContent = pendingCount;
 
@@ -2826,6 +2827,7 @@ function renderAdminOrders() {
           ${o.status !== "shipped" && o.status !== "cancelled" ? `<button class="btn-status-order" onclick="adminSetOrderStatus(${o.order_number}, 'shipped')">🚚 Shipped</button>` : ""}
           ${o.status !== "delivered" && o.status !== "cancelled" ? `<button class="btn-status-order" onclick="adminSetOrderStatus(${o.order_number}, 'delivered')">📦 Delivered</button>` : ""}
           ${o.status !== "cancelled" ? `<button class="btn-cancel-order" onclick="adminCancelOrder(${o.order_number})">✕ Cancel Order</button>` : ""}
+          <button class="del-btn" style="padding:6px 12px;border-radius:9px" onclick="adminDeleteOrder(${o.order_number})">🗑 Delete</button>
         </div>
       </div>
     `;
@@ -2858,6 +2860,15 @@ async function adminCancelOrder(orderNumber) {
   if (error) { alert("Could not cancel order: " + error.message); return; }
   await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
   showToast(`Order #NS-${orderNumber} cancelled`);
+}
+
+async function adminDeleteOrder(orderNumber) {
+  if (!isAdmin) return;
+  if (!confirm(`Permanently delete Order #NS-${orderNumber}?`)) return;
+  const { error } = await sb.rpc("delete_ns_order", { p_order_number: orderNumber });
+  if (error) { alert("Could not delete order: " + error.message); return; }
+  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
+  showToast(`Order #NS-${orderNumber} deleted ✓`);
 }
 
 function mapDbProduct(row) {
@@ -3023,7 +3034,6 @@ function renderAdminManageList() {
   }).join("");
 }
 
-/* Customer Order Tracking & Profile Modal */
 function openTrackModal() {
   const saved = JSON.parse(localStorage.getItem("ns_customer_profile") || "null");
   const checkoutEmail = document.getElementById("customerEmail")?.value.trim() || "";

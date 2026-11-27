@@ -519,79 +519,90 @@
     .hero {
       position: relative;
       overflow: hidden;
-      border-radius: var(--r-lg);
-      background: linear-gradient(125deg, #21120a 0%, #3b2316 56%, #5c3826 100%);
-      color: #f9f2e8;
-      padding: 68px 44px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(232, 195, 145, 0.25);
+      border-radius: 26px;
+      background: linear-gradient(180deg, #fffdf9 0%, #fbf6ee 100%);
+      color: var(--brown-deep);
+      padding: 44px 42px;
+      box-shadow: 0 18px 42px -20px rgba(33, 18, 10, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(228, 215, 198, 0.92);
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 34px;
+      align-items: center;
     }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(232, 195, 145, 0.14) 1px, transparent 1px);
-      background-size: 24px 24px;
-      pointer-events: none;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      width: 380px;
-      height: 380px;
-      right: -80px;
-      top: -90px;
-      background: radial-gradient(circle, rgba(232, 195, 145, 0.24), transparent 70%);
-      pointer-events: none;
-    }
-    .hero-content { position: relative; z-index: 1; max-width: 650px; }
+    .hero-content { position: relative; z-index: 1; max-width: 560px; }
     .hero-eyebrow {
       display: inline-block;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      color: var(--bronze-light);
-      margin-bottom: 12px;
+      color: var(--brown-mid);
+      margin-bottom: 14px;
     }
     .hero h1 {
-      margin: 0 0 14px;
-      font-size: clamp(38px, 5vw, 56px);
-      line-height: 1.06;
-      font-weight: 700;
-      letter-spacing: 0.4px;
+      margin: 0 0 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(36px, 4.4vw, 52px);
+      line-height: 1.09;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--brown-deep);
     }
     .hero p {
-      margin: 0 0 26px;
-      color: rgba(249, 242, 232, 0.86);
-      font-size: 15.5px;
-      max-width: 530px;
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      max-width: 490px;
     }
     .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .btn-primary {
-      background: #f9f2e8;
-      color: var(--brown-deep);
-      border: 1px solid #f9f2e8;
+      background: var(--brown);
+      color: #fffdf9;
+      border: 1px solid var(--brown);
       border-radius: var(--r-pill);
-      padding: 12px 26px;
+      padding: 12px 24px;
       font-weight: 800;
       font-size: 13.5px;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 10px 20px -10px rgba(33, 18, 10, 0.45);
     }
-    .btn-primary:hover { background: var(--bronze-light); border-color: var(--bronze-light); transform: translateY(-2px); }
+    .btn-primary:hover { background: var(--brown-deep); border-color: var(--brown-deep); transform: translateY(-2px); }
     .btn-ghost {
-      background: rgba(255, 255, 255, 0.08);
-      color: #f9f2e8;
-      border: 1px solid rgba(249, 242, 232, 0.34);
+      background: #fffefa;
+      color: var(--brown-deep);
+      border: 1px solid var(--line);
       border-radius: var(--r-pill);
       padding: 12px 22px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 13.5px;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 12px rgba(33, 18, 10, 0.04);
     }
-    .btn-ghost:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px); }
+    .btn-ghost:hover { background: var(--brown-soft); border-color: #d6c3ab; transform: translateY(-1px); }
+    .hero-visual {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      background: #f5e5e6;
+      border: 1px solid rgba(228, 215, 198, 0.85);
+      box-shadow: 0 16px 32px -18px rgba(33, 18, 10, 0.18);
+    }
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s ease;
+    }
+    .hero:hover .hero-visual img { transform: scale(1.03); }
 
     .sec-head {
       display: flex;
@@ -1664,7 +1675,7 @@
       .track-trigger { padding: 7px 10px; font-size: 11.5px; }
       .cart-trigger { padding: 7px 11px; font-size: 12px; }
       .floating-cart-btn { right: 14px; bottom: 14px; padding: 10px 14px; font-size: 12px; }
-      .hero { padding: 44px 24px; }
+      .hero { grid-template-columns: 1fr; padding: 28px 22px; gap: 24px; }
       .cat-photo-card { height: 240px; }
     }
     @media (max-width: 560px) {
@@ -1920,7 +1931,7 @@
 
     <div id="adminTabConsole" style="display:none">
       <div class="admin-card">
-        <h3>🖥️ Console Info Card (Shown when clicking "POWERED BY Konsowah")</h3>
+        <h3>🖥️ Konsowah Info Card (Shown when clicking "POWERED BY KONSOWAH")</h3>
         <div class="inp-row">
           <div class="inp-group">
             <label for="admConsoleName">Name / Brand</label>
@@ -1972,13 +1983,16 @@
 
   <section class="hero">
     <div class="hero-content">
-      <span class="hero-eyebrow">NS ACCESSORIES • EDITORIAL COLLECTION</span>
-      <h1>Refined Pieces Crafted for Every Day</h1>
-      <p>Browse our categories or open <strong>ALL</strong> to view every piece in the collection with seamless checkout and order tracking.</p>
+      <span class="hero-eyebrow">NS ACCESSORIES • CURATED COLLECTION</span>
+      <h1>Everyday pieces crafted to stay with you.</h1>
+      <p>Explore curated collections across dedicated category pages, add your favorites to your cart, and confirm your order directly on the website.</p>
       <div class="hero-actions">
-        <a class="btn-primary" href="#products">Explore Categories</a>
-        <a class="btn-ghost" href="#track-order" onclick="openTrackPage(event)">Track Order</a>
+        <a class="btn-primary" href="#products">Browse Categories</a>
+        <a class="btn-ghost" href="#track-order" onclick="openTrackPage(event)">📦 Track Your Order</a>
       </div>
+    </div>
+    <div class="hero-visual">
+      <img id="heroFeatureImg" src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1000&q=80" alt="NS Accessories featured jewelry piece">
     </div>
   </section>
 
@@ -2070,7 +2084,7 @@
   </div>
   <div class="footer-bottom">
     <p>© <span id="year"></span> NS. All rights reserved.</p>
-    <button type="button" class="powered-by-btn" onclick="openContactInfoPage(event)" title="Contact & Konsowah Info">POWERED BY Konsowah</button>
+    <button type="button" class="powered-by-btn" onclick="openContactInfoPage(event)" title="Contact & Konsowah Info">POWERED BY KONSOWAH</button>
   </div>
 </footer>
 
@@ -2293,11 +2307,11 @@
   </div>
 </section>
 
-<section class="contact-page" id="contactInfoPage" aria-label="Powered By Console Info Card">
+<section class="contact-page" id="contactInfoPage" aria-label="Powered By Konsowah Info Card">
   <div class="track-shell" style="max-width:640px">
     <div class="track-page-head">
       <div>
-        <div class="hero-eyebrow" style="margin:0 0 3px">POWERED BY Konsowah</div>
+        <div class="hero-eyebrow" style="margin:0 0 3px">POWERED BY KONSOWAH</div>
         <h2>Info Card</h2>
       </div>
       <button class="checkout-back-btn" type="button" onclick="closeContactInfoPage()">← Back to Store</button>
@@ -2750,6 +2764,7 @@ async function loadCategoriesFromDatabase() {
     categories = data || [];
   }
   populateProductCategorySelect();
+  syncHeroShowcaseImage();
   renderCategoryShowcase();
   renderFooterCollectionLinks();
   if (isAdmin) renderAdminCategoriesList();
@@ -2874,6 +2889,19 @@ function renderAdminCategoriesList() {
       </div>
     `;
   }).join("");
+}
+
+function syncHeroShowcaseImage() {
+  const heroImg = document.getElementById("heroFeatureImg");
+  if (!heroImg) return;
+  const firstCatWithImg = categories.find(c => (c.image_url || "").trim());
+  if (firstCatWithImg) {
+    heroImg.src = firstCatWithImg.image_url.trim();
+    return;
+  }
+  if (products.length) {
+    heroImg.src = getImgs(products[0])[0];
+  }
 }
 
 function renderCategoryShowcase() {

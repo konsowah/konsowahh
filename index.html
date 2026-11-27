@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#4a1525">
 <title>NS | Everyday Shopping Made Simple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f6f4f5;
@@ -19,6 +22,7 @@
   --gold-light: #f3c669;
   --wa: #16a34a;
   --wa-hover: #15803d;
+  --danger: #dc2626;
   --r-sm: 14px;
   --r-md: 22px;
   --r-lg: 30px;
@@ -39,7 +43,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: Arial, "Helvetica Neue", sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   line-height: 1.65;
   overflow-x: hidden;
   padding-bottom: 84px;
@@ -57,6 +61,7 @@ button {
 button:disabled {
   opacity: 0.48;
   cursor: not-allowed;
+  transform: none !important;
 }
 
 img {
@@ -64,6 +69,7 @@ img {
   max-width: 100%;
 }
 
+/* Admin Top Strip (Visible only when logged in) */
 .admin-strip {
   background: #181416;
   color: #fff;
@@ -93,18 +99,20 @@ img {
   padding: 5px 12px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .admin-mini-btn.out {
   background: rgba(255,255,255,0.12);
 }
 
+/* Header */
 header {
   position: sticky;
   top: 0;
   z-index: 15;
-  background: rgba(246, 244, 245, 0.92);
+  background: rgba(246, 244, 245, 0.86);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
 }
 
@@ -127,13 +135,21 @@ header {
   user-select: none;
 }
 
+/* Frameless 3D Logo */
 .logo-3d-wrap {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  filter: drop-shadow(0 8px 10px rgba(46, 11, 22, 0.28)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+  transition: transform 0.28s ease, filter 0.28s ease;
+}
+
+.brand:hover .logo-3d-wrap {
+  transform: translateY(-2px) scale(1.04);
+  filter: drop-shadow(0 11px 14px rgba(46, 11, 22, 0.34)) drop-shadow(0 3px 4px rgba(200, 138, 43, 0.25));
 }
 
 .logo-3d-wrap svg,
@@ -141,11 +157,15 @@ header {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border: 0;
+  background: transparent;
 }
 
 .brand-name {
-  font-weight: 700;
-  font-size: 21px;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 3px 6px rgba(46, 11, 22, 0.14);
 }
 
 .brand-pill {
@@ -160,7 +180,7 @@ header {
 
 .links {
   display: flex;
-  gap: 24px;
+  gap: 26px;
 }
 
 .links a {
@@ -180,11 +200,17 @@ header {
   border: 0;
   border-radius: 999px;
   padding: 9px 18px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
   display: flex;
   align-items: center;
   gap: 9px;
+  box-shadow: 0 8px 20px rgba(74, 21, 37, 0.22);
+}
+
+.cart-trigger:hover {
+  background: var(--burgundy-deep);
+  transform: translateY(-1px);
 }
 
 .badge-num {
@@ -196,7 +222,7 @@ header {
   display: grid;
   place-items: center;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .container {
@@ -205,6 +231,7 @@ header {
   padding: 24px 24px 0;
 }
 
+/* Admin Panel Section */
 .admin-panel {
   display: none;
   background: var(--paper);
@@ -232,25 +259,9 @@ header {
 
 .admin-head h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 21px;
+  font-weight: 800;
   color: var(--burgundy);
-}
-
-.sync-status-pill {
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 999px;
-}
-
-.sync-status-pill.cloud {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.sync-status-pill.local {
-  background: #fef3c7;
-  color: #92400e;
 }
 
 .admin-tabs {
@@ -267,7 +278,7 @@ header {
   padding: 8px 16px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .adm-tab-btn.active {
@@ -293,6 +304,7 @@ header {
 .admin-card h3 {
   margin: 0 0 12px;
   font-size: 16px;
+  font-weight: 800;
 }
 
 .admin-row-2 {
@@ -319,6 +331,13 @@ header {
   background: #fff;
   margin-bottom: 10px;
   font-size: 13px;
+  outline: none;
+}
+
+.admin-card input:focus,
+.admin-card select:focus,
+.admin-card textarea:focus {
+  border-color: var(--burgundy);
 }
 
 .sale-builder-box {
@@ -331,7 +350,7 @@ header {
 
 .sale-builder-head {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 800;
   color: #92400e;
   margin-bottom: 8px;
 }
@@ -344,6 +363,32 @@ header {
   border: 1px dashed rgba(200, 138, 43, 0.6);
   border-radius: 8px;
   padding: 6px 10px;
+}
+
+.logo-uploader-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0 10px;
+}
+
+.logo-live-preview {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 7px 9px rgba(46, 11, 22, 0.25));
+}
+
+.logo-live-preview svg,
+.logo-live-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  background: transparent;
 }
 
 .preview-strip {
@@ -396,6 +441,7 @@ header {
 .manage-item-actions {
   display: flex;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .sale-edit-btn {
@@ -405,7 +451,11 @@ header {
   padding: 5px 9px;
   border-radius: 8px;
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 800;
+}
+
+.sale-edit-btn:hover {
+  background: #fef3c7;
 }
 
 .orders-list {
@@ -438,7 +488,7 @@ header {
   padding: 3px 10px;
   border-radius: 999px;
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .status-pill.pending {
@@ -479,7 +529,7 @@ header {
   border-radius: 9px;
   padding: 6px 12px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .btn-cancel-order {
@@ -489,9 +539,10 @@ header {
   border-radius: 9px;
   padding: 6px 12px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
+/* Bento Hero */
 .bento-hero {
   display: grid;
   grid-template-columns: 1.35fr 0.85fr;
@@ -507,8 +558,22 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 340px;
+  min-height: 360px;
   box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-main::after {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  bottom: -90px;
+  right: -70px;
+  pointer-events: none;
 }
 
 .hero-kicker {
@@ -524,13 +589,14 @@ header {
 }
 
 .hero-main h1 {
-  font-size: clamp(28px, 4.2vw, 46px);
+  font-size: clamp(30px, 4.4vw, 48px);
+  font-weight: 800;
   line-height: 1.15;
   margin: 18px 0 12px;
 }
 
 .hero-main p {
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 15px;
   max-width: 460px;
   margin: 0 0 24px;
@@ -542,12 +608,17 @@ header {
   text-decoration: none;
   padding: 12px 24px;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   width: fit-content;
+}
+
+.cta-light:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
 }
 
 .bento-side {
@@ -569,12 +640,17 @@ header {
   overflow: hidden;
   position: relative;
   box-shadow: var(--shadow);
+  transition: transform 0.25s ease;
+}
+
+.bento-tile:hover {
+  transform: translateY(-3px);
 }
 
 .bento-tile img {
   width: 100%;
   height: 100%;
-  min-height: 150px;
+  min-height: 155px;
   object-fit: cover;
 }
 
@@ -588,8 +664,10 @@ header {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
+  backdrop-filter: blur(6px);
 }
 
+/* Section Head & Filters */
 .sec-top {
   display: flex;
   justify-content: space-between;
@@ -602,6 +680,8 @@ header {
 .sec-top h2 {
   margin: 0;
   font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
 }
 
 .sec-top p {
@@ -637,12 +717,18 @@ header {
   font-size: 14px;
 }
 
+.cat-btn:hover {
+  border-color: var(--burgundy);
+  color: var(--burgundy);
+}
+
 .cat-btn.active {
   background: var(--burgundy);
   color: #fff;
   border-color: var(--burgundy);
 }
 
+/* Product Cards */
 .grid-products {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -657,14 +743,21 @@ header {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow);
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
 .card.is-sale {
   border-color: rgba(200, 138, 43, 0.55);
+  box-shadow: 0 14px 34px -12px rgba(200, 138, 43, 0.22);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(74, 21, 37, 0.35);
 }
 
 .card-media {
-  height: 210px;
+  height: 215px;
   position: relative;
   overflow: hidden;
   background: #ece8ea;
@@ -675,6 +768,11 @@ header {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity 0.3s ease, transform 0.35s ease;
+}
+
+.card:hover .card-media img {
+  transform: scale(1.04);
 }
 
 .top-badges {
@@ -696,7 +794,7 @@ header {
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .sale-badge {
@@ -705,7 +803,9 @@ header {
   padding: 4px 11px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(180, 83, 9, 0.35);
+  letter-spacing: 0.2px;
 }
 
 .out-overlay {
@@ -715,9 +815,47 @@ header {
   color: #fff;
   display: grid;
   place-items: center;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
   z-index: 2;
+}
+
+.img-step {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 2;
+  background: rgba(24, 20, 22, 0.75);
+  color: #fff;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dots-row {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2;
+  display: flex;
+  gap: 5px;
+  background: rgba(24, 20, 22, 0.45);
+  padding: 4px 7px;
+  border-radius: 999px;
+}
+
+.dot-item {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.dot-item.active {
+  width: 14px;
+  border-radius: 999px;
+  background: #fff;
 }
 
 .card-body {
@@ -737,14 +875,15 @@ header {
 
 .card-cat {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--burgundy);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .stock-pill {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 2px 8px;
   border-radius: 999px;
   background: #ecfdf5;
@@ -764,6 +903,7 @@ header {
 .card-title {
   margin: 0 0 6px;
   font-size: 17px;
+  font-weight: 800;
 }
 
 .card-desc {
@@ -783,7 +923,7 @@ header {
 
 .card-price {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--ink);
 }
 
@@ -793,13 +933,14 @@ header {
 
 .old-price {
   font-size: 13.5px;
+  font-weight: 600;
   color: var(--muted);
   text-decoration: line-through;
 }
 
 .save-chip {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   background: #fef3c7;
   color: #92400e;
   padding: 2px 7px;
@@ -815,7 +956,7 @@ header {
   padding: 10px;
   border-radius: var(--r-sm);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .btn-add {
@@ -825,6 +966,10 @@ header {
   border: 0;
 }
 
+.btn-add:hover:not(:disabled) {
+  background: var(--burgundy-deep);
+}
+
 .btn-info {
   flex: 1;
   background: var(--bg);
@@ -832,6 +977,12 @@ header {
   border: 1px solid var(--line);
 }
 
+.btn-info:hover {
+  border-color: var(--burgundy);
+  color: var(--burgundy);
+}
+
+/* Reviews (Compact Burgundy Framed Cards) */
 .block-sec {
   margin-top: 64px;
 }
@@ -846,11 +997,21 @@ header {
   background: linear-gradient(155deg, var(--burgundy) 0%, var(--burgundy-deep) 100%);
   color: #ffffff;
   border: 1.5px solid rgba(255, 255, 255, 0.22);
+  outline: 1px solid rgba(200, 138, 43, 0.34);
+  outline-offset: -5px;
   border-radius: 16px;
   padding: 15px 16px;
+  box-shadow: 0 10px 24px -10px rgba(46, 11, 22, 0.35);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rev-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -10px rgba(46, 11, 22, 0.48);
 }
 
 .rev-top-row {
@@ -864,6 +1025,7 @@ header {
   color: var(--gold-light);
   letter-spacing: 1.5px;
   font-size: 12px;
+  line-height: 1.2;
 }
 
 .rev-del-btn {
@@ -873,7 +1035,12 @@ header {
   border-radius: 8px;
   padding: 2px 8px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  z-index: 2;
+}
+
+.rev-del-btn:hover {
+  background: #b91c1c;
 }
 
 .rev-card p {
@@ -886,6 +1053,7 @@ header {
 .rev-card strong {
   font-size: 12.5px;
   color: var(--gold-light);
+  font-weight: 800;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
   padding-top: 7px;
   display: block;
@@ -898,11 +1066,13 @@ header {
   border-radius: 18px;
   padding: 18px 20px;
   max-width: 500px;
+  box-shadow: var(--shadow);
 }
 
 .rev-box h3 {
   margin: 0 0 12px;
   font-size: 16px;
+  font-weight: 800;
   color: var(--burgundy);
 }
 
@@ -924,6 +1094,14 @@ header {
   background: var(--bg);
   margin-bottom: 10px;
   font-size: 13px;
+  outline: none;
+}
+
+.rev-box input:focus,
+.rev-box select:focus,
+.rev-box textarea:focus {
+  border-color: var(--burgundy);
+  background: #fff;
 }
 
 .rev-submit {
@@ -932,8 +1110,12 @@ header {
   border: 0;
   padding: 9px 18px;
   border-radius: 10px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 13px;
+}
+
+.rev-submit:hover {
+  background: var(--burgundy-deep);
 }
 
 .about-banner {
@@ -942,11 +1124,13 @@ header {
   border-left: 6px solid var(--burgundy);
   border-radius: var(--r-md);
   padding: 28px;
+  box-shadow: var(--shadow);
 }
 
 .about-banner h2 {
   margin: 0 0 8px;
   font-size: 24px;
+  font-weight: 800;
 }
 
 .about-banner p {
@@ -969,13 +1153,15 @@ footer p {
   font-size: 13px;
 }
 
+/* Floating Bottom Dock */
 .dock {
   position: fixed;
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
-  background: rgba(24, 20, 22, 0.92);
+  background: rgba(24, 20, 22, 0.9);
+  backdrop-filter: blur(12px);
   color: #fff;
   padding: 8px 14px;
   border-radius: 999px;
@@ -994,23 +1180,30 @@ footer p {
   border-radius: 999px;
 }
 
+.dock a:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
 .dock-cart {
   background: var(--burgundy);
   color: #fff;
   border: 0;
   padding: 7px 14px;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 13px;
   display: flex;
   align-items: center;
   gap: 7px;
 }
 
+/* Drawer & Modals */
 .backdrop {
   position: fixed;
   inset: 0;
   background: rgba(24, 20, 22, 0.55);
+  backdrop-filter: blur(4px);
   z-index: 28;
   opacity: 0;
   pointer-events: none;
@@ -1034,7 +1227,10 @@ footer p {
   transform: translateX(105%);
   transition: transform 0.28s ease;
   padding: 18px 20px 104px;
+  display: block;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   box-shadow: var(--shadow-lg);
 }
 
@@ -1108,7 +1304,7 @@ footer p {
   border-radius: 7px;
   border: 1px solid var(--line);
   background: var(--paper);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .del-btn {
@@ -1118,13 +1314,13 @@ footer p {
   padding: 5px 9px;
   border-radius: 8px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .sum-bar {
   display: flex;
   justify-content: space-between;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 16.5px;
   padding: 10px 0;
   border-top: 1px solid var(--line);
@@ -1138,6 +1334,7 @@ footer p {
 .order-box h3 {
   margin: 0 0 8px;
   font-size: 15.5px;
+  font-weight: 800;
 }
 
 .inp-group {
@@ -1160,7 +1357,15 @@ footer p {
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--bg);
+  outline: none;
   font-size: 14px;
+}
+
+.inp-group input:focus,
+.inp-group textarea:focus,
+.inp-group select:focus {
+  border-color: var(--burgundy);
+  background: #fff;
 }
 
 .pay-methods {
@@ -1177,8 +1382,9 @@ footer p {
   border-radius: 10px;
   padding: 8px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
+  line-height: 1.3;
 }
 
 .pay-opt.active {
@@ -1216,7 +1422,9 @@ footer p {
   padding: 6px 14px;
   border-radius: 9px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
 }
 
 .instapay-copy-btn {
@@ -1226,7 +1434,7 @@ footer p {
   padding: 6px 14px;
   border-radius: 9px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .confirm-box {
@@ -1256,7 +1464,7 @@ footer p {
   border-radius: 12px;
   background: var(--wa);
   color: #fff;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
 }
 
@@ -1271,14 +1479,25 @@ footer p {
   border-radius: 12px;
   background: var(--burgundy);
   color: #fff;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
+}
+
+.confirm-trigger-btn:hover {
+  background: var(--burgundy-deep);
+}
+
+.note-txt {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0 0;
 }
 
 .modal-layer {
   position: fixed;
   inset: 0;
   background: rgba(24, 20, 22, 0.68);
+  backdrop-filter: blur(5px);
   z-index: 36;
   display: none;
   place-items: center;
@@ -1324,7 +1543,7 @@ footer p {
 
 .stage {
   position: relative;
-  height: 290px;
+  height: 295px;
   border-radius: 16px;
   overflow: hidden;
   background: var(--bg);
@@ -1335,6 +1554,68 @@ footer p {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(24, 20, 22, 0.72);
+  color: #fff;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.arrow-btn:hover {
+  background: var(--burgundy);
+}
+
+.prev-pos { left: 12px; }
+.next-pos { right: 12px; }
+
+.stage-tag {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(24, 20, 22, 0.78);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.strip button {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 11px;
+  overflow: hidden;
+  height: 64px;
+  background: var(--bg);
+  opacity: 0.7;
+}
+
+.strip button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.strip button.active {
+  border-color: var(--burgundy);
+  opacity: 1;
 }
 
 .empty-msg {
@@ -1359,6 +1640,7 @@ footer p {
   transform: translateY(14px);
   pointer-events: none;
   transition: all 0.25s ease;
+  box-shadow: var(--shadow-lg);
 }
 
 .toast.show {
@@ -1375,28 +1657,32 @@ footer p {
 @media (max-width: 600px) {
   .links { display: none; }
   .container { padding: 16px 14px 0; }
-  .logo-3d-wrap { width: 42px; height: 42px; }
+  .logo-3d-wrap { width: 44px; height: 44px; }
   .brand-name { font-size: 19px; }
-  .hero-main { min-height: 280px; padding: 24px 20px; }
+  .hero-main { min-height: 290px; padding: 24px 20px; }
   .grid-products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
-  .card-media { height: 155px; }
+  .card-media { height: 160px; }
   .card-body { padding: 12px; }
   .card-title { font-size: 15px; }
   .card-actions { flex-direction: column; }
   .reviews-3 { grid-template-columns: 1fr; }
-  .stage { height: 220px; }
+  .stage { height: 225px; }
+  .strip button { height: 52px; }
   .admin-row-2 { grid-template-columns: 1fr; }
   .drawer { width: 100%; padding: 16px 16px 115px; }
+  .cart-list { max-height: 150px; }
 }
 </style>
 </head>
 <body>
 
+<!-- Admin Status Bar -->
 <div class="admin-strip" id="adminStrip">
-  <span>Admin Mode Active — Orders, Stock &amp; Sale Management</span>
+  <span>🔐 Admin Mode Active — Orders, Stock &amp; Sale Management</span>
   <div class="admin-strip-actions">
     <button class="admin-mini-btn" onclick="switchAdminTab('orders');scrollToAdmin()">Orders (<span id="stripPendingCount">0</span>)</button>
-    <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">Products &amp; Sale</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">Products</button>
+    <button class="admin-mini-btn" onclick="copyExportCode()">Copy Products Code</button>
     <button class="admin-mini-btn out" onclick="logoutAdmin()">Log Out</button>
   </div>
 </div>
@@ -1406,7 +1692,6 @@ footer p {
     <a class="brand" href="#" onclick="handleBrandTripleClick(event)">
       <span class="logo-3d-wrap" id="siteLogoBox"></span>
       <span class="brand-name">NS Store</span>
-      <span class="brand-pill">Fresh Picks</span>
     </a>
     <nav class="links">
       <a href="#products">Products</a>
@@ -1414,37 +1699,54 @@ footer p {
       <a href="#about">About Us</a>
     </nav>
     <button class="cart-trigger" onclick="openCart()">
-      <span>Bag</span>
+      <span>Cart</span>
       <span class="badge-num" id="cartCount">0</span>
     </button>
   </div>
 </header>
 
 <main class="container">
+  <!-- Admin Control Panel (Hidden until login) -->
   <section class="admin-panel" id="adminPanel">
     <div class="admin-head">
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <h2>NS Admin Dashboard</h2>
-        <span class="sync-status-pill local" id="cloudSyncBadge">Local Mode</span>
-      </div>
+      <h2>⚙️ NS Admin Dashboard</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-info" style="padding:7px 14px;border-radius:10px;font-size:12px" onclick="pullCloudStoreNow(false)">Sync Cloud</button>
-        <button class="btn-info" style="padding:7px 14px;border-radius:10px;font-size:12px" onclick="copyExportCode()">Copy Products Code</button>
+        <button class="btn-info" style="padding:7px 14px;border-radius:10px;font-size:12px" onclick="copyExportCode()">📋 Copy Products Code</button>
         <button class="del-btn" style="padding:7px 14px;border-radius:10px" onclick="logoutAdmin()">Log Out</button>
       </div>
     </div>
 
     <div class="admin-tabs">
-      <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">Orders (<span id="admOrdersTotal">0</span>)</button>
-      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">Products &amp; Sale</button>
+      <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 Orders (<span id="admOrdersTotal">0</span>)</button>
+      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ Products &amp; Sale</button>
     </div>
 
+    <!-- Orders Tab -->
     <div id="adminTabOrders">
       <div class="orders-list" id="admOrdersList"></div>
     </div>
 
+    <!-- Products Tab -->
     <div id="adminTabProducts" style="display:none">
+      <div class="admin-card">
+        <h3>✦ Frameless 3D Logo (or Custom Image)</h3>
+        <div class="logo-uploader-box">
+          <div class="logo-live-preview" id="admLogoPreview"></div>
+          <div style="flex:1">
+            <label style="margin-bottom:4px">Upload an image or keep the 3D emblem</label>
+            <input id="admLogoFile" type="file" accept="image/*" style="margin-bottom:0" onchange="handleLogoUpload(event)">
+          </div>
+        </div>
+        <label>Or paste a direct image URL</label>
+        <input id="admLogoUrl" placeholder="https://example.com/logo.png" oninput="handleLogoUrlInput(event)">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn-add" style="padding:8px 16px;border-radius:10px;font-size:12.5px" onclick="saveLogoUrlFromInput()">Save Logo URL</button>
+          <button type="button" class="btn-info" style="padding:8px 14px;border-radius:10px;font-size:12.5px" onclick="resetDefaultLogo()">Restore 3D Logo</button>
+        </div>
+      </div>
+
       <div class="admin-grid">
+        <!-- Add New Product Form -->
         <div class="admin-card">
           <h3>+ Add New Product</h3>
           <div class="admin-row-2">
@@ -1464,12 +1766,12 @@ footer p {
             </div>
             <div>
               <label>Available Stock *</label>
-              <input id="admStock" type="number" min="0" value="10">
+              <input id="admStock" type="number" min="0" value="10" placeholder="e.g. 10">
             </div>
           </div>
 
           <div class="sale-builder-box">
-            <div class="sale-builder-head">Sale Discount Settings</div>
+            <div class="sale-builder-head">🔥 Sale Discount Settings (% or Fixed Amount)</div>
             <div class="admin-row-2">
               <div>
                 <label>Sale Type</label>
@@ -1496,15 +1798,17 @@ footer p {
           <input id="admFiles" type="file" accept="image/*" multiple onchange="handleAdminImages(event)">
           <div class="preview-strip" id="admPreview"></div>
 
-          <label>Or paste image URLs (one per line)</label>
+          <label>Or paste image URLs (one per line - optional)</label>
           <textarea id="admUrls" rows="2" placeholder="https://example.com/img1.jpg"></textarea>
 
           <button class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminAddProduct()">Save &amp; Publish Product</button>
         </div>
 
+        <!-- Manage Existing Products -->
         <div class="admin-card">
           <h3>Existing Products (<span id="admProdCount">0</span>)</h3>
           <div class="admin-manage-list" id="admProdList"></div>
+          <p class="note-txt" style="margin-top:10px">Click <b>Sale</b> on any item to set or clear a Sale discount anytime, or <b>Delete</b> to remove it.</p>
         </div>
       </div>
     </div>
@@ -1513,11 +1817,11 @@ footer p {
   <section class="bento-hero">
     <div class="hero-main">
       <div>
-        <div class="hero-kicker">Multi-angle photos • Clear details • Instant checkout</div>
+        <div class="hero-kicker">✦ Multi-angle photos • Clear details • Instant checkout</div>
         <h1>Everyday favorites,<br>made easy to shop.</h1>
         <p>Browse quality picks with smooth photo previews, check every detail up close, and send your order straight to WhatsApp in seconds.</p>
       </div>
-      <a class="cta-light" href="#products">Shop Products</a>
+      <a class="cta-light" href="#products">Shop Products ↓</a>
     </div>
 
     <div class="bento-side" aria-hidden="true">
@@ -1542,7 +1846,7 @@ footer p {
     <div class="sec-top">
       <div>
         <h2>Products</h2>
-        <p>Click any product to inspect photos and details</p>
+        <p>Photos rotate automatically — hover to pause or click to view details</p>
       </div>
       <span class="sec-meta" id="productTotal"></span>
     </div>
@@ -1565,38 +1869,39 @@ footer p {
       <input id="reviewName" placeholder="Enter your name">
       <label>Rating</label>
       <select id="reviewStars">
-        <option value="5">5 Stars - Excellent</option>
-        <option value="4">4 Stars - Very Good</option>
-        <option value="3">3 Stars - Good</option>
-        <option value="2">2 Stars - Fair</option>
-        <option value="1">1 Star - Poor</option>
+        <option value="5">★★★★★ - Excellent</option>
+        <option value="4">★★★★☆ - Very Good</option>
+        <option value="3">★★★☆☆ - Good</option>
+        <option value="2">★★☆☆☆ - Fair</option>
+        <option value="1">★☆☆☆☆ - Poor</option>
       </select>
       <label>Your Comment</label>
       <textarea id="reviewText" rows="2" placeholder="Share your experience with the item or service..."></textarea>
       <button class="rev-submit" onclick="addReview()">Post Review</button>
+      <p class="note-txt">Added reviews are saved locally on this device.</p>
     </div>
   </section>
 
   <section class="block-sec" id="about">
     <div class="about-banner">
       <h2>About NS</h2>
-      <p>A clean shopping space bringing together everyday essentials and standout finds so you can inspect every angle and order directly via WhatsApp.</p>
+      <p>A clean, straightforward shopping space bringing together everyday essentials and standout finds so you can inspect every angle and order directly via WhatsApp.</p>
     </div>
   </section>
 </main>
 
 <footer>
-  <div style="font-weight:700;font-size:21px">NS STORE</div>
+  <div style="font-weight:800;font-size:22px">NS STORE</div>
   <p>Clean design and direct WhatsApp ordering.</p>
-  <p>All rights reserved © <span id="year"></span> NS</p>
+  <p>© <span id="year"></span> NS. All rights reserved.</p>
 </footer>
 
-<div class="dock">
+<div class="dock" aria-label="Quick navigation">
   <a href="#products">Products</a>
   <a href="#reviews">Reviews</a>
   <a href="#about">About</a>
   <button class="dock-cart" onclick="openCart()">
-    <span>Bag</span>
+    <span>Cart</span>
     <span class="badge-num" id="dockCartCount">0</span>
   </button>
 </div>
@@ -1605,8 +1910,8 @@ footer p {
 
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <h2 style="margin:0;font-size:19px">Shopping Bag</h2>
-    <button class="x-btn" onclick="closeCart()">x</button>
+    <h2 style="margin:0;font-size:19px;font-weight:800">Shopping Cart</h2>
+    <button class="x-btn" onclick="closeCart()">×</button>
   </div>
   <div class="cart-list" id="cartItems"></div>
   <div class="sum-bar">
@@ -1617,34 +1922,35 @@ footer p {
     <h3>Order &amp; Payment Details</h3>
     <div class="inp-group">
       <label for="customerName">Full Name *</label>
-      <input id="customerName" placeholder="Your full name" oninput="resetOrderConfirmation()">
+      <input id="customerName" placeholder="Your full name" autocomplete="name" oninput="resetOrderConfirmation()">
     </div>
     <div class="inp-group">
       <label for="customerPhone">Phone Number *</label>
-      <input id="customerPhone" type="tel" placeholder="01xxxxxxxxx" oninput="resetOrderConfirmation()">
+      <input id="customerPhone" type="tel" placeholder="01xxxxxxxxx" autocomplete="tel" oninput="resetOrderConfirmation()">
     </div>
     <div class="inp-group">
       <label for="customerAddress">Delivery Address *</label>
-      <textarea id="customerAddress" rows="2" placeholder="City, area, street, building and apartment" oninput="resetOrderConfirmation()"></textarea>
+      <textarea id="customerAddress" rows="2" placeholder="City, area, street, building &amp; apartment" oninput="resetOrderConfirmation()"></textarea>
     </div>
 
     <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px">Payment Method *</label>
-    <div class="pay-methods">
-      <button type="button" class="pay-opt active" id="pay-cod" onclick="selectPayment('cod')">Cash on Delivery</button>
-      <button type="button" class="pay-opt" id="pay-instapay" onclick="selectPayment('instapay')">InstaPay / Telda Link</button>
+    <div class="pay-methods" role="group" aria-label="Payment options">
+      <button type="button" class="pay-opt active" id="pay-cod" onclick="selectPayment('cod')">💵 Cash on Delivery</button>
+      <button type="button" class="pay-opt" id="pay-instapay" onclick="selectPayment('instapay')">⚡ InstaPay / Telda Link</button>
     </div>
 
     <div class="instapay-box" id="instapayBox">
-      <div style="font-size:12.5px;font-weight:700;color:var(--burgundy);margin-bottom:4px">Pay using our official link:</div>
-      <div style="font-size:12px;word-break:break-all;background:#fff;padding:7px 9px;border-radius:8px;border:1px solid var(--line)" id="instapayLinkText"></div>
+      <div style="font-size:12.5px;font-weight:800;color:var(--burgundy);margin-bottom:4px">Pay using our official InstaPay / Telda link:</div>
+      <div style="font-size:12px;color:var(--ink);font-weight:700;word-break:break-all;background:#fff;padding:7px 9px;border-radius:8px;border:1px solid var(--line)" id="instapayLinkText"></div>
       <div class="instapay-link-row">
         <a class="instapay-open-btn" id="instapayOpenLink" href="#" target="_blank" rel="noopener">Open Payment Link</a>
         <button type="button" class="instapay-copy-btn" onclick="copyInstaPayLink()">Copy Link</button>
       </div>
+      <p class="note-txt">After transferring or checking your details, confirm your order to send it with your order number on WhatsApp.</p>
     </div>
 
     <div class="confirm-box" id="confirmBox">
-      <div style="font-weight:700;color:#92400e;margin-bottom:4px">Confirm Order Before WhatsApp</div>
+      <div style="font-weight:800;color:#92400e;margin-bottom:4px">✅ Confirm Order Before WhatsApp</div>
       <div id="confirmSummary"></div>
       <div class="confirm-actions">
         <button type="button" class="wa-btn" onclick="finalizeAndSendWhatsApp()">Confirm &amp; Send on WhatsApp</button>
@@ -1653,31 +1959,38 @@ footer p {
     </div>
 
     <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">Confirm &amp; Generate Order #</button>
+    <p class="note-txt">Your order is numbered and logged first; stock is deducted once confirmed in the Admin panel.</p>
   </div>
 </aside>
 
+<!-- Product Details Modal -->
 <div class="modal-layer" id="modalWrap" onclick="if(event.target===this)closeDetails()">
   <div class="modal-card" id="modal"></div>
 </div>
 
+<!-- Admin Edit Product Sale Modal -->
 <div class="modal-layer" id="saleModalWrap" onclick="if(event.target===this)closeSaleModal()">
   <div class="modal-card" style="width:min(420px,100%)">
-    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeSaleModal()">x</button>
-    <h3 style="margin:0 0 4px;font-size:19px;color:var(--burgundy)">Edit Product Sale</h3>
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeSaleModal()">×</button>
+    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--burgundy)">🔥 Edit Product Sale</h3>
     <div id="saleEditProdTitle" style="font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px"></div>
+
     <div class="inp-group">
       <label for="editSaleType">Sale Type</label>
       <select id="editSaleType" onchange="updateEditSaleCalc()">
-        <option value="none">No Sale</option>
+        <option value="none">No Sale (Original Price)</option>
         <option value="percent">Percentage Sale (%)</option>
         <option value="amount">Fixed Amount Sale (EGP)</option>
       </select>
     </div>
+
     <div class="inp-group">
       <label for="editSaleVal" id="editSaleValLabel">Sale Value</label>
-      <input id="editSaleVal" type="number" min="0" step="any" oninput="updateEditSaleCalc()">
+      <input id="editSaleVal" type="number" min="0" step="any" placeholder="e.g. 15 or 100" oninput="updateEditSaleCalc()">
     </div>
+
     <div class="sale-live-calc" id="editSaleCalc" style="margin-bottom:14px"></div>
+
     <div style="display:flex;gap:8px">
       <button type="button" class="btn-add" style="padding:10px;border-radius:11px" onclick="saveEditedProductSale()">Save Sale</button>
       <button type="button" class="del-btn" style="padding:10px 14px;border-radius:11px" onclick="clearEditedProductSale()">Remove Sale</button>
@@ -1685,82 +1998,252 @@ footer p {
   </div>
 </div>
 
+<!-- Admin Login Modal -->
 <div class="modal-layer" id="loginWrap" onclick="if(event.target===this)closeAdminLogin()">
   <div class="login-card">
-    <button class="x-btn" style="position:absolute;right:14px;top:14px" onclick="closeAdminLogin()">x</button>
-    <div class="login-icon">NS</div>
-    <h3 style="margin:0 0 6px;font-size:20px">Admin Sign In</h3>
-    <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">Enter the store Admin password</p>
+    <button class="x-btn" style="position:absolute;right:14px;top:14px" onclick="closeAdminLogin()">×</button>
+    <div class="login-icon">🔐</div>
+    <h3 style="margin:0 0 6px;font-size:20px;font-weight:800">Admin Sign In</h3>
+    <p style="margin:0 0 16px;font-size:13px;color:var(--muted)">Sign in with your authorized admin account</p>
+    <div class="inp-group" style="text-align:left">
+      <label for="adminEmailInput">Admin Email</label>
+      <input id="adminEmailInput" type="email" placeholder="admin@example.com" autocomplete="username" onkeydown="if(event.key==='Enter')submitAdminLogin()">
+    </div>
     <div class="inp-group" style="text-align:left">
       <label for="adminPassInput">Password</label>
-      <input id="adminPassInput" type="password" placeholder="********" onkeydown="if(event.key==='Enter')submitAdminLogin()">
+      <input id="adminPassInput" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAdminLogin()">
     </div>
     <button class="btn-add" style="width:100%;padding:11px;border-radius:11px;margin-top:4px" onclick="submitAdminLogin()">Sign In</button>
   </div>
 </div>
 
-<div class="toast" id="toast">Added to bag</div>
+<div class="toast" id="toast">Added to Cart ✓</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://wgcbtfumziqmetevjgdw.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_kEaNBC4PHYc1P0YapV5ekw_bW5dTk6f";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const WHATSAPP_NUMBER = "201128887442";
-const ADMIN_PASS = "admin123";
 const CURRENCY = "EGP";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
-const CUSTOM_LOGO_SRC = "https://media.discordapp.net/attachments/1499065232528773231/1575716756469719162/image-removebg-previews.png?ex=6b0a4c16&is=6b08fa96&hm=9825aeec5bdec7d2e2bdd49fcda6c043092a4f0a3cc7e87706a3d5dda1f3cb2b&format=webp&quality=lossless";
-const FIREBASE_DB_URL = "https://nsns-2521c-default-rtdb.firebaseio.com";
+const CUSTOM_LOGO_SRC = "";
+
+const LOGO_3D_SVG = `
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="ns3dBody" x1="16" y1="12" x2="84" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7c233f"/>
+      <stop offset="52%" stop-color="#4a1525"/>
+      <stop offset="100%" stop-color="#260812"/>
+    </linearGradient>
+    <linearGradient id="ns3dDepth" x1="20" y1="20" x2="85" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#220710"/>
+      <stop offset="100%" stop-color="#120308"/>
+    </linearGradient>
+    <linearGradient id="ns3dGold" x1="15" y1="15" x2="85" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffe096"/>
+      <stop offset="50%" stop-color="#d49635"/>
+      <stop offset="100%" stop-color="#8f5b12"/>
+    </linearGradient>
+    <linearGradient id="ns3dShine" x1="50" y1="10" x2="50" y2="55" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M50 11L85 30V70L50 89L15 70V30L50 11Z" fill="url(#ns3dDepth)" transform="translate(0, 4.5)"/>
+  <path d="M50 9L85 28V68L50 87L15 68V28L50 9Z" fill="url(#ns3dBody)" stroke="url(#ns3dGold)" stroke-width="2.4"/>
+  <path d="M50 11.5L82.5 29.5L50 47L17.5 29.5L50 11.5Z" fill="url(#ns3dShine)"/>
+  <path d="M27 63V36L45 58V35M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
+        stroke="#16040a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(1.5, 3)"/>
+  <path d="M27 63V36L45 58V35" stroke="#fff7f9" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
+        stroke="url(#ns3dGold)" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
 
 const defaultProducts = [
-  { id: 1, name: "Wireless Headphones", category: "Electronics", price: 650, saleType: "percent", saleValue: 20, stock: 12, tag: "Best Seller", desc: "Clear sound and comfortable fit for everyday listening and calls.", images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=75"] },
-  { id: 2, name: "Classic Watch", category: "Accessories", price: 850, saleType: "amount", saleValue: 150, stock: 6, tag: "New", desc: "Clean, versatile design that pairs easily with any outfit.", images: ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"] },
-  { id: 3, name: "Everyday Tote Bag", category: "Style", price: 520, saleType: "none", saleValue: 0, stock: 3, tag: "", desc: "Practical and lightweight for work, errands, and daily outings.", images: ["https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=75"] },
-  { id: 4, name: "Travel Mug", category: "Home", price: 280, saleType: "percent", saleValue: 15, stock: 15, tag: "", desc: "Keeps your drink warm longer while you are on the move.", images: ["https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=700&q=75"] },
-  { id: 5, name: "Sunglasses", category: "Style", price: 390, saleType: "none", saleValue: 0, stock: 8, tag: "", desc: "Modern frames and comfortable lenses for sunny days.", images: ["https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=75"] },
-  { id: 6, name: "Power Bank", category: "Electronics", price: 720, saleType: "none", saleValue: 0, stock: 0, tag: "", desc: "Reliable backup power to keep your devices charged on trips.", images: ["https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=700&q=75"] },
-  { id: 7, name: "Slim Wallet", category: "Accessories", price: 300, saleType: "amount", saleValue: 50, stock: 9, tag: "", desc: "Compact pocket profile with neat slots for cards and cash.", images: ["https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=75"] },
-  { id: 8, name: "Desk Lamp", category: "Home", price: 450, saleType: "none", saleValue: 0, stock: 5, tag: "", desc: "Clean, steady light for studying, reading, and desk work.", images: ["https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=75"] }
+  {
+    "id": 10,
+    "name": "ab",
+    "category": "car",
+    "price": 300000,
+    "saleType": "amount",
+    "saleValue": 100000,
+    "stock": 10,
+    "tag": "new",
+    "desc": "so good",
+    "images": [
+      "https://media.discordapp.net/attachments/1499065232528773231/1566962883529547867/temp_image_6E636BF3-2AEB-49F5-9FBE-8505462B34B3.webp?ex=6b096ea8&is=6b081d28&hm=72d6aba463c5b9cb6bfbe2405d2158085ab50d1b3393dcef4d07e67d5f3f6c4f&format=webp&width=575&height=1024"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "car",
+    "category": "car",
+    "price": 100000,
+    "stock": 1,
+    "tag": "good",
+    "desc": "good",
+    "images": [
+      "https://media.discordapp.net/attachments/1499065232528773231/1566962883529547867/temp_image_6E636BF3-2AEB-49F5-9FBE-8505462B34B3.webp?ex=6b096ea8&is=6b081d28&hm=72d6aba463c5b9cb6bfbe2405d2158085ab50d1b3393dcef4d07e67d5f3f6c4f&format=webp&width=575&height=1024",
+      "https://media.discordapp.net/attachments/1499065232528773231/1566962886256099388/temp_image_0A7D9FD5-1FF6-4859-A7CF-DB22382FAB98.webp?ex=6b096ea8&is=6b081d28&hm=9faccb71192b413ccbb5a32373395b3e6de8cf7f697bf4bb08c59f9b9589887f&format=webp&width=768&height=1024"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 1,
+    "name": "سماعة لاسلكية",
+    "category": "إلكترونيات",
+    "price": 650,
+    "stock": 12,
+    "tag": "الأكثر طلباً",
+    "desc": "صوت واضح وتصميم مريح للاستخدام اليومي والمكالمات.",
+    "images": [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 2,
+    "name": "ساعة أنيقة",
+    "category": "إكسسوارات",
+    "price": 850,
+    "stock": 6,
+    "tag": "جديد",
+    "desc": "تصميم بسيط يناسب كل الأوقات والإطلالات.",
+    "images": [
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 3,
+    "name": "شنطة يومية",
+    "category": "موضة",
+    "price": 520,
+    "stock": 2,
+    "tag": "",
+    "desc": "عملية وخفيفة ومناسبة للخروجات والعمل.",
+    "images": [
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 4,
+    "name": "كوب حراري",
+    "category": "المنزل",
+    "price": 280,
+    "stock": 15,
+    "tag": "",
+    "desc": "يحافظ على حرارة مشروبك لفترة أطول أثناء التنقل.",
+    "images": [
+      "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 5,
+    "name": "نظارة شمس",
+    "category": "موضة",
+    "price": 390,
+    "stock": 8,
+    "tag": "",
+    "desc": "ستايل عصري وعدسات مريحة لإطلالة مميزة.",
+    "images": [
+      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1509695507497-903c140c43b0?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 6,
+    "name": "باور بانك",
+    "category": "إلكترونيات",
+    "price": 720,
+    "stock": 0,
+    "tag": "",
+    "desc": "طاقة إضافية وسريعة لأجهزتك أثناء التنقل والسفر.",
+    "images": [
+      "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1591290619762-c588f56e29b9?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 7,
+    "name": "محفظة",
+    "category": "إكسسوارات",
+    "price": 300,
+    "stock": 8,
+    "tag": "",
+    "desc": "حجم مناسب وتنظيم عملي للبطاقات والنقدية.",
+    "images": [
+      "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  },
+  {
+    "id": 8,
+    "name": "مصباح مكتبي",
+    "category": "المنزل",
+    "price": 450,
+    "stock": 5,
+    "tag": "",
+    "desc": "إضاءة مريحة وواضحة للمذاكرة والعمل اليومي.",
+    "images": [
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&w=700&q=75",
+      "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=700&q=75"
+    ],
+    "saleType": "none",
+    "saleValue": 0
+  }
 ];
-
-function safeReadStorage(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return fallback;
-    const parsed = JSON.parse(raw);
-    return parsed ?? fallback;
-  } catch (e) {
-    return fallback;
-  }
-}
-
-function getCloudBaseUrl() {
-  return FIREBASE_DB_URL.trim().replace(/\/+$/, "");
-}
-
-function isCloudEnabled() {
-  return /^https:\/\/.+/i.test(getCloudBaseUrl());
-}
-
-function updateCloudBadge() {
-  const el = document.getElementById("cloudSyncBadge");
-  if (!el) return;
-  if (isCloudEnabled()) {
-    el.className = "sync-status-pill cloud";
-    el.textContent = "Cloud DB Active";
-  } else {
-    el.className = "sync-status-pill local";
-    el.textContent = "Local Mode Only";
-  }
-}
-
+  
 function normalizeSaleFields(p) {
   const basePrice = Math.max(1, Number(p.price) || 1);
   const rawType = p.saleType || "none";
   const rawVal = Math.max(0, Number(p.saleValue) || 0);
   if (rawType === "percent" && rawVal > 0) {
-    return { ...p, price: basePrice, saleType: "percent", saleValue: Math.min(95, rawVal) };
+    const pct = Math.min(95, rawVal);
+    return { ...p, price: basePrice, saleType: "percent", saleValue: pct };
   }
   if (rawType === "amount" && rawVal > 0) {
     const amt = Math.min(basePrice - 1, rawVal);
-    return amt > 0 ? { ...p, price: basePrice, saleType: "amount", saleValue: amt } : { ...p, price: basePrice, saleType: "none", saleValue: 0 };
+    return amt > 0
+      ? { ...p, price: basePrice, saleType: "amount", saleValue: amt }
+      : { ...p, price: basePrice, saleType: "none", saleValue: 0 };
   }
   return { ...p, price: basePrice, saleType: "none", saleValue: 0 };
 }
@@ -1772,55 +2255,74 @@ function computeSaleInfo(basePrice, saleType, saleValue) {
 
   if (type === "percent" && val > 0) {
     const pct = Math.min(95, val);
-    const finalPrice = Math.max(1, original - Math.round((original * pct) / 100));
-    const savedAmount = Math.max(0, original - finalPrice);
-    if (savedAmount > 0) {
-      return { hasSale: true, originalPrice: original, finalPrice, savedAmount, badgeText: `SALE -${pct}%`, labelText: `Sale -${pct}%` };
+    const discountAmt = Math.round((original * pct) / 100);
+    const finalPrice = Math.max(1, original - discountAmt);
+    const actualSaved = Math.max(0, original - finalPrice);
+    if (actualSaved > 0) {
+      return {
+        hasSale: true,
+        originalPrice: original,
+        finalPrice,
+        savedAmount: actualSaved,
+        badgeText: `🔥 SALE -${pct}%`,
+        labelText: `Sale -${pct}%`
+      };
     }
   }
+
   if (type === "amount" && val > 0) {
-    const finalPrice = Math.max(1, original - Math.min(original - 1, val));
-    const savedAmount = Math.max(0, original - finalPrice);
-    if (savedAmount > 0) {
-      return { hasSale: true, originalPrice: original, finalPrice, savedAmount, badgeText: `SALE -${money(savedAmount)}`, labelText: `Sale -${money(savedAmount)}` };
+    const discountAmt = Math.min(original - 1, val);
+    const finalPrice = Math.max(1, original - discountAmt);
+    const actualSaved = Math.max(0, original - finalPrice);
+    if (actualSaved > 0) {
+      return {
+        hasSale: true,
+        originalPrice: original,
+        finalPrice,
+        savedAmount: actualSaved,
+        badgeText: `🔥 SALE -${money(actualSaved)}`,
+        labelText: `Sale -${money(actualSaved)}`
+      };
     }
   }
-  return { hasSale: false, originalPrice: original, finalPrice: original, savedAmount: 0, badgeText: "", labelText: "" };
+
+  return {
+    hasSale: false,
+    originalPrice: original,
+    finalPrice: original,
+    savedAmount: 0,
+    badgeText: "",
+    labelText: ""
+  };
 }
 
-const getSaleInfo = p => computeSaleInfo(p.price, p.saleType, p.saleValue);
-const money = n => Number(n).toLocaleString("en-US") + " " + CURRENCY;
-const getStock = p => Math.max(0, Number(p.stock ?? 0));
-const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice(0, 4) : defaultProducts[0].images;
+function getSaleInfo(p) {
+  return computeSaleInfo(p.price, p.saleType, p.saleValue);
+}
 
 function priceHtml(p, large = false) {
   const s = getSaleInfo(p);
   if (!s.hasSale) {
     return `<div class="price-box"><span class="card-price" style="${large ? 'font-size:21px' : ''}">${money(s.finalPrice)}</span></div>`;
   }
-  return `<div class="price-box"><span class="card-price sale-active" style="${large ? 'font-size:22px' : ''}">${money(s.finalPrice)}</span><span class="old-price">${money(s.originalPrice)}</span><span class="save-chip">Save ${money(s.savedAmount)}</span></div>`;
+  return `
+    <div class="price-box">
+      <span class="card-price sale-active" style="${large ? 'font-size:22px' : ''}">${money(s.finalPrice)}</span>
+      <span class="old-price">${money(s.originalPrice)}</span>
+      <span class="save-chip">Save ${money(s.savedAmount)}</span>
+    </div>
+  `;
 }
 
-const FIXED_LOGO_SRC = CUSTOM_LOGO_SRC.trim();
-let products = safeReadStorage("ns_products", defaultProducts);
-if (!Array.isArray(products) || !products.length) products = defaultProducts;
-products = products.map(p => normalizeSaleFields({ ...p, stock: Math.max(0, Number(p.stock ?? 10)) }));
-
-let cart = safeReadStorage("ns_cart", []);
-if (!Array.isArray(cart)) cart = [];
-
-let orders = safeReadStorage("ns_orders", []);
-if (!Array.isArray(orders)) orders = [];
-
-let reviews = safeReadStorage("ns_reviews", [
-  {name: "Mariam", stars: 5, text: "Smooth ordering and my item arrived in great shape."},
-  {name: "Omar", stars: 5, text: "Helpful service and quick confirmation on WhatsApp."},
-  {name: "Sara", stars: 4, text: "Nice variety of everyday products and easy to browse."}
-]);
-if (!Array.isArray(reviews)) reviews = [];
-
+let logoValue = CUSTOM_LOGO_SRC.trim() || localStorage.getItem("ns_logo_custom") || "";
+let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => normalizeSaleFields({
+  ...p,
+  stock: Math.max(0, Number(p.stock ?? 10))
+}));
+let cart = JSON.parse(localStorage.getItem("ns_cart") || "[]");
+let orders = [];
 let activeCategory = "All";
-let isAdmin = sessionStorage.getItem("ns_admin") === "1";
+let isAdmin = false;
 let activeAdminTab = "orders";
 let uploadedAdminImgs = [];
 let editingSaleProductId = null;
@@ -1828,27 +2330,48 @@ let selectedPayment = "cod";
 let pendingOrderData = null;
 let brandClickCount = 0;
 let brandClickTimer = null;
+
+let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || [
+  {name: "Mariam", stars: 5, text: "Smooth ordering and my item arrived in great shape. Thanks NS!"},
+  {name: "Omar", stars: 5, text: "Helpful service and quick confirmation on WhatsApp."},
+  {name: "Sara", stars: 4, text: "Nice variety of everyday products and easy to browse."}
+];
+
 const cardIdxMap = {};
+const hoveredSet = new Set();
 let activeModalId = null;
 let activeModalImg = 0;
+
 products.forEach(p => { cardIdxMap[p.id] = 0; });
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = n => Number(n).toLocaleString("en-US") + " " + CURRENCY;
+const getStock = p => Math.max(0, Number(p.stock ?? 0));
+const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice(0, 4) : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"];
+
+function renderLogoMarkup(src) {
+  const clean = (src || "").trim();
+  if (!clean) return LOGO_3D_SVG;
+  return `<img src="${escapeHtml(clean)}" alt="NS Store logo">`;
 }
 
-function showToast(msg) {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  clearTimeout(window._toastT);
-  window._toastT = setTimeout(() => el.classList.remove("show"), 2200);
-}
-
-function renderFixedLogo() {
-  const box = document.getElementById("siteLogoBox");
-  if (!box || !FIXED_LOGO_SRC) return;
-  box.innerHTML = `<img src="${escapeHtml(FIXED_LOGO_SRC)}" alt="NS Store logo">`;
+function applyLogo(src, persist = true) {
+  const clean = (src || "").trim();
+  logoValue = clean;
+  const markup = renderLogoMarkup(clean);
+  const headerBox = document.getElementById("siteLogoBox");
+  const prevBox = document.getElementById("admLogoPreview");
+  const urlInput = document.getElementById("admLogoUrl");
+  if (headerBox) headerBox.innerHTML = markup;
+  if (prevBox) prevBox.innerHTML = markup;
+  if (urlInput && !clean.startsWith("data:")) urlInput.value = clean;
+  if (persist) {
+    try {
+      if (clean) localStorage.setItem("ns_logo_custom", clean);
+      else localStorage.removeItem("ns_logo_custom");
+    } catch (err) {
+      alert("Logo image is too large for local storage. Try a smaller image.");
+    }
+  }
 }
 
 function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image/jpeg") {
@@ -1874,24 +2397,68 @@ function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image
   });
 }
 
+async function handleLogoUpload(e) {
+  const file = (e.target.files || [])[0];
+  if (!file) return;
+  const dataUrl = await resizeImageToDataUrl(file, 260, 0.9, "image/png");
+  applyLogo(dataUrl, true);
+  showToast("Frameless 3D logo updated ✓");
+}
+
+function handleLogoUrlInput(e) {
+  const val = e.target.value.trim();
+  const prevBox = document.getElementById("admLogoPreview");
+  if (prevBox) prevBox.innerHTML = renderLogoMarkup(val);
+}
+
+function saveLogoUrlFromInput() {
+  const val = document.getElementById("admLogoUrl").value.trim();
+  if (!val) {
+    alert("Enter an image URL first.");
+    return;
+  }
+  applyLogo(val, true);
+  showToast("Logo URL saved ✓");
+}
+
+function resetDefaultLogo() {
+  document.getElementById("admLogoFile").value = "";
+  document.getElementById("admLogoUrl").value = "";
+  applyLogo("", true);
+  showToast("Default 3D logo restored ✓");
+}
+
 function updateSalePreviewCalc() {
   const price = Number(document.getElementById("admPrice").value) || 0;
   const type = document.getElementById("admSaleType").value;
   const val = Number(document.getElementById("admSaleVal").value) || 0;
+  const labelEl = document.getElementById("admSaleValLabel");
   const calcEl = document.getElementById("admSaleCalc");
+
+  if (type === "percent") {
+    labelEl.textContent = "Sale Percentage (%)";
+    document.getElementById("admSaleVal").placeholder = "e.g. 20";
+  } else if (type === "amount") {
+    labelEl.textContent = "Sale Amount (EGP)";
+    document.getElementById("admSaleVal").placeholder = "e.g. 100";
+  } else {
+    labelEl.textContent = "Sale Value";
+  }
+
   if (!price || type === "none" || val <= 0) {
     calcEl.textContent = price > 0 ? `Final Price: ${money(price)} (No Sale)` : "Final Price: No Sale";
     return;
   }
+
   const info = computeSaleInfo(price, type, val);
-  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s>${money(info.originalPrice)}</s>`;
+  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
 }
 
 function openSaleModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   editingSaleProductId = id;
-  document.getElementById("saleEditProdTitle").textContent = `${p.name} — ${money(p.price)}`;
+  document.getElementById("saleEditProdTitle").textContent = `${p.name} — Original Price: ${money(p.price)}`;
   document.getElementById("editSaleType").value = p.saleType || "none";
   document.getElementById("editSaleVal").value = p.saleType && p.saleType !== "none" ? (p.saleValue || "") : "";
   updateEditSaleCalc();
@@ -1908,13 +2475,19 @@ function updateEditSaleCalc() {
   if (!p) return;
   const type = document.getElementById("editSaleType").value;
   const val = Number(document.getElementById("editSaleVal").value) || 0;
+  const labelEl = document.getElementById("editSaleValLabel");
   const calcEl = document.getElementById("editSaleCalc");
+
+  if (type === "percent") labelEl.textContent = "Sale Percentage (%)";
+  else if (type === "amount") labelEl.textContent = "Sale Amount (EGP)";
+  else labelEl.textContent = "Sale Value";
+
   if (type === "none" || val <= 0) {
     calcEl.textContent = `Final Price: ${money(p.price)} (No Sale)`;
     return;
   }
   const info = computeSaleInfo(p.price, type, val);
-  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s>${money(info.originalPrice)}</s>`;
+  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
 }
 
 function saveEditedProductSale() {
@@ -1922,13 +2495,27 @@ function saveEditedProductSale() {
   if (!p) return;
   const type = document.getElementById("editSaleType").value;
   const val = Number(document.getElementById("editSaleVal").value) || 0;
+
+  if (type !== "none" && val <= 0) {
+    alert("Enter a Sale value greater than 0 or choose No Sale.");
+    return;
+  }
+  if (type === "percent" && val > 95) {
+    alert("Maximum Sale discount is 95%.");
+    return;
+  }
+  if (type === "amount" && val >= p.price) {
+    alert("Sale amount must be less than the original price.");
+    return;
+  }
+
   Object.assign(p, normalizeSaleFields({ ...p, saleType: type, saleValue: val }));
-  saveProductsState();
+  localStorage.setItem("ns_products", JSON.stringify(products));
   closeSaleModal();
   renderProducts();
   renderCart();
   renderAdminManageList();
-  showToast("Sale updated");
+  showToast("Sale updated ✓");
 }
 
 function clearEditedProductSale() {
@@ -1943,72 +2530,34 @@ function stockBadgeHtml(stock) {
   return `<span class="stock-pill">In Stock: ${stock}</span>`;
 }
 
-function saveProductsState() {
-  try { localStorage.setItem("ns_products", JSON.stringify(products)); } catch (e) {}
-  if (isCloudEnabled()) {
-    fetch(`${getCloudBaseUrl()}/ns_store/products.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(products)
-    }).catch(() => {});
-  }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
 }
 
-async function pushOrderToCloud(orderObj) {
-  if (!isCloudEnabled()) return false;
-  try {
-    const res = await fetch(`${getCloudBaseUrl()}/ns_store/orders/${encodeURIComponent(orderObj.orderNumber)}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderObj)
-    });
-    return res.ok;
-  } catch (e) {
-    return false;
-  }
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => el.classList.remove("show"), 2200);
 }
 
-async function deleteOrderFromCloud(orderNumber) {
-  if (!isCloudEnabled()) return;
-  try {
-    await fetch(`${getCloudBaseUrl()}/ns_store/orders/${encodeURIComponent(orderNumber)}.json`, { method: "DELETE" });
-  } catch (e) {}
+function initInstaPayDisplay() {
+  document.getElementById("instapayLinkText").textContent = INSTAPAY_LINK;
+  document.getElementById("instapayOpenLink").href = INSTAPAY_LINK;
 }
 
-async function pullCloudStoreNow(silent = false) {
-  if (!isCloudEnabled()) {
-    if (!silent) alert("FIREBASE_DB_URL is not configured.");
-    return;
-  }
-  try {
-    const [prodRes, ordRes] = await Promise.all([
-      fetch(`${getCloudBaseUrl()}/ns_store/products.json`),
-      isAdmin ? fetch(`${getCloudBaseUrl()}/ns_store/orders.json`) : Promise.resolve(null)
-    ]);
-    if (prodRes.ok) {
-      const cloudProds = await prodRes.json();
-      if (Array.isArray(cloudProds) && cloudProds.length) {
-        products = cloudProds.map(p => normalizeSaleFields({ ...p, stock: Math.max(0, Number(p.stock ?? 10)) }));
-        try { localStorage.setItem("ns_products", JSON.stringify(products)); } catch (e) {}
-        renderFilters();
-        renderProducts();
-        renderCart();
-        if (isAdmin) renderAdminManageList();
-      }
-    }
-    if (ordRes && ordRes.ok) {
-      const raw = await ordRes.json();
-      const list = raw && typeof raw === "object" ? Object.values(raw) : [];
-      orders = list.sort((a, b) => (b.createdTs || 0) - (a.createdTs || 0));
-      try { localStorage.setItem("ns_orders", JSON.stringify(orders)); } catch (e) {}
-      document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
-      document.getElementById("admOrdersTotal").textContent = orders.length;
-      if (isAdmin) renderAdminOrders();
-    }
-    if (!silent) showToast("Synced");
-  } catch (e) {}
+function copyInstaPayLink() {
+  navigator.clipboard.writeText(INSTAPAY_LINK).then(() => {
+    showToast("Payment link copied ✓");
+  }).catch(() => {
+    alert("Unable to copy automatically.");
+  });
 }
 
+/* Triple-Click Logo to Open Admin Login */
 function handleBrandTripleClick(e) {
   e.preventDefault();
   brandClickCount++;
@@ -2019,18 +2568,20 @@ function handleBrandTripleClick(e) {
     return;
   }
   brandClickTimer = setTimeout(() => {
-    if (brandClickCount === 1) window.scrollTo({ top: 0, behavior: "smooth" });
+    if (brandClickCount === 1) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     brandClickCount = 0;
   }, 450);
 }
 
+/* Admin Login & Controls */
 function openAdminLogin() {
-  if (isAdmin) {
-    pullCloudStoreNow(true);
-    return scrollToAdmin();
-  }
+  if (isAdmin) { scrollToAdmin(); return; }
+  document.getElementById("adminEmailInput").value = "";
   document.getElementById("adminPassInput").value = "";
   document.getElementById("loginWrap").classList.add("show");
+  setTimeout(() => document.getElementById("adminEmailInput").focus(), 100);
 }
 
 function closeAdminLogin() {
@@ -2038,22 +2589,31 @@ function closeAdminLogin() {
 }
 
 async function submitAdminLogin() {
-  if (document.getElementById("adminPassInput").value === ADMIN_PASS) {
-    isAdmin = true;
-    sessionStorage.setItem("ns_admin", "1");
-    closeAdminLogin();
-    syncAdminUI();
-    await pullCloudStoreNow(true);
-    scrollToAdmin();
-  } else {
-    alert("Incorrect password.");
+  const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
+  const password = document.getElementById("adminPassInput").value;
+  if (!email || !password) { alert("Enter your admin email and password."); return; }
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { alert("Sign in failed: " + error.message); return; }
+  const { data: allowed, error: allowError } = await sb.rpc("is_ns_admin");
+  if (allowError || allowed !== true) {
+    await sb.auth.signOut();
+    alert("This account is not authorized as an NS Store admin.");
+    return;
   }
+  isAdmin = true;
+  closeAdminLogin();
+  await loadOrders();
+  syncAdminUI();
+  showToast("Signed in as Admin ✓");
+  scrollToAdmin();
 }
 
-function logoutAdmin() {
+async function logoutAdmin() {
+  await sb.auth.signOut();
   isAdmin = false;
-  sessionStorage.removeItem("ns_admin");
+  orders = [];
   syncAdminUI();
+  showToast("Signed out of Admin");
 }
 
 function scrollToAdmin() {
@@ -2074,166 +2634,251 @@ function switchAdminTab(tab) {
 }
 
 function syncAdminUI() {
-  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
+  const pendingCount = orders.filter(o => o.status === "pending").length;
+  document.getElementById("stripPendingCount").textContent = pendingCount;
   document.getElementById("admOrdersTotal").textContent = orders.length;
   document.getElementById("adminStrip").classList.toggle("active", isAdmin);
   document.getElementById("adminPanel").classList.toggle("active", isAdmin);
-  updateCloudBadge();
   renderReviews();
-  if (isAdmin) switchAdminTab(activeAdminTab);
+  if (isAdmin) {
+    switchAdminTab(activeAdminTab);
+  }
 }
 
+/* Orders Management & Stock Deduction on Admin Confirm */
 function saveOrders() {
-  try { localStorage.setItem("ns_orders", JSON.stringify(orders)); } catch (e) {}
   document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
   document.getElementById("admOrdersTotal").textContent = orders.length;
+}
+
+function mapDbOrder(row) {
+  return {
+    orderNumber: "NS-" + row.order_number,
+    name: row.customer_name,
+    phone: row.customer_phone,
+    address: row.customer_address,
+    paymentText: row.payment_text,
+    items: row.items || [],
+    total: Number(row.total || 0),
+    createdAt: new Date(row.created_at).toLocaleString("en-US"),
+    status: row.status,
+    stockDeducted: !!row.stock_deducted
+  };
+}
+
+async function loadOrders() {
+  if (!isAdmin) return;
+  const { data, error } = await sb.from("ns_orders").select("*").order("order_number", { ascending: false });
+  if (error) { console.error(error); alert("Couldn't load orders: " + error.message); return; }
+  orders = (data || []).map(mapDbOrder);
+  saveOrders();
+  renderAdminOrders();
 }
 
 async function confirmOrderAndDeductStock(orderNumber) {
   const order = orders.find(o => o.orderNumber === orderNumber);
-  if (!order || order.stockDeducted || order.status === "cancelled") return;
-  for (const item of order.items) {
-    const p = products.find(y => y.id === item.id);
-    if (!p || getStock(p) < item.qty) return alert("Insufficient stock.");
-  }
-  order.items.forEach(item => {
-    const p = products.find(y => y.id === item.id);
-    if (p) p.stock = Math.max(0, getStock(p) - item.qty);
-  });
-  order.status = "confirmed";
-  order.stockDeducted = true;
-  saveProductsState();
-  saveOrders();
-  await pushOrderToCloud(order);
-  renderProducts();
-  renderCart();
-  renderAdminOrders();
-  renderAdminManageList();
+  if (!order || order.status !== "pending") return;
+  const numericNo = Number(String(orderNumber).replace("NS-", ""));
+  const { error } = await sb.from("ns_orders").update({ status: "confirmed", stock_deducted: false }).eq("order_number", numericNo);
+  if (error) { alert("Couldn't confirm order: " + error.message); return; }
+  await loadOrders();
+  showToast(`Order #${orderNumber} confirmed ✓`);
 }
 
 async function cancelOrderInAdmin(orderNumber) {
   const order = orders.find(o => o.orderNumber === orderNumber);
   if (!order || order.status === "cancelled") return;
-  if (order.stockDeducted) {
-    order.items.forEach(item => {
-      const p = products.find(y => y.id === item.id);
-      if (p) p.stock = getStock(p) + item.qty;
-    });
-    order.stockDeducted = false;
-    saveProductsState();
-  }
-  order.status = "cancelled";
-  saveOrders();
-  await pushOrderToCloud(order);
-  renderProducts();
-  renderCart();
-  renderAdminOrders();
-  renderAdminManageList();
+  if (!confirm(`Cancel order #${orderNumber}?`)) return;
+  const numericNo = Number(String(orderNumber).replace("NS-", ""));
+  const { error } = await sb.from("ns_orders").update({ status: "cancelled", stock_deducted: false }).eq("order_number", numericNo);
+  if (error) { alert("Couldn't cancel order: " + error.message); return; }
+  await loadOrders();
+  showToast(`Order #${orderNumber} cancelled`);
 }
 
 async function deleteOrderFromHistory(orderNumber) {
-  orders = orders.filter(o => o.orderNumber !== orderNumber);
-  saveOrders();
-  await deleteOrderFromCloud(orderNumber);
-  renderAdminOrders();
+  if (!confirm(`Permanently delete order #${orderNumber} from history?`)) return;
+  const numericNo = Number(String(orderNumber).replace("NS-", ""));
+  const { error } = await sb.from("ns_orders").delete().eq("order_number", numericNo);
+  if (error) { alert("Couldn't delete order: " + error.message); return; }
+  await loadOrders();
+  showToast("Order removed from log");
 }
 
 function renderAdminOrders() {
+  document.getElementById("admOrdersTotal").textContent = orders.length;
+  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
+
   const box = document.getElementById("admOrdersList");
   if (!orders.length) {
     box.innerHTML = '<div class="empty-msg">No orders logged yet.</div>';
     return;
   }
-  box.innerHTML = orders.map(o => `
-    <div class="order-card">
-      <div class="order-card-head">
-        <div><strong>Order #${escapeHtml(o.orderNumber)}</strong> <span style="font-size:11.5px;color:var(--muted)">${escapeHtml(o.createdAt || "")}</span></div>
-        <span class="status-pill ${o.status}">${o.status}</span>
+
+  box.innerHTML = orders.map(o => {
+    let badgeClass = "pending";
+    let badgeText = "Pending Admin Confirm (Stock Not Deducted)";
+    if (o.status === "confirmed") {
+      badgeClass = "confirmed";
+      badgeText = "Confirmed ✓";
+    } else if (o.status === "cancelled") {
+      badgeClass = "cancelled";
+      badgeText = "Cancelled";
+    }
+
+    return `
+      <div class="order-card">
+        <div class="order-card-head">
+          <div>
+            <strong style="font-size:15px">Order #${escapeHtml(o.orderNumber)}</strong>
+            <span style="font-size:11.5px;color:var(--muted);margin-left:8px">${escapeHtml(o.createdAt || "")}</span>
+          </div>
+          <span class="status-pill ${badgeClass}">${badgeText}</span>
+        </div>
+        <div style="font-size:13px"><b>Customer:</b> ${escapeHtml(o.name)} — <b>Phone:</b> ${escapeHtml(o.phone)}</div>
+        <div style="font-size:12.5px;color:var(--muted)"><b>Address:</b> ${escapeHtml(o.address)}</div>
+        <div style="font-size:12.5px;margin-top:4px"><b>Payment:</b> ${escapeHtml(o.paymentText)}</div>
+        <div class="order-items-box">
+          ${o.items.map(it => `<div>• ${escapeHtml(it.name)} × ${it.qty} = ${money(it.price * it.qty)}</div>`).join("")}
+          <div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-weight:800">Total: ${money(o.total)}</div>
+        </div>
+        <div class="order-actions">
+          ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">✓ Confirm Order</button>` : ""}
+          ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">Cancel Order</button>` : ""}
+          <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">Delete</button>
+        </div>
       </div>
-      <div style="font-size:13px"><b>Customer:</b> ${escapeHtml(o.name)} — ${escapeHtml(o.phone)}</div>
-      <div style="font-size:12.5px;color:var(--muted)"><b>Address:</b> ${escapeHtml(o.address)}</div>
-      <div class="order-items-box">
-        ${(o.items || []).map(it => `<div>• ${escapeHtml(it.name)} × ${it.qty} = ${money(it.price * it.qty)}</div>`).join("")}
-        <div style="margin-top:6px;font-weight:700">Total: ${money(o.total)}</div>
-      </div>
-      <div class="order-actions">
-        ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">Confirm &amp; Deduct Stock</button>` : ""}
-        ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">Cancel</button>` : ""}
-        <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">Delete</button>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 async function handleAdminImages(e) {
   const files = Array.from(e.target.files || []).slice(0, 4);
   if (!files.length) return;
   uploadedAdminImgs = await Promise.all(files.map(f => resizeImageToDataUrl(f, 750, 0.78, "image/jpeg")));
-  document.getElementById("admPreview").innerHTML = uploadedAdminImgs.map(src => `<img src="${src}" alt="Preview">`).join("");
+  document.getElementById("admPreview").innerHTML = uploadedAdminImgs
+    .map(src => `<img src="${src}" alt="Preview">`)
+    .join("");
 }
 
 function adminAddProduct() {
   const name = document.getElementById("admName").value.trim();
   const category = document.getElementById("admCat").value.trim();
   const price = Number(document.getElementById("admPrice").value);
-  const stock = Math.max(0, Number(document.getElementById("admStock").value));
+  const stockRaw = document.getElementById("admStock").value;
+  const stock = Math.max(0, Number(stockRaw));
   const saleType = document.getElementById("admSaleType").value;
   const saleValue = Number(document.getElementById("admSaleVal").value) || 0;
   const tag = document.getElementById("admTag").value.trim();
   const desc = document.getElementById("admDesc").value.trim();
-  const urlLines = document.getElementById("admUrls").value.split("\n").map(s => s.trim()).filter(Boolean);
+  const urlLines = document.getElementById("admUrls").value
+    .split("\n")
+    .map(s => s.trim())
+    .filter(Boolean);
+
   const finalImages = [...uploadedAdminImgs, ...urlLines].slice(0, 4);
-  if (!name || !category || !price || !desc || !finalImages.length) return alert("Fill all required fields and add an image.");
+
+  if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) {
+    alert("Please fill in Name, Category, Original Price, Stock, and Description.");
+    return;
+  }
+  if (saleType !== "none" && saleValue <= 0) {
+    alert("Enter a Sale value greater than 0 or select No Sale.");
+    return;
+  }
+  if (saleType === "percent" && saleValue > 95) {
+    alert("Maximum Sale discount is 95%.");
+    return;
+  }
+  if (saleType === "amount" && saleValue >= price) {
+    alert("Sale amount must be less than the original price.");
+    return;
+  }
+  if (!finalImages.length) {
+    alert("Upload at least one image or add an image URL.");
+    return;
+  }
+
   const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-  products.unshift(normalizeSaleFields({ id: newId, name, category, price, saleType, saleValue, stock, tag, desc, images: finalImages }));
-  saveProductsState();
+  const newProd = normalizeSaleFields({ id: newId, name, category, price, saleType, saleValue, stock, tag, desc, images: finalImages });
+  products.unshift(newProd);
+  cardIdxMap[newId] = 0;
+
+  try {
+    localStorage.setItem("ns_products", JSON.stringify(products));
+  } catch (err) {
+    alert("Storage is full. Try fewer/smaller photos or image URLs.");
+    products.shift();
+    return;
+  }
+
   document.getElementById("admName").value = "";
+  document.getElementById("admCat").value = "";
   document.getElementById("admPrice").value = "";
+  document.getElementById("admStock").value = "10";
+  document.getElementById("admSaleType").value = "none";
+  document.getElementById("admSaleVal").value = "";
+  document.getElementById("admTag").value = "";
   document.getElementById("admDesc").value = "";
+  document.getElementById("admFiles").value = "";
   document.getElementById("admUrls").value = "";
   document.getElementById("admPreview").innerHTML = "";
   uploadedAdminImgs = [];
+  updateSalePreviewCalc();
+
   renderFilters();
   renderProducts();
   renderAdminManageList();
-  showToast("Product added");
+  showToast("Product published ✓");
 }
 
 function adminDeleteProduct(id) {
+  if (!confirm("Delete this product?")) return;
   products = products.filter(p => p.id !== id);
   cart = cart.filter(c => c.id !== id);
-  saveProductsState();
+  localStorage.setItem("ns_products", JSON.stringify(products));
   saveCart();
   renderFilters();
   renderProducts();
   renderAdminManageList();
+  showToast("Product deleted");
 }
 
 function renderAdminManageList() {
   document.getElementById("admProdCount").textContent = products.length;
-  document.getElementById("admProdList").innerHTML = products.map(p => `
-    <div class="manage-item">
-      <div class="manage-item-info">
-        <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
-        <div>
-          <div style="font-weight:700;font-size:13px">${escapeHtml(p.name)}</div>
-          <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • Stock: ${getStock(p)}</div>
+  document.getElementById("admProdList").innerHTML = products.map(p => {
+    const s = getSaleInfo(p);
+    const saleTag = s.hasSale ? ` • <b style="color:#b45309">${escapeHtml(s.badgeText)} (${money(s.finalPrice)})</b>` : "";
+    return `
+      <div class="manage-item">
+        <div class="manage-item-info">
+          <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
+          <div>
+            <div style="font-weight:800;font-size:13px">${escapeHtml(p.name)}</div>
+            <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • Stock: ${getStock(p)}${saleTag}</div>
+          </div>
+        </div>
+        <div class="manage-item-actions">
+          <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">Sale</button>
+          <button type="button" class="del-btn" onclick="adminDeleteProduct(${p.id})">Delete</button>
         </div>
       </div>
-      <div class="manage-item-actions">
-        <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">Sale</button>
-        <button type="button" class="del-btn" onclick="adminDeleteProduct(${p.id})">Delete</button>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function copyExportCode() {
-  navigator.clipboard.writeText("const defaultProducts = " + JSON.stringify(products, null, 2) + ";").then(() => showToast("Code copied"));
+  const code = "const defaultProducts = " + JSON.stringify(products, null, 2) + ";";
+  navigator.clipboard.writeText(code).then(() => {
+    showToast("Products code copied! Paste it into defaultProducts ✓");
+  }).catch(() => {
+    alert("Unable to copy automatically.");
+  });
 }
 
+/* Store Core */
 function saveCart() {
-  try { localStorage.setItem("ns_cart", JSON.stringify(cart)); } catch (e) {}
+  localStorage.setItem("ns_cart", JSON.stringify(cart));
   resetOrderConfirmation();
   renderCart();
 }
@@ -2241,7 +2886,9 @@ function saveCart() {
 function renderFilters() {
   const cats = ["All", ...new Set(products.map(p => p.category))];
   if (!cats.includes(activeCategory)) activeCategory = "All";
-  document.getElementById("filters").innerHTML = cats.map(c => `<button class="cat-btn ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`).join("");
+  document.getElementById("filters").innerHTML = cats.map(c =>
+    `<button class="cat-btn ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
+  ).join("");
 }
 
 function setCategory(c) {
@@ -2256,22 +2903,26 @@ function visibleProducts() {
 
 function renderProducts() {
   const list = visibleProducts();
-  document.getElementById("productTotal").textContent = list.length + " items";
-  document.getElementById("productGrid").innerHTML = list.map(p => {
+  document.getElementById("productTotal").textContent = list.length + (list.length === 1 ? " item" : " items");
+  document.getElementById("productGrid").innerHTML = list.map((p, idx) => {
     const imgs = getImgs(p);
+    const cur = (cardIdxMap[p.id] || 0) % imgs.length;
     const stock = getStock(p);
     const sale = getSaleInfo(p);
     const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
     const canAddMore = stock > 0 && inCartQty < stock;
+
     return `
-      <article class="card ${sale.hasSale ? 'is-sale' : ''}">
+      <article class="card ${sale.hasSale ? 'is-sale' : ''}" onmouseenter="hoveredSet.add(${p.id})" onmouseleave="hoveredSet.delete(${p.id})">
         <div class="card-media" onclick="showDetails(${p.id})">
-          <img src="${imgs[0]}" alt="${escapeHtml(p.name)}">
+          <img id="p-img-${p.id}" src="${imgs[cur]}" alt="${escapeHtml(p.name)}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async">
           <div class="top-badges">
             ${p.tag ? `<span class="ribbon">${escapeHtml(p.tag)}</span>` : "<span></span>"}
             ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ""}
           </div>
           ${stock <= 0 ? `<div class="out-overlay">Sold Out</div>` : ""}
+          <span class="img-step" id="p-step-${p.id}">${cur + 1}/${imgs.length}</span>
+          ${imgs.length > 1 ? `<div class="dots-row" id="p-dots-${p.id}">${imgs.map((_, i) => `<span class="dot-item ${i === cur ? 'active' : ''}"></span>`).join("")}</div>` : ""}
         </div>
         <div class="card-body">
           <div class="card-meta-line">
@@ -2282,7 +2933,7 @@ function renderProducts() {
           <p class="card-desc">${escapeHtml(p.desc)}</p>
           ${priceHtml(p, false)}
           <div class="card-actions">
-            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Bag" : "Max in Bag")}</button>
+            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
             <button class="btn-info" onclick="showDetails(${p.id})">Details</button>
           </div>
         </div>
@@ -2291,22 +2942,62 @@ function renderProducts() {
   }).join("");
 }
 
+function cycleCard(p) {
+  const imgs = getImgs(p);
+  if (imgs.length <= 1) return;
+  cardIdxMap[p.id] = ((cardIdxMap[p.id] || 0) + 1) % imgs.length;
+  const idx = cardIdxMap[p.id];
+  const img = document.getElementById(`p-img-${p.id}`);
+  const step = document.getElementById(`p-step-${p.id}`);
+  const dots = document.getElementById(`p-dots-${p.id}`);
+  if (!img) return;
+  img.style.opacity = "0.55";
+  img.src = imgs[idx];
+  img.onload = () => { img.style.opacity = "1"; };
+  if (step) step.textContent = `${idx + 1}/${imgs.length}`;
+  if (dots) dots.innerHTML = imgs.map((_, i) => `<span class="dot-item ${i === idx ? 'active' : ''}"></span>`).join("");
+}
+
+setInterval(() => {
+  if (document.hidden || activeModalId !== null) return;
+  visibleProducts().forEach(p => {
+    if (!hoveredSet.has(p.id)) cycleCard(p);
+  });
+}, 3200);
+
 function addToCart(id) {
   const p = products.find(x => x.id === id);
-  if (!p || getStock(p) <= 0) return;
+  if (!p) return;
+  const stock = getStock(p);
+  if (stock <= 0) {
+    alert("This product is currently out of stock.");
+    return;
+  }
   const found = cart.find(x => x.id === id);
+  const currentQty = found ? found.qty : 0;
+  if (currentQty + 1 > stock) {
+    alert(`Only ${stock} available in stock.`);
+    return;
+  }
   if (found) found.qty++;
-  else cart.push({ id, qty: 1 });
+  else cart.push({id, qty: 1});
   saveCart();
   renderProducts();
-  showToast("Added to bag");
+  showToast("Added to Cart ✓");
   openCart();
 }
 
 function changeQty(id, delta) {
+  const p = products.find(x => x.id === id);
   const found = cart.find(x => x.id === id);
-  if (!found) return;
-  found.qty += delta;
+  if (!found || !p) return;
+  const stock = getStock(p);
+  const nextQty = found.qty + delta;
+  if (delta > 0 && nextQty > stock) {
+    alert(`Only ${stock} available in stock.`);
+    return;
+  }
+  found.qty = nextQty;
   if (found.qty <= 0) cart = cart.filter(x => x.id !== id);
   saveCart();
   renderProducts();
@@ -2319,6 +3010,14 @@ function removeItem(id) {
 }
 
 function renderCart() {
+  cart = cart.filter(x => {
+    const p = products.find(y => y.id === x.id);
+    const stock = p ? getStock(p) : 0;
+    if (!p || stock <= 0) return false;
+    if (x.qty > stock) x.qty = stock;
+    return x.qty > 0;
+  });
+
   const count = cart.reduce((s, x) => s + x.qty, 0);
   const total = cart.reduce((s, x) => {
     const p = products.find(y => y.id === x.id);
@@ -2327,31 +3026,39 @@ function renderCart() {
   document.getElementById("cartCount").textContent = count;
   document.getElementById("dockCartCount").textContent = count;
   document.getElementById("cartTotal").textContent = money(total);
+
   document.getElementById("cartItems").innerHTML = cart.length ? cart.map(x => {
     const p = products.find(y => y.id === x.id);
     if (!p) return "";
+    const stock = getStock(p);
     const sale = getSaleInfo(p);
+    const unitPriceLine = sale.hasSale
+      ? `<span style="font-weight:800;color:var(--burgundy)">${money(sale.finalPrice)}</span> <s style="font-size:11.5px;color:var(--muted)">${money(sale.originalPrice)}</s>`
+      : `<span style="font-weight:700;color:var(--muted)">${money(sale.finalPrice)}</span>`;
     return `
       <div class="cart-row">
-        <div class="cart-thumb"><img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}"></div>
+        <div class="cart-thumb"><img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
         <div>
-          <div style="font-weight:700">${escapeHtml(p.name)}</div>
-          <div style="font-size:13px">${money(sale.finalPrice)}</div>
+          <div style="font-weight:800">${escapeHtml(p.name)} ${sale.hasSale ? `<span class="save-chip">${escapeHtml(sale.labelText)}</span>` : ""}</div>
+          <div style="font-size:13px">${unitPriceLine} • <span style="font-size:11.5px;color:var(--muted)">In stock: ${stock}</span></div>
           <div class="qty-box">
-            <button onclick="changeQty(${p.id},-1)">-</button>
-            <span>${x.qty}</span>
-            <button onclick="changeQty(${p.id},1)">+</button>
+            <button onclick="changeQty(${p.id},-1)">−</button>
+            <span style="font-weight:800">${x.qty}</span>
+            <button ${x.qty >= stock ? "disabled" : ""} onclick="changeQty(${p.id},1)">+</button>
           </div>
         </div>
         <button class="del-btn" onclick="removeItem(${p.id})">Remove</button>
       </div>
     `;
-  }).join("") : '<div class="empty-msg">Your bag is empty</div>';
+  }).join("") : '<div class="empty-msg">Your Cart is empty 🛍️<br>Add items to get started</div>';
+  localStorage.setItem("ns_cart", JSON.stringify(cart));
 }
 
 function openCart() {
   renderCart();
-  document.getElementById("drawer").classList.add("open");
+  const drawer = document.getElementById("drawer");
+  drawer.scrollTop = 0;
+  drawer.classList.add("open");
   document.getElementById("overlay").classList.add("show");
 }
 
@@ -2360,6 +3067,7 @@ function closeCart() {
   document.getElementById("overlay").classList.remove("show");
 }
 
+/* Payment Selection, Order Numbering & Pre-WhatsApp Confirmation */
 function selectPayment(method) {
   selectedPayment = method;
   document.getElementById("pay-cod").classList.toggle("active", method === "cod");
@@ -2374,55 +3082,133 @@ function resetOrderConfirmation() {
   document.getElementById("prepareOrderBtn").style.display = "block";
 }
 
+function generateNextOrderNumber() {
+  const lastNum = Number(localStorage.getItem("ns_last_order_num") || "1000");
+  const nextNum = lastNum + 1;
+  localStorage.setItem("ns_last_order_num", String(nextNum));
+  return "NS-" + nextNum;
+}
+
+function getPaymentLabel() {
+  if (selectedPayment === "instapay") {
+    return `InstaPay / Telda (${INSTAPAY_LINK})`;
+  }
+  return "Cash on Delivery";
+}
+
 function prepareOrderConfirmation() {
-  if (!cart.length) return alert("Your bag is empty.");
+  if (!cart.length) {
+    alert("Your Cart is empty. Add at least one item first.");
+    return;
+  }
+
+  const orderItems = [];
+  for (const item of cart) {
+    const p = products.find(y => y.id === item.id);
+    const stock = p ? getStock(p) : 0;
+    if (!p || stock <= 0) {
+      alert(`"${p ? p.name : "Selected item"}" is sold out. Please remove it from your Cart.`);
+      renderCart();
+      renderProducts();
+      return;
+    }
+    if (item.qty > stock) {
+      alert(`Requested quantity for "${p.name}" (${item.qty}) exceeds available stock (${stock}).`);
+      renderCart();
+      return;
+    }
+    const sale = getSaleInfo(p);
+    orderItems.push({
+      id: p.id,
+      name: sale.hasSale ? `${p.name} (${sale.labelText})` : p.name,
+      price: sale.finalPrice,
+      qty: item.qty
+    });
+  }
+
   const name = document.getElementById("customerName").value.trim();
   const phone = document.getElementById("customerPhone").value.trim();
   const address = document.getElementById("customerAddress").value.trim();
-  if (!name || !phone || !address) return alert("Complete all order fields.");
-  const orderItems = cart.map(item => {
-    const p = products.find(y => y.id === item.id);
-    const sale = getSaleInfo(p);
-    return { id: p.id, name: p.name, price: sale.finalPrice, qty: item.qty };
-  });
+  if (!name || !phone || !address) {
+    alert("Please enter your full name, phone number, and delivery address.");
+    return;
+  }
+  if (!/^(\+?20|0)?1[0125][0-9]{8}$/.test(phone.replace(/[\s-]/g, ""))) {
+    if (!confirm("That phone number looks unusual. Continue anyway?")) return;
+  }
+
+  const lines = orderItems.map(it => `• ${it.name} × ${it.qty} = ${money(it.price * it.qty)}`);
   const total = orderItems.reduce((s, it) => s + it.qty * it.price, 0);
-  const orderNumber = "NS-" + (Number(localStorage.getItem("ns_last_order_num") || "1000") + 1);
-  localStorage.setItem("ns_last_order_num", orderNumber.replace("NS-", ""));
+  const paymentText = getPaymentLabel();
+
   pendingOrderData = {
-    orderNumber,
     name,
     phone,
     address,
+    lines,
     total,
-    paymentText: selectedPayment === "instapay" ? `InstaPay (${INSTAPAY_LINK})` : "Cash on Delivery",
+    paymentText,
     items: orderItems,
-    createdTs: Date.now(),
     createdAt: new Date().toLocaleString("en-US")
   };
-  document.getElementById("confirmSummary").innerHTML = `<div><b>Order #:</b> #${escapeHtml(orderNumber)}</div><div><b>Total:</b> ${money(total)}</div>`;
+
+  document.getElementById("confirmSummary").innerHTML = `
+    <div><b>Order #:</b> Will be assigned when you submit</div>
+    <div><b>Name:</b> ${escapeHtml(name)} (${escapeHtml(phone)})</div>
+    <div><b>Payment:</b> ${escapeHtml(paymentText)}</div>
+    <div><b>Total:</b> ${money(total)}</div>
+  `;
   document.getElementById("confirmBox").classList.add("show");
   document.getElementById("prepareOrderBtn").style.display = "none";
+  showToast("Order details ready — review and submit");
+  setTimeout(() => {
+    document.getElementById("confirmBox").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, 60);
+}
+
+async function recordOrderToAdmin(data) {
+  const { data: result, error } = await sb.rpc("create_ns_order", {
+    p_customer_name: data.name,
+    p_customer_phone: data.phone,
+    p_customer_address: data.address,
+    p_payment_text: data.paymentText,
+    p_items: data.items,
+    p_total: data.total
+  });
+  if (error) throw error;
+  return "NS-" + result;
 }
 
 async function finalizeAndSendWhatsApp() {
-  if (!pendingOrderData) return prepareOrderConfirmation();
-  const orderObj = { ...pendingOrderData, status: "pending", stockDeducted: false };
-  orders.unshift(orderObj);
-  saveOrders();
-  await pushOrderToCloud(orderObj);
-  cart = [];
-  saveCart();
-  closeCart();
-  const lines = orderObj.items.map(it => `- ${it.name} x ${it.qty} = ${money(it.price * it.qty)}`).join("\n");
-  const msg = `New Order #${orderObj.orderNumber}\nName: ${orderObj.name}\nPhone: ${orderObj.phone}\nAddress: ${orderObj.address}\nPayment: ${orderObj.paymentText}\n\n${lines}\n\nTotal: ${money(orderObj.total)}`;
-  window.open(`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`, "_blank");
+  if (!pendingOrderData) { prepareOrderConfirmation(); return; }
+  const submitButton = document.querySelector(".wa-btn");
+  if (submitButton) { submitButton.disabled = true; submitButton.textContent = "Saving order..."; }
+  try {
+    const orderNumber = await recordOrderToAdmin(pendingOrderData);
+    const { name, phone, address, lines, total, paymentText } = pendingOrderData;
+    cart = [];
+    localStorage.setItem("ns_cart", JSON.stringify(cart));
+    renderCart();
+    renderProducts();
+    resetOrderConfirmation();
+    closeCart();
+    const msg = `New Order — NS Store\nOrder #: #${orderNumber}\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentText}\n\nItems:\n${lines.join("\n")}\n\nTotal: ${money(total)}\n\nSaved in NS Store database and awaiting Admin confirmation.`;
+    const number = WHATSAPP_NUMBER.replace(/\D/g, "");
+    window.open(`https://wa.me/${number}?text=${encodeURIComponent(msg)}`, "_blank");
+    showToast(`Order #${orderNumber} saved ✓`);
+  } catch (err) {
+    console.error(err);
+    alert("Order was not saved, so WhatsApp was not opened. Please try again.\n" + (err.message || "Unknown error"));
+  } finally {
+    if (submitButton) { submitButton.disabled = false; submitButton.textContent = "Confirm & Send on WhatsApp"; }
+  }
 }
 
 function showDetails(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   activeModalId = id;
-  activeModalImg = 0;
+  activeModalImg = (cardIdxMap[id] || 0) % getImgs(p).length;
   paintModal();
   document.getElementById("modalWrap").classList.add("show");
 }
@@ -2432,14 +3218,49 @@ function paintModal() {
   if (!p) return;
   const imgs = getImgs(p);
   const idx = activeModalImg % imgs.length;
+  const stock = getStock(p);
+  const sale = getSaleInfo(p);
+  const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
+  const canAddMore = stock > 0 && inCartQty < stock;
+
   document.getElementById("modal").innerHTML = `
-    <button class="x-btn" style="position:absolute;right:16px;top:16px;z-index:4" onclick="closeDetails()">x</button>
-    <div class="stage"><img src="${imgs[idx]}" alt="${escapeHtml(p.name)}"></div>
-    <h3 style="margin:4px 0 6px;font-size:21px">${escapeHtml(p.name)}</h3>
+    <button class="x-btn" style="position:absolute;right:16px;top:16px;z-index:4" onclick="closeDetails()">×</button>
+    <div class="stage">
+      <img src="${imgs[idx]}" alt="${escapeHtml(p.name)} - ${idx + 1}" decoding="async">
+      ${imgs.length > 1 ? `
+        <button class="arrow-btn prev-pos" onclick="stepModal(-1)" aria-label="Previous">‹</button>
+        <button class="arrow-btn next-pos" onclick="stepModal(1)" aria-label="Next">›</button>
+      ` : ""}
+      <span class="stage-tag">${idx + 1} / ${imgs.length}</span>
+    </div>
+    <div class="strip">
+      ${imgs.map((u, i) => `<button class="${i === idx ? 'active' : ''}" onclick="pickModal(${i})"><img src="${u}" alt="Photo ${i + 1}" loading="lazy"></button>`).join("")}
+    </div>
+    <div class="card-meta-line">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span class="card-cat">${escapeHtml(p.category)}</span>
+        ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ""}
+      </div>
+      ${stockBadgeHtml(stock)}
+    </div>
+    <h3 style="margin:4px 0 6px;font-size:21px;font-weight:800">${escapeHtml(p.name)}</h3>
     <p style="margin:0 0 12px;color:var(--muted);font-size:14px">${escapeHtml(p.desc)}</p>
     ${priceHtml(p, true)}
-    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px" onclick="addToCart(${p.id});closeDetails()">Add to Bag</button>
+    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
   `;
+}
+
+function stepModal(d) {
+  const p = products.find(x => x.id === activeModalId);
+  if (!p) return;
+  const len = getImgs(p).length;
+  activeModalImg = (activeModalImg + d + len) % len;
+  paintModal();
+}
+
+function pickModal(i) {
+  activeModalImg = i;
+  paintModal();
 }
 
 function closeDetails() {
@@ -2447,48 +3268,81 @@ function closeDetails() {
   document.getElementById("modalWrap").classList.remove("show");
 }
 
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    closeDetails();
+    closeAdminLogin();
+    closeSaleModal();
+  }
+  if (activeModalId === null) return;
+  if (e.key === "ArrowLeft") stepModal(-1);
+  else if (e.key === "ArrowRight") stepModal(1);
+});
+
 function renderReviews() {
-  document.getElementById("reviewGrid").innerHTML = reviews.map((r, i) => `
+  document.getElementById("reviewGrid").innerHTML = reviews.map((r, index) => `
     <div class="rev-card">
       <div>
         <div class="rev-top-row">
-          <div class="stars">${"*".repeat(r.stars)}</div>
-          ${isAdmin ? `<button class="rev-del-btn" onclick="deleteReview(${i})">Delete</button>` : ""}
+          <div class="stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div>
+          ${isAdmin ? `<button class="rev-del-btn" onclick="deleteReview(${index})">Delete</button>` : ""}
         </div>
-        <p>${escapeHtml(r.text)}</p>
+        <p>“${escapeHtml(r.text)}”</p>
       </div>
       <strong>${escapeHtml(r.name)}</strong>
     </div>
   `).join("");
 }
 
-function deleteReview(i) {
-  reviews.splice(i, 1);
-  try { localStorage.setItem("ns_reviews", JSON.stringify(reviews)); } catch (e) {}
+function deleteReview(index) {
+  if (!isAdmin) return;
+  if (!confirm("Delete this review?")) return;
+  reviews.splice(index, 1);
+  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
   renderReviews();
+  showToast("Review deleted ✓");
 }
 
 function addReview() {
   const name = document.getElementById("reviewName").value.trim();
   const text = document.getElementById("reviewText").value.trim();
   const stars = Number(document.getElementById("reviewStars").value);
-  if (!name || !text) return alert("Enter name and review.");
-  reviews.unshift({ name, text, stars });
-  try { localStorage.setItem("ns_reviews", JSON.stringify(reviews)); } catch (e) {}
+  if (!name || !text) {
+    alert("Please enter your name and review first.");
+    return;
+  }
+  reviews.unshift({name, text, stars});
+  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
   renderReviews();
   document.getElementById("reviewName").value = "";
   document.getElementById("reviewText").value = "";
+  showToast("Thanks for your review! ★");
+}
+
+async function initializeSupabaseAdmin() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const { data: allowed, error } = await sb.rpc("is_ns_admin");
+    isAdmin = !error && allowed === true;
+    if (isAdmin) await loadOrders();
+    else await sb.auth.signOut();
+  }
+  syncAdminUI();
+  sb.channel("ns-orders-live")
+    .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
+      if (isAdmin) loadOrders();
+    })
+    .subscribe();
 }
 
 document.getElementById("year").textContent = new Date().getFullYear();
-document.getElementById("instapayLinkText").textContent = INSTAPAY_LINK;
-document.getElementById("instapayOpenLink").href = INSTAPAY_LINK;
-renderFixedLogo();
+applyLogo(logoValue, false);
+initInstaPayDisplay();
 renderFilters();
 renderProducts();
 renderCart();
 syncAdminUI();
-if (isCloudEnabled()) pullCloudStoreNow(true);
+initializeSupabaseAdmin();
 </script>
 </body>
 </html>

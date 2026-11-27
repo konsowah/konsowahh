@@ -2356,7 +2356,7 @@ function renderLogoMarkup(src) {
   return `<img src="${escapeHtml(clean)}" alt="NS Store logo">`;
 }
 
-function applyLogo(src, persist = true) {
+function applyLogo(src, persist = false) {
   const clean = (src || "").trim();
   logoValue = clean;
   const markup = renderLogoMarkup(clean);
@@ -2366,14 +2366,43 @@ function applyLogo(src, persist = true) {
   if (headerBox) headerBox.innerHTML = markup;
   if (prevBox) prevBox.innerHTML = markup;
   if (urlInput && !clean.startsWith("data:")) urlInput.value = clean;
+  // The shared Supabase setting is the source of truth; localStorage is not used for logo sync.
   if (persist) {
     try {
       if (clean) localStorage.setItem("ns_logo_custom", clean);
       else localStorage.removeItem("ns_logo_custom");
-    } catch (err) {
-      alert("Logo image is too large for local storage. Try a smaller image.");
-    }
+    } catch (_) {}
   }
+}
+
+async function saveSharedLogo(src) {
+  if (!isAdmin) throw new Error("Only an authorized admin can change the store logo.");
+  const clean = (src || "").trim();
+  const { error } = await sb.from("ns_store_settings").upsert({ id: "main", logo_url: clean }, { onConflict: "id" });
+  if (error) throw error;
+  applyLogo(clean, false);
+}
+
+async function loadSharedLogo() {
+  const { data, error } = await sb.from("ns_store_settings").select("logo_url").eq("id", "main").maybeSingle();
+  if (error) {
+    console.warn("Could not load shared NS logo:", error.message);
+    return;
+  }
+  applyLogo(data?.logo_url || "", false);
+}
+
+async function uploadSharedLogo(file) {
+  const dataUrl = await resizeImageToDataUrl(file, 700, 0.9, "image/png");
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+  const path = `store-logo/logo-${Date.now()}.png`;
+  const { error: uploadError } = await sb.storage.from("ns-products").upload(path, blob, {
+    contentType: "image/png", upsert: false, cacheControl: "3600"
+  });
+  if (uploadError) throw uploadError;
+  const { data } = sb.storage.from("ns-products").getPublicUrl(path);
+  await saveSharedLogo(data.publicUrl);
 }
 
 function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image/jpeg") {
@@ -2402,9 +2431,16 @@ function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image
 async function handleLogoUpload(e) {
   const file = (e.target.files || [])[0];
   if (!file) return;
-  const dataUrl = await resizeImageToDataUrl(file, 260, 0.9, "image/png");
-  applyLogo(dataUrl, true);
-  showToast("Frameless 3D logo updated ✓");
+  try {
+    showToast("Uploading shared logo...");
+    await uploadSharedLogo(file);
+    showToast("Shared store logo updated for everyone ✓");
+  } catch (err) {
+    console.error(err);
+    alert("Could not save the shared logo: " + (err.message || "Unknown error"));
+  } finally {
+    e.target.value = "";
+  }
 }
 
 function handleLogoUrlInput(e) {
@@ -2413,21 +2449,29 @@ function handleLogoUrlInput(e) {
   if (prevBox) prevBox.innerHTML = renderLogoMarkup(val);
 }
 
-function saveLogoUrlFromInput() {
+async function saveLogoUrlFromInput() {
   const val = document.getElementById("admLogoUrl").value.trim();
   if (!val) {
     alert("Enter an image URL first.");
     return;
   }
-  applyLogo(val, true);
-  showToast("Logo URL saved ✓");
+  try {
+    await saveSharedLogo(val);
+    showToast("Shared logo URL saved ✓");
+  } catch (err) {
+    alert("Could not save the shared logo: " + (err.message || "Unknown error"));
+  }
 }
 
-function resetDefaultLogo() {
+async function resetDefaultLogo() {
   document.getElementById("admLogoFile").value = "";
   document.getElementById("admLogoUrl").value = "";
-  applyLogo("", true);
-  showToast("Default 3D logo restored ✓");
+  try {
+    await saveSharedLogo("");
+    showToast("Default 3D logo restored for everyone ✓");
+  } catch (err) {
+    alert("Could not restore the shared logo: " + (err.message || "Unknown error"));
+  }
 }
 
 function updateSalePreviewCalc() {
@@ -3369,6 +3413,7 @@ async function initializeSupabaseAdmin() {
     else await sb.auth.signOut();
   }
   if (!isAdmin) await loadProductsFromDatabase();
+  await loadSharedLogo();
   syncAdminUI();
   sb.channel("ns-store-live")
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
@@ -3376,6 +3421,9 @@ async function initializeSupabaseAdmin() {
     })
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_products" }, () => {
       loadProductsFromDatabase();
+    })
+    .on("postgres_changes", { event: "*", schema: "public", table: "ns_store_settings" }, () => {
+      loadSharedLogo();
     })
     .subscribe();
 }

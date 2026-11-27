@@ -1732,7 +1732,7 @@ footer p {
     </a>
     <div class="nav-right">
       <button class="cart-trigger" onclick="openCart()">
-        <span>Bag</span>
+        <span>Cart</span>
         <span class="badge-num" id="cartCount">0</span>
       </button>
     </div>
@@ -1944,7 +1944,7 @@ footer p {
 
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <h2 style="margin:0;font-size:22px;font-weight:700;color:var(--brown-deep)">Shopping Bag</h2>
+    <h2 style="margin:0;font-size:22px;font-weight:700;color:var(--brown-deep)">Shopping Cart</h2>
     <button class="x-btn" onclick="closeCart()">×</button>
   </div>
   <div class="cart-list" id="cartItems"></div>
@@ -2051,7 +2051,7 @@ footer p {
   </div>
 </div>
 
-<div class="toast" id="toast">Added to Bag ✓</div>
+<div class="toast" id="toast">Added to Cart ✓</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -3049,7 +3049,7 @@ function renderProducts() {
           <p class="card-desc">${escapeHtml(p.desc)}</p>
           ${priceHtml(p, false)}
           <div class="card-actions">
-            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Bag" : "Max in Bag")}</button>
+            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
             <button class="btn-info" onclick="showDetails(${p.id})">Details</button>
           </div>
         </div>
@@ -3099,7 +3099,7 @@ function addToCart(id) {
   else cart.push({id, qty: 1});
   saveCart();
   renderProducts();
-  showToast("Added to Bag ✓");
+  showToast("Added to Cart ✓");
   openCart();
 }
 
@@ -3165,7 +3165,7 @@ function renderCart() {
         <button class="del-btn" onclick="removeItem(${p.id})">Remove</button>
       </div>
     `;
-  }).join("") : '<div class="empty-msg">Your Bag is empty 🛍️<br>Add pieces to get started</div>';
+  }).join("") : '<div class="empty-msg">Your Cart is empty 🛍️<br>Add pieces to get started</div>';
   localStorage.setItem("ns_cart", JSON.stringify(cart));
 }
 
@@ -3206,7 +3206,7 @@ function getPaymentLabel() {
 
 function prepareOrderConfirmation() {
   if (!cart.length) {
-    alert("Your Bag is empty. Add at least one item first.");
+    alert("Your Cart is empty. Add at least one item first.");
     return;
   }
 
@@ -3215,7 +3215,7 @@ function prepareOrderConfirmation() {
     const p = products.find(y => y.id === item.id);
     const stock = p ? getStock(p) : 0;
     if (!p || stock <= 0) {
-      alert(`"${p ? p.name : "Selected item"}" is sold out. Please remove it from your Bag.`);
+      alert(`"${p ? p.name : "Selected item"}" is sold out. Please remove it from your Cart.`);
       renderCart();
       renderProducts();
       return;
@@ -3355,7 +3355,7 @@ function paintModal() {
     <h3 style="margin:4px 0 6px;font-size:21px;font-weight:800;color:var(--brown-deep)">${escapeHtml(p.name)}</h3>
     <p style="margin:0 0 12px;color:var(--muted);font-size:14px">${escapeHtml(p.desc)}</p>
     ${priceHtml(p, true)}
-    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Bag" : "Max in Bag")}</button>
+    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
   `;
 }
 

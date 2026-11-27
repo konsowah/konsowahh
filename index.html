@@ -2602,7 +2602,8 @@ function handleInstaPayProofChange(e) {
   }
   resizeImageToDataUrl(file, 900, 0.82).then(dataUrl => {
     instapayProofDataUrl = dataUrl;
-    if (imgEl) {
+    if[cite: 6]
+    (imgEl) {
       imgEl.src = dataUrl;
       imgEl.classList.add("show");
     }
@@ -3803,7 +3804,9 @@ async function finalizeWebsiteOrder() {
 }
 
 function renderReviews() {
-  document.getElementById("reviewGrid").innerHTML = reviews.map((r, idx) => {
+  const grid = document.getElementById("reviewGrid");
+  if (!grid) return;
+  grid.innerHTML = reviews.map((r, idx) => {
     const s = Math.max(1, Math.min(5, Number(r.stars) || 5));
     const delBtn = isAdmin ? `<button class="rev-del-btn" onclick="deleteReview(${idx})">Delete</button>` : "";
     return `

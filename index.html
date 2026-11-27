@@ -173,28 +173,36 @@ header {
   user-select: none;
 }
 
+/* 3D Embossed Style for Admin Custom Logo Only */
 .logo-3d-wrap {
-  width: 48px;
-  height: 48px;
-  display: flex;
+  display: none;
+  width: 50px;
+  height: 50px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  filter: drop-shadow(0 8px 10px rgba(59, 35, 22, 0.25));
+  perspective: 500px;
+  filter: drop-shadow(0 9px 12px rgba(36, 19, 10, 0.28)) drop-shadow(0 3px 4px rgba(182, 130, 70, 0.24));
   transition: transform 0.28s ease, filter 0.28s ease;
 }
 
-.brand:hover .logo-3d-wrap {
-  transform: translateY(-2px) scale(1.04);
+.logo-3d-wrap.has-logo {
+  display: flex;
 }
 
-.logo-3d-wrap svg,
+.brand:hover .logo-3d-wrap.has-logo {
+  transform: translateY(-2px) scale(1.06) rotateY(-6deg);
+  filter: drop-shadow(0 13px 16px rgba(36, 19, 10, 0.36)) drop-shadow(0 4px 6px rgba(182, 130, 70, 0.35));
+}
+
 .logo-3d-wrap img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   border: 0;
   background: transparent;
+  border-radius: 10px;
+  transform: translateZ(6px);
 }
 
 .brand-name {
@@ -203,6 +211,7 @@ header {
   font-size: 27px;
   letter-spacing: 1px;
   color: var(--brown-deep);
+  text-shadow: 0 1px 0 rgba(255, 253, 249, 0.9), 0 3px 6px rgba(36, 19, 10, 0.14);
 }
 
 .nav-right {
@@ -391,19 +400,42 @@ header {
 }
 
 .logo-live-preview {
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  filter: drop-shadow(0 8px 11px rgba(36, 19, 10, 0.25)) drop-shadow(0 2px 4px rgba(182, 130, 70, 0.25));
+  transition: transform 0.25s ease;
 }
 
-.logo-live-preview svg,
+.logo-live-preview.has-logo {
+  border: 0;
+  background: transparent;
+}
+
+.logo-live-preview:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
 .logo-live-preview img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 10px;
+}
+
+.logo-empty-note {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.3;
+  padding: 4px;
 }
 
 .preview-strip {
@@ -467,6 +499,24 @@ header {
   border-radius: 8px;
   font-size: 11.5px;
   font-weight: 800;
+}
+
+.coupon-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.coupon-badge.on {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.coupon-badge.off {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .orders-list {
@@ -553,7 +603,7 @@ header {
   font-weight: 800;
 }
 
-/* Completely Redesigned Hero: Asymmetric Editorial Showcase */
+/* Asymmetric Editorial Showcase Hero */
 .editorial-hero {
   background: var(--paper);
   border: 1px solid var(--line);
@@ -1039,7 +1089,7 @@ header {
   background: var(--brown-soft);
 }
 
-/* Reviews Section - Same Compact Framed Card Concept, Adapted to Brown & Cream */
+/* Reviews Section - Framed Cards in Warm Brown & Cream */
 .block-sec {
   margin-top: 72px;
 }
@@ -1282,7 +1332,7 @@ footer p {
 }
 
 .cart-list {
-  max-height: 210px;
+  max-height: 190px;
   overflow-y: auto;
   padding: 6px 0;
 }
@@ -1337,13 +1387,96 @@ footer p {
   font-weight: 800;
 }
 
+/* Coupon Box in Cart */
+.coupon-box {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.coupon-row {
+  display: flex;
+  gap: 8px;
+}
+
+.coupon-row input {
+  flex: 1;
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.coupon-row input:focus {
+  border-color: var(--brown);
+  background: var(--paper);
+}
+
+.coupon-apply-btn {
+  background: var(--brown);
+  color: #faf6f0;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.coupon-clear-btn {
+  background: var(--bg);
+  color: var(--brown);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.coupon-msg {
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.coupon-msg.ok {
+  color: #15803d;
+}
+
+.coupon-msg.err {
+  color: var(--danger);
+}
+
+.sum-breakdown {
+  border-top: 1px solid var(--line);
+  margin-top: 10px;
+  padding-top: 8px;
+}
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.sum-line.discount {
+  color: #15803d;
+  font-weight: 700;
+}
+
 .sum-bar {
   display: flex;
   justify-content: space-between;
   font-weight: 800;
   font-size: 16.5px;
-  padding: 10px 0;
-  border-top: 1px solid var(--line);
+  padding: 8px 0 10px;
+  border-top: 1px dashed var(--line);
   color: var(--brown-deep);
 }
 
@@ -1700,7 +1833,7 @@ footer p {
   .strip button { height: 52px; }
   .admin-row-2 { grid-template-columns: 1fr; }
   .drawer { width: 100%; padding: 16px 16px 115px; }
-  .cart-list { max-height: 150px; }
+  .cart-list { max-height: 140px; }
 }
 </style>
 </head>
@@ -1710,11 +1843,11 @@ footer p {
 
 <!-- Admin Status Bar -->
 <div class="admin-strip" id="adminStrip">
-  <span>🔐 Admin Mode Active — Orders, Stock &amp; Sale Management</span>
+  <span>🔐 Admin Mode Active — Orders, Stock, Sales &amp; Coupons</span>
   <div class="admin-strip-actions">
     <button class="admin-mini-btn" onclick="switchAdminTab('orders');scrollToAdmin()">Orders (<span id="stripPendingCount">0</span>)</button>
     <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">Products</button>
-    <button class="admin-mini-btn" onclick="copyExportCode()">Copy Products Code</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('coupons');scrollToAdmin()">Coupons</button>
     <button class="admin-mini-btn out" onclick="logoutAdmin()">Log Out</button>
   </div>
 </div>
@@ -1745,14 +1878,14 @@ footer p {
     <div class="admin-head">
       <h2>⚙️ NS Admin Dashboard</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-info" style="padding:7px 14px;border-radius:10px;font-size:12px" onclick="copyExportCode()">📋 Copy Products Code</button>
         <button class="del-btn" style="padding:7px 14px;border-radius:10px" onclick="logoutAdmin()">Log Out</button>
       </div>
     </div>
 
     <div class="admin-tabs">
       <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 Orders (<span id="admOrdersTotal">0</span>)</button>
-      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ Products &amp; Sale</button>
+      <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ Products &amp; Logo</button>
+      <button type="button" class="adm-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')">🎟️ Coupons (<span id="admCouponsCount">0</span>)</button>
     </div>
 
     <!-- Orders Tab -->
@@ -1763,11 +1896,13 @@ footer p {
     <!-- Products Tab -->
     <div id="adminTabProducts" style="display:none">
       <div class="admin-card">
-        <h3>✦ Frameless 3D Logo (or Custom Image)</h3>
+        <h3>✦ Store Logo (3D Embossed Style)</h3>
         <div class="logo-uploader-box">
-          <div class="logo-live-preview" id="admLogoPreview"></div>
+          <div class="logo-live-preview" id="admLogoPreview">
+            <span class="logo-empty-note">No logo set</span>
+          </div>
           <div style="flex:1">
-            <label style="margin-bottom:4px">Upload an image or keep the 3D emblem</label>
+            <label style="margin-bottom:4px">Upload a logo image to appear for all visitors</label>
             <input id="admLogoFile" type="file" accept="image/*" style="margin-bottom:0" onchange="handleLogoUpload(event)">
           </div>
         </div>
@@ -1775,7 +1910,7 @@ footer p {
         <input id="admLogoUrl" placeholder="https://example.com/logo.png" oninput="handleLogoUrlInput(event)">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button type="button" class="btn-add" style="padding:8px 16px;border-radius:10px;font-size:12.5px" onclick="saveLogoUrlFromInput()">Save Logo URL</button>
-          <button type="button" class="btn-info" style="padding:8px 14px;border-radius:10px;font-size:12.5px" onclick="resetDefaultLogo()">Restore 3D Logo</button>
+          <button type="button" class="btn-info" style="padding:8px 14px;border-radius:10px;font-size:12.5px" onclick="removeSharedLogo()">Remove Logo</button>
         </div>
       </div>
 
@@ -1846,6 +1981,45 @@ footer p {
         </div>
       </div>
     </div>
+
+    <!-- Coupons Tab -->
+    <div id="adminTabCoupons" style="display:none">
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h3>+ Create Discount Coupon</h3>
+          <div class="admin-row-2">
+            <div>
+              <label>Coupon Code *</label>
+              <input id="cpnCode" placeholder="e.g. VIP3 or SAVE20" style="text-transform:uppercase">
+            </div>
+            <div>
+              <label>Usage Limit (Max People) *</label>
+              <input id="cpnLimit" type="number" min="1" value="3" placeholder="e.g. 3">
+            </div>
+          </div>
+          <div class="admin-row-2">
+            <div>
+              <label>Discount Type *</label>
+              <select id="cpnType" onchange="updateCouponFormLabel()">
+                <option value="percent">Percentage (%)</option>
+                <option value="amount">Fixed Amount (EGP)</option>
+              </select>
+            </div>
+            <div>
+              <label id="cpnValLabel">Discount Value (%) *</label>
+              <input id="cpnVal" type="number" min="1" step="any" placeholder="e.g. 15">
+            </div>
+          </div>
+          <button type="button" class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminCreateCoupon()">Save Coupon to Database</button>
+          <p class="note-txt">Once a coupon reaches its usage limit (for example 3 uses), it automatically stops working for any additional orders.</p>
+        </div>
+
+        <div class="admin-card">
+          <h3>Active &amp; Past Coupons</h3>
+          <div class="admin-manage-list" id="admCouponsList"></div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Editorial Accessories Hero -->
@@ -1894,7 +2068,7 @@ footer p {
     <div class="grid-products" id="productGrid"></div>
   </section>
 
-  <!-- Customer Reviews Section (Preserved Framed Cards in Warm Brown & Cream) -->
+  <!-- Customer Reviews Section (Framed Cards in Warm Brown & Cream) -->
   <section class="block-sec" id="reviews">
     <div class="sec-center-head">
       <span class="kicker">Verified Experiences</span>
@@ -1948,10 +2122,33 @@ footer p {
     <button class="x-btn" onclick="closeCart()">×</button>
   </div>
   <div class="cart-list" id="cartItems"></div>
-  <div class="sum-bar">
-    <span>Total</span>
-    <span id="cartTotal">0 EGP</span>
+
+  <!-- Discount Coupon Input -->
+  <div class="coupon-box">
+    <label for="couponInput" style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px">Discount Coupon</label>
+    <div class="coupon-row">
+      <input id="couponInput" placeholder="Enter coupon code" onkeydown="if(event.key==='Enter')applyCouponCode()">
+      <button type="button" class="coupon-apply-btn" id="applyCouponBtn" onclick="applyCouponCode()">Apply</button>
+      <button type="button" class="coupon-clear-btn" id="clearCouponBtn" style="display:none" onclick="clearAppliedCoupon()">Clear</button>
+    </div>
+    <div class="coupon-msg" id="couponMsg"></div>
   </div>
+
+  <div class="sum-breakdown">
+    <div class="sum-line">
+      <span>Subtotal</span>
+      <span id="cartSubtotal">0 EGP</span>
+    </div>
+    <div class="sum-line discount" id="cartDiscountRow" style="display:none">
+      <span id="cartDiscountLabel">Discount</span>
+      <span id="cartDiscountAmount">-0 EGP</span>
+    </div>
+    <div class="sum-bar">
+      <span>Total</span>
+      <span id="cartTotal">0 EGP</span>
+    </div>
+  </div>
+
   <div class="order-box">
     <h3>Order &amp; Payment Details</h3>
     <div class="inp-group">
@@ -2062,40 +2259,6 @@ const WHATSAPP_NUMBER = "201128887442";
 const CURRENCY = "EGP";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
 const CUSTOM_LOGO_SRC = "";
-
-const LOGO_3D_SVG = `
-<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="ns3dBody" x1="16" y1="12" x2="84" y2="88" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#69422d"/>
-      <stop offset="52%" stop-color="#3b2316"/>
-      <stop offset="100%" stop-color="#1f1008"/>
-    </linearGradient>
-    <linearGradient id="ns3dDepth" x1="20" y1="20" x2="85" y2="90" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#1a0d06"/>
-      <stop offset="100%" stop-color="#0d0603"/>
-    </linearGradient>
-    <linearGradient id="ns3dGold" x1="15" y1="15" x2="85" y2="85" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#f7dfc1"/>
-      <stop offset="50%" stop-color="#c69156"/>
-      <stop offset="100%" stop-color="#875a29"/>
-    </linearGradient>
-    <linearGradient id="ns3dShine" x1="50" y1="10" x2="50" y2="55" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.38"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-
-  <path d="M50 11L85 30V70L50 89L15 70V30L50 11Z" fill="url(#ns3dDepth)" transform="translate(0, 4.5)"/>
-  <path d="M50 9L85 28V68L50 87L15 68V28L50 9Z" fill="url(#ns3dBody)" stroke="url(#ns3dGold)" stroke-width="2.4"/>
-  <path d="M50 11.5L82.5 29.5L50 47L17.5 29.5L50 11.5Z" fill="url(#ns3dShine)"/>
-  <path d="M27 63V36L45 58V35M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
-        stroke="#120804" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(1.5, 3)"/>
-  <path d="M27 63V36L45 58V35" stroke="#faf6f0" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M56 38C56 35.5 59.5 34 64 34C68.5 34 72 35.8 72 39.5C72 47.5 55 46.5 55 55.5C55 59.5 59.5 62 64.5 62C69 62 72.5 60.2 73 57.5"
-        stroke="url(#ns3dGold)" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-`;
 
 const defaultProducts = [
   {
@@ -2264,7 +2427,7 @@ const defaultProducts = [
     "saleValue": 0
   }
 ];
-  
+
 function normalizeSaleFields(p) {
   const basePrice = Math.max(1, Number(p.price) || 1);
   const rawType = p.saleType || "none";
@@ -2348,7 +2511,7 @@ function priceHtml(p, large = false) {
   `;
 }
 
-let logoValue = CUSTOM_LOGO_SRC.trim() || localStorage.getItem("ns_logo_custom") || "";
+let logoValue = CUSTOM_LOGO_SRC.trim();
 let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts).map(p => normalizeSaleFields({
   ...p,
   stock: Math.max(0, Number(p.stock ?? 10))
@@ -2356,1110 +2519,7 @@ let products = (JSON.parse(localStorage.getItem("ns_products") || "null") || def
 let hasLoadedProductsFromDb = false;
 let cart = JSON.parse(localStorage.getItem("ns_cart") || "[]");
 let orders = [];
+let coupons = [];
+let appliedCoupon = null; // { code, discountType, discountValue, discountAmount, finalTotal, remainingUses }
 let activeCategory = "All";
-let isAdmin = false;
-let activeAdminTab = "orders";
-let uploadedAdminImgs = [];
-let editingSaleProductId = null;
-let selectedPayment = "cod";
-let pendingOrderData = null;
-let brandClickCount = 0;
-let brandClickTimer = null;
-
-let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || [
-  {name: "Mariam", stars: 5, text: "Smooth ordering and my piece arrived beautifully packaged. Thanks NS!"},
-  {name: "Omar", stars: 5, text: "Great finishing and quick confirmation on WhatsApp."},
-  {name: "Sara", stars: 4, text: "Lovely variety of everyday accessories and very easy to browse."}
-];
-
-const cardIdxMap = {};
-const hoveredSet = new Set();
-let activeModalId = null;
-let activeModalImg = 0;
-
-products.forEach(p => { cardIdxMap[p.id] = 0; });
-
-const money = n => Number(n).toLocaleString("en-US") + " " + CURRENCY;
-const getStock = p => Math.max(0, Number(p.stock ?? 0));
-const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice(0, 4) : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"];
-
-function renderLogoMarkup(src) {
-  const clean = (src || "").trim();
-  if (!clean) return LOGO_3D_SVG;
-  return `<img src="${escapeHtml(clean)}" alt="NS Accessories logo">`;
-}
-
-function applyLogo(src, persist = false) {
-  const clean = (src || "").trim();
-  logoValue = clean;
-  const markup = renderLogoMarkup(clean);
-  const headerBox = document.getElementById("siteLogoBox");
-  const prevBox = document.getElementById("admLogoPreview");
-  const urlInput = document.getElementById("admLogoUrl");
-  if (headerBox) headerBox.innerHTML = markup;
-  if (prevBox) prevBox.innerHTML = markup;
-  if (urlInput && !clean.startsWith("data:")) urlInput.value = clean;
-  if (persist) {
-    try {
-      if (clean) localStorage.setItem("ns_logo_custom", clean);
-      else localStorage.removeItem("ns_logo_custom");
-    } catch (_) {}
-  }
-}
-
-async function saveSharedLogo(src) {
-  if (!isAdmin) throw new Error("Only an authorized admin can change the store logo.");
-  const clean = (src || "").trim();
-  const { error } = await sb.from("ns_store_settings").upsert({ id: "main", logo_url: clean }, { onConflict: "id" });
-  if (error) throw error;
-  applyLogo(clean, false);
-}
-
-async function loadSharedLogo() {
-  const { data, error } = await sb.from("ns_store_settings").select("logo_url").eq("id", "main").maybeSingle();
-  if (error) {
-    console.warn("Could not load shared NS logo:", error.message);
-    return;
-  }
-  applyLogo(data?.logo_url || "", false);
-}
-
-async function uploadSharedLogo(file) {
-  const dataUrl = await resizeImageToDataUrl(file, 700, 0.9, "image/png");
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-  const path = `store-logo/logo-${Date.now()}.png`;
-  const { error: uploadError } = await sb.storage.from("ns-products").upload(path, blob, {
-    contentType: "image/png", upsert: false, cacheControl: "3600"
-  });
-  if (uploadError) throw uploadError;
-  const { data } = sb.storage.from("ns-products").getPublicUrl(path);
-  await saveSharedLogo(data.publicUrl);
-}
-
-function resizeImageToDataUrl(file, maxSide = 750, quality = 0.78, mime = "image/jpeg") {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let w = img.width, h = img.height;
-        if (w > maxSide || h > maxSide) {
-          if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
-          else { w = Math.round(w * maxSide / h); h = maxSide; }
-        }
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL(mime, quality));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-async function handleLogoUpload(e) {
-  const file = (e.target.files || [])[0];
-  if (!file) return;
-  try {
-    showToast("Uploading shared logo...");
-    await uploadSharedLogo(file);
-    showToast("Shared store logo updated for everyone ✓");
-  } catch (err) {
-    console.error(err);
-    alert("Could not save the shared logo: " + (err.message || "Unknown error"));
-  } finally {
-    e.target.value = "";
-  }
-}
-
-function handleLogoUrlInput(e) {
-  const val = e.target.value.trim();
-  const prevBox = document.getElementById("admLogoPreview");
-  if (prevBox) prevBox.innerHTML = renderLogoMarkup(val);
-}
-
-async function saveLogoUrlFromInput() {
-  const val = document.getElementById("admLogoUrl").value.trim();
-  if (!val) {
-    alert("Enter an image URL first.");
-    return;
-  }
-  try {
-    await saveSharedLogo(val);
-    showToast("Shared logo URL saved ✓");
-  } catch (err) {
-    alert("Could not save the shared logo: " + (err.message || "Unknown error"));
-  }
-}
-
-async function resetDefaultLogo() {
-  document.getElementById("admLogoFile").value = "";
-  document.getElementById("admLogoUrl").value = "";
-  try {
-    await saveSharedLogo("");
-    showToast("Default 3D logo restored for everyone ✓");
-  } catch (err) {
-    alert("Could not restore the shared logo: " + (err.message || "Unknown error"));
-  }
-}
-
-function updateSalePreviewCalc() {
-  const price = Number(document.getElementById("admPrice").value) || 0;
-  const type = document.getElementById("admSaleType").value;
-  const val = Number(document.getElementById("admSaleVal").value) || 0;
-  const labelEl = document.getElementById("admSaleValLabel");
-  const calcEl = document.getElementById("admSaleCalc");
-
-  if (type === "percent") {
-    labelEl.textContent = "Sale Percentage (%)";
-    document.getElementById("admSaleVal").placeholder = "e.g. 20";
-  } else if (type === "amount") {
-    labelEl.textContent = "Sale Amount (EGP)";
-    document.getElementById("admSaleVal").placeholder = "e.g. 100";
-  } else {
-    labelEl.textContent = "Sale Value";
-  }
-
-  if (!price || type === "none" || val <= 0) {
-    calcEl.textContent = price > 0 ? `Final Price: ${money(price)} (No Sale)` : "Final Price: No Sale";
-    return;
-  }
-
-  const info = computeSaleInfo(price, type, val);
-  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
-}
-
-function openSaleModal(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  editingSaleProductId = id;
-  document.getElementById("saleEditProdTitle").textContent = `${p.name} — Original Price: ${money(p.price)}`;
-  document.getElementById("editSaleType").value = p.saleType || "none";
-  document.getElementById("editSaleVal").value = p.saleType && p.saleType !== "none" ? (p.saleValue || "") : "";
-  updateEditSaleCalc();
-  document.getElementById("saleModalWrap").classList.add("show");
-}
-
-function closeSaleModal() {
-  editingSaleProductId = null;
-  document.getElementById("saleModalWrap").classList.remove("show");
-}
-
-function updateEditSaleCalc() {
-  const p = products.find(x => x.id === editingSaleProductId);
-  if (!p) return;
-  const type = document.getElementById("editSaleType").value;
-  const val = Number(document.getElementById("editSaleVal").value) || 0;
-  const labelEl = document.getElementById("editSaleValLabel");
-  const calcEl = document.getElementById("editSaleCalc");
-
-  if (type === "percent") labelEl.textContent = "Sale Percentage (%)";
-  else if (type === "amount") labelEl.textContent = "Sale Amount (EGP)";
-  else labelEl.textContent = "Sale Value";
-
-  if (type === "none" || val <= 0) {
-    calcEl.textContent = `Final Price: ${money(p.price)} (No Sale)`;
-    return;
-  }
-  const info = computeSaleInfo(p.price, type, val);
-  calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
-}
-
-async function saveEditedProductSale() {
-  const p = products.find(x => x.id === editingSaleProductId);
-  if (!p) return;
-  const type = document.getElementById("editSaleType").value;
-  const val = Number(document.getElementById("editSaleVal").value) || 0;
-
-  if (type !== "none" && val <= 0) { alert("Enter a Sale value greater than 0 or choose No Sale."); return; }
-  if (type === "percent" && val > 95) { alert("Maximum Sale discount is 95%."); return; }
-  if (type === "amount" && val >= p.price) { alert("Sale amount must be less than the original price."); return; }
-
-  const { error } = await sb.from("ns_products").update({ sale_type: type, sale_value: val }).eq("id", p.id);
-  if (error) { alert("Couldn't save sale: " + error.message); return; }
-  Object.assign(p, normalizeSaleFields({ ...p, saleType: type, saleValue: val }));
-  closeSaleModal();
-  renderProducts(); renderCart(); renderAdminManageList();
-  showToast("Sale updated for everyone ✓");
-}
-
-function clearEditedProductSale() {
-  document.getElementById("editSaleType").value = "none";
-  document.getElementById("editSaleVal").value = "";
-  saveEditedProductSale();
-}
-
-function stockBadgeHtml(stock) {
-  if (stock <= 0) return '<span class="stock-pill out">Sold Out</span>';
-  if (stock <= 3) return `<span class="stock-pill low">Only ${stock} left</span>`;
-  return `<span class="stock-pill">In Stock: ${stock}</span>`;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
-}
-
-function showToast(msg) {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  clearTimeout(window._toastT);
-  window._toastT = setTimeout(() => el.classList.remove("show"), 2200);
-}
-
-function initInstaPayDisplay() {
-  document.getElementById("instapayLinkText").textContent = INSTAPAY_LINK;
-  document.getElementById("instapayOpenLink").href = INSTAPAY_LINK;
-}
-
-function copyInstaPayLink() {
-  navigator.clipboard.writeText(INSTAPAY_LINK).then(() => {
-    showToast("Payment link copied ✓");
-  }).catch(() => {
-    alert("Unable to copy automatically.");
-  });
-}
-
-/* Triple-Click Logo to Open Admin Login */
-function handleBrandTripleClick(e) {
-  e.preventDefault();
-  brandClickCount++;
-  clearTimeout(brandClickTimer);
-  if (brandClickCount >= 3) {
-    brandClickCount = 0;
-    openAdminLogin();
-    return;
-  }
-  brandClickTimer = setTimeout(() => {
-    if (brandClickCount === 1) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    brandClickCount = 0;
-  }, 450);
-}
-
-/* Admin Login & Controls */
-function openAdminLogin() {
-  if (isAdmin) { scrollToAdmin(); return; }
-  document.getElementById("adminEmailInput").value = "";
-  document.getElementById("adminPassInput").value = "";
-  document.getElementById("loginWrap").classList.add("show");
-  setTimeout(() => document.getElementById("adminEmailInput").focus(), 100);
-}
-
-function closeAdminLogin() {
-  document.getElementById("loginWrap").classList.remove("show");
-}
-
-async function submitAdminLogin() {
-  const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
-  const password = document.getElementById("adminPassInput").value;
-  if (!email || !password) { alert("Enter your admin email and password."); return; }
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) { alert("Sign in failed: " + error.message); return; }
-  const { data: allowed, error: allowError } = await sb.rpc("is_ns_admin");
-  if (allowError || allowed !== true) {
-    await sb.auth.signOut();
-    alert("This account is not authorized as an NS Store admin.");
-    return;
-  }
-  isAdmin = true;
-  closeAdminLogin();
-  await Promise.all([loadOrders(), loadProductsFromDatabase({ seedIfEmpty: true })]);
-  syncAdminUI();
-  showToast("Signed in as Admin ✓");
-  scrollToAdmin();
-}
-
-async function logoutAdmin() {
-  await sb.auth.signOut();
-  isAdmin = false;
-  orders = [];
-  syncAdminUI();
-  showToast("Signed out of Admin");
-}
-
-function scrollToAdmin() {
-  document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
-}
-
-function switchAdminTab(tab) {
-  activeAdminTab = tab;
-  document.getElementById("tabBtnOrders").classList.toggle("active", tab === "orders");
-  document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
-  document.getElementById("adminTabOrders").style.display = tab === "orders" ? "block" : "none";
-  document.getElementById("adminTabProducts").style.display = tab === "products" ? "block" : "none";
-  if (tab === "orders") renderAdminOrders();
-  if (tab === "products") {
-    updateSalePreviewCalc();
-    renderAdminManageList();
-  }
-}
-
-function syncAdminUI() {
-  const pendingCount = orders.filter(o => o.status === "pending").length;
-  document.getElementById("stripPendingCount").textContent = pendingCount;
-  document.getElementById("admOrdersTotal").textContent = orders.length;
-  document.getElementById("adminStrip").classList.toggle("active", isAdmin);
-  document.getElementById("adminPanel").classList.toggle("active", isAdmin);
-  renderReviews();
-  if (isAdmin) {
-    switchAdminTab(activeAdminTab);
-  }
-}
-
-/* Orders Management */
-function saveOrders() {
-  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
-  document.getElementById("admOrdersTotal").textContent = orders.length;
-}
-
-function mapDbOrder(row) {
-  return {
-    orderNumber: "NS-" + row.order_number,
-    name: row.customer_name,
-    phone: row.customer_phone,
-    address: row.customer_address,
-    paymentText: row.payment_text,
-    items: row.items || [],
-    total: Number(row.total || 0),
-    createdAt: new Date(row.created_at).toLocaleString("en-US"),
-    status: row.status,
-    stockDeducted: !!row.stock_deducted
-  };
-}
-
-async function loadOrders() {
-  if (!isAdmin) return;
-  const { data, error } = await sb.from("ns_orders").select("*").order("order_number", { ascending: false });
-  if (error) { console.error(error); alert("Couldn't load orders: " + error.message); return; }
-  orders = (data || []).map(mapDbOrder);
-  saveOrders();
-  renderAdminOrders();
-}
-
-async function confirmOrderAndDeductStock(orderNumber) {
-  const order = orders.find(o => o.orderNumber === orderNumber);
-  if (!order || order.status !== "pending") return;
-  const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.rpc("confirm_ns_order", { p_order_number: numericNo });
-  if (error) {
-    alert("Couldn't confirm order. Stock was not changed. " + error.message);
-    return;
-  }
-  await Promise.all([loadOrders(), loadProductsFromDatabase()]);
-  showToast(`Order #${orderNumber} confirmed and stock deducted ✓`);
-}
-
-async function cancelOrderInAdmin(orderNumber) {
-  const order = orders.find(o => o.orderNumber === orderNumber);
-  if (!order || order.status === "cancelled") return;
-  if (!confirm(`Cancel order #${orderNumber}? If it was confirmed, its quantities will be returned to stock.`)) return;
-  const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.rpc("cancel_ns_order", { p_order_number: numericNo });
-  if (error) { alert("Couldn't cancel order: " + error.message); return; }
-  await Promise.all([loadOrders(), loadProductsFromDatabase()]);
-  showToast(`Order #${orderNumber} cancelled`);
-}
-
-async function deleteOrderFromHistory(orderNumber) {
-  if (!confirm(`Permanently delete order #${orderNumber} from history?`)) return;
-  const numericNo = Number(String(orderNumber).replace("NS-", ""));
-  const { error } = await sb.from("ns_orders").delete().eq("order_number", numericNo);
-  if (error) { alert("Couldn't delete order: " + error.message); return; }
-  await loadOrders();
-  showToast("Order removed from log");
-}
-
-function renderAdminOrders() {
-  document.getElementById("admOrdersTotal").textContent = orders.length;
-  document.getElementById("stripPendingCount").textContent = orders.filter(o => o.status === "pending").length;
-
-  const box = document.getElementById("admOrdersList");
-  if (!orders.length) {
-    box.innerHTML = '<div class="empty-msg">No orders logged yet.</div>';
-    return;
-  }
-
-  box.innerHTML = orders.map(o => {
-    let badgeClass = "pending";
-    let badgeText = "Pending Admin Confirm (Stock Not Deducted)";
-    if (o.status === "confirmed") {
-      badgeClass = "confirmed";
-      badgeText = "Confirmed ✓";
-    } else if (o.status === "cancelled") {
-      badgeClass = "cancelled";
-      badgeText = "Cancelled";
-    }
-
-    return `
-      <div class="order-card">
-        <div class="order-card-head">
-          <div>
-            <strong style="font-size:15px">Order #${escapeHtml(o.orderNumber)}</strong>
-            <span style="font-size:11.5px;color:var(--muted);margin-left:8px">${escapeHtml(o.createdAt || "")}</span>
-          </div>
-          <span class="status-pill ${badgeClass}">${badgeText}</span>
-        </div>
-        <div style="font-size:13px"><b>Customer:</b> ${escapeHtml(o.name)} — <b>Phone:</b> ${escapeHtml(o.phone)}</div>
-        <div style="font-size:12.5px;color:var(--muted)"><b>Address:</b> ${escapeHtml(o.address)}</div>
-        <div style="font-size:12.5px;margin-top:4px"><b>Payment:</b> ${escapeHtml(o.paymentText)}</div>
-        <div class="order-items-box">
-          ${o.items.map(it => `<div>• ${escapeHtml(it.name)} × ${it.qty} = ${money(it.price * it.qty)}</div>`).join("")}
-          <div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-weight:800">Total: ${money(o.total)}</div>
-        </div>
-        <div class="order-actions">
-          ${o.status === "pending" ? `<button type="button" class="btn-confirm-order" onclick="confirmOrderAndDeductStock('${escapeHtml(o.orderNumber)}')">✓ Confirm Order</button>` : ""}
-          ${o.status !== "cancelled" ? `<button type="button" class="btn-cancel-order" onclick="cancelOrderInAdmin('${escapeHtml(o.orderNumber)}')">Cancel Order</button>` : ""}
-          <button type="button" class="del-btn" onclick="deleteOrderFromHistory('${escapeHtml(o.orderNumber)}')">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-async function handleAdminImages(e) {
-  const files = Array.from(e.target.files || []).slice(0, 4);
-  if (!files.length) return;
-  uploadedAdminImgs = await Promise.all(files.map(f => resizeImageToDataUrl(f, 750, 0.78, "image/jpeg")));
-  document.getElementById("admPreview").innerHTML = uploadedAdminImgs
-    .map(src => `<img src="${src}" alt="Preview">`)
-    .join("");
-}
-
-async function uploadProductImageIfNeeded(src) {
-  if (!String(src).startsWith("data:")) return src;
-  const match = String(src).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
-  if (!match) throw new Error("One of the product images has an unsupported format.");
-  const mime = match[1];
-  const ext = mime.split("/")[1].replace("jpeg", "jpg").replace("svg+xml", "svg");
-  const binary = atob(match[2]);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const path = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
-  const { error } = await sb.storage.from("ns-products").upload(path, new Blob([bytes], { type: mime }), { contentType: mime, upsert: false });
-  if (error) throw error;
-  return sb.storage.from("ns-products").getPublicUrl(path).data.publicUrl;
-}
-
-function mapDbProduct(row) {
-  return normalizeSaleFields({
-    id: Number(row.id), name: row.name, category: row.category,
-    price: Number(row.price), saleType: row.sale_type || "none", saleValue: Number(row.sale_value || 0),
-    stock: Number(row.stock || 0), tag: row.tag || "", desc: row.description || "", images: row.images || []
-  });
-}
-
-async function loadProductsFromDatabase({ seedIfEmpty = false } = {}) {
-  const { data, error } = await sb.from("ns_products").select("*").order("id", { ascending: false });
-  if (error) { console.error(error); showToast("Couldn't refresh products"); return; }
-
-  if ((!data || data.length === 0) && !seedIfEmpty && !hasLoadedProductsFromDb) return;
-
-  if ((!data || data.length === 0) && seedIfEmpty && isAdmin) {
-    try {
-      const legacy = (JSON.parse(localStorage.getItem("ns_products") || "null") || defaultProducts);
-      const rows = [];
-      for (const p of legacy) {
-        const imgs = await Promise.all((p.images || []).slice(0, 4).map(uploadProductImageIfNeeded));
-        rows.push({
-          id: Number(p.id), name: p.name, category: p.category, price: Number(p.price),
-          sale_type: p.saleType || "none", sale_value: Number(p.saleValue || 0), stock: Math.max(0, Number(p.stock ?? 0)),
-          tag: p.tag || "", description: p.desc || "", images: imgs
-        });
-      }
-      if (rows.length) {
-        const { error: seedError } = await sb.from("ns_products").upsert(rows, { onConflict: "id" });
-        if (seedError) throw seedError;
-        const { error: seqError } = await sb.rpc("sync_ns_products_identity");
-        if (seqError) console.warn("Product ID sequence sync:", seqError.message);
-        return loadProductsFromDatabase();
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Couldn't migrate the existing products to the shared database: " + err.message);
-      return;
-    }
-  }
-
-  products = (data || []).map(mapDbProduct);
-  hasLoadedProductsFromDb = true;
-  products.forEach(p => { cardIdxMap[p.id] = cardIdxMap[p.id] || 0; });
-  renderFilters(); renderProducts(); renderCart();
-  if (isAdmin) renderAdminManageList();
-}
-
-async function adminAddProduct() {
-  if (!isAdmin) { alert("Only an authorized admin can add products."); return; }
-  const name = document.getElementById("admName").value.trim();
-  const category = document.getElementById("admCat").value.trim();
-  const price = Number(document.getElementById("admPrice").value);
-  const stockRaw = document.getElementById("admStock").value;
-  const stock = Math.max(0, Number(stockRaw));
-  const saleType = document.getElementById("admSaleType").value;
-  const saleValue = Number(document.getElementById("admSaleVal").value) || 0;
-  const tag = document.getElementById("admTag").value.trim();
-  const desc = document.getElementById("admDesc").value.trim();
-  const urlLines = document.getElementById("admUrls").value.split("\n").map(x => x.trim()).filter(Boolean);
-  const finalImages = [...uploadedAdminImgs, ...urlLines].slice(0, 4);
-
-  if (!name || !category || !price || stockRaw === "" || Number.isNaN(stock) || !desc) { alert("Please fill in Name, Category, Original Price, Stock, and Description."); return; }
-  if (saleType !== "none" && saleValue <= 0) { alert("Enter a Sale value greater than 0 or select No Sale."); return; }
-  if (saleType === "percent" && saleValue > 95) { alert("Maximum Sale discount is 95%."); return; }
-  if (saleType === "amount" && saleValue >= price) { alert("Sale amount must be less than the original price."); return; }
-  if (!finalImages.length) { alert("Upload at least one image or add an image URL."); return; }
-
-  const saveBtn = document.querySelector('#adminTabProducts button[onclick="adminAddProduct()"]');
-  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Saving product..."; }
-  try {
-    const images = await Promise.all(finalImages.map(uploadProductImageIfNeeded));
-    const { data, error } = await sb.from("ns_products").insert({
-      name, category, price, sale_type: saleType, sale_value: saleValue, stock, tag, description: desc, images
-    }).select("*").single();
-    if (error) throw error;
-    const created = mapDbProduct(data);
-    products.unshift(created);
-    cardIdxMap[created.id] = 0;
-
-    document.getElementById("admName").value = "";
-    document.getElementById("admCat").value = "";
-    document.getElementById("admPrice").value = "";
-    document.getElementById("admStock").value = "10";
-    document.getElementById("admSaleType").value = "none";
-    document.getElementById("admSaleVal").value = "";
-    document.getElementById("admTag").value = "";
-    document.getElementById("admDesc").value = "";
-    document.getElementById("admFiles").value = "";
-    document.getElementById("admUrls").value = "";
-    document.getElementById("admPreview").innerHTML = "";
-    uploadedAdminImgs = [];
-    updateSalePreviewCalc();
-    renderFilters(); renderProducts(); renderAdminManageList();
-    showToast("Product saved and published for everyone ✓");
-  } catch (err) {
-    console.error(err);
-    alert("Couldn't publish product: " + (err.message || "Unknown error"));
-  } finally {
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = "Save & Publish Product"; }
-  }
-}
-
-async function adminDeleteProduct(id) {
-  if (!isAdmin) return;
-  if (!confirm("Delete this product for everyone?")) return;
-  const { error } = await sb.from("ns_products").delete().eq("id", id);
-  if (error) { alert("Couldn't delete product: " + error.message); return; }
-  products = products.filter(p => p.id !== id);
-  cart = cart.filter(c => c.id !== id);
-  saveCart(); renderFilters(); renderProducts(); renderAdminManageList();
-  showToast("Product deleted for everyone");
-}
-
-function renderAdminManageList() {
-  document.getElementById("admProdCount").textContent = products.length;
-  document.getElementById("admProdList").innerHTML = products.map(p => {
-    const s = getSaleInfo(p);
-    const saleTag = s.hasSale ? ` • <b style="color:#8a561e">${escapeHtml(s.badgeText)} (${money(s.finalPrice)})</b>` : "";
-    return `
-      <div class="manage-item">
-        <div class="manage-item-info">
-          <img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}">
-          <div>
-            <div style="font-weight:800;font-size:13px">${escapeHtml(p.name)}</div>
-            <div style="font-size:11px;color:var(--muted)">${escapeHtml(p.category)} • ${money(p.price)} • Stock: ${getStock(p)}${saleTag}</div>
-          </div>
-        </div>
-        <div class="manage-item-actions">
-          <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">Sale</button>
-          <button type="button" class="del-btn" onclick="adminDeleteProduct(${p.id})">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function copyExportCode() {
-  const code = "const defaultProducts = " + JSON.stringify(products, null, 2) + ";";
-  navigator.clipboard.writeText(code).then(() => {
-    showToast("Products code copied! Paste it into defaultProducts ✓");
-  }).catch(() => {
-    alert("Unable to copy automatically.");
-  });
-}
-
-/* Store Core */
-function saveCart() {
-  localStorage.setItem("ns_cart", JSON.stringify(cart));
-  resetOrderConfirmation();
-  renderCart();
-}
-
-function renderFilters() {
-  const cats = ["All", ...new Set(products.map(p => p.category))];
-  if (!cats.includes(activeCategory)) activeCategory = "All";
-  document.getElementById("filters").innerHTML = cats.map(c =>
-    `<button class="cat-btn ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
-  ).join("");
-}
-
-function setCategory(c) {
-  activeCategory = c;
-  renderFilters();
-  renderProducts();
-}
-
-function visibleProducts() {
-  return activeCategory === "All" ? products : products.filter(p => p.category === activeCategory);
-}
-
-function renderProducts() {
-  const list = visibleProducts();
-  document.getElementById("productTotal").textContent = list.length + (list.length === 1 ? " piece" : " pieces");
-  document.getElementById("productGrid").innerHTML = list.map((p, idx) => {
-    const imgs = getImgs(p);
-    const cur = (cardIdxMap[p.id] || 0) % imgs.length;
-    const stock = getStock(p);
-    const sale = getSaleInfo(p);
-    const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
-    const canAddMore = stock > 0 && inCartQty < stock;
-
-    return `
-      <article class="card ${sale.hasSale ? 'is-sale' : ''}" onmouseenter="hoveredSet.add(${p.id})" onmouseleave="hoveredSet.delete(${p.id})">
-        <div class="card-media" onclick="showDetails(${p.id})">
-          <img id="p-img-${p.id}" src="${imgs[cur]}" alt="${escapeHtml(p.name)}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async">
-          <div class="top-badges">
-            ${p.tag ? `<span class="ribbon">${escapeHtml(p.tag)}</span>` : "<span></span>"}
-            ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ""}
-          </div>
-          ${stock <= 0 ? `<div class="out-overlay">Sold Out</div>` : ""}
-          <span class="img-step" id="p-step-${p.id}">${cur + 1}/${imgs.length}</span>
-          ${imgs.length > 1 ? `<div class="dots-row" id="p-dots-${p.id}">${imgs.map((_, i) => `<span class="dot-item ${i === cur ? 'active' : ''}"></span>`).join("")}</div>` : ""}
-        </div>
-        <div class="card-body">
-          <div class="card-meta-line">
-            <span class="card-cat">${escapeHtml(p.category)}</span>
-            ${stockBadgeHtml(stock)}
-          </div>
-          <h3 class="card-title">${escapeHtml(p.name)}</h3>
-          <p class="card-desc">${escapeHtml(p.desc)}</p>
-          ${priceHtml(p, false)}
-          <div class="card-actions">
-            <button class="btn-add" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id})">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
-            <button class="btn-info" onclick="showDetails(${p.id})">Details</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-function cycleCard(p) {
-  const imgs = getImgs(p);
-  if (imgs.length <= 1) return;
-  cardIdxMap[p.id] = ((cardIdxMap[p.id] || 0) + 1) % imgs.length;
-  const idx = cardIdxMap[p.id];
-  const img = document.getElementById(`p-img-${p.id}`);
-  const step = document.getElementById(`p-step-${p.id}`);
-  const dots = document.getElementById(`p-dots-${p.id}`);
-  if (!img) return;
-  img.style.opacity = "0.55";
-  img.src = imgs[idx];
-  img.onload = () => { img.style.opacity = "1"; };
-  if (step) step.textContent = `${idx + 1}/${imgs.length}`;
-  if (dots) dots.innerHTML = imgs.map((_, i) => `<span class="dot-item ${i === idx ? 'active' : ''}"></span>`).join("");
-}
-
-setInterval(() => {
-  if (document.hidden || activeModalId !== null) return;
-  visibleProducts().forEach(p => {
-    if (!hoveredSet.has(p.id)) cycleCard(p);
-  });
-}, 3200);
-
-function addToCart(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  const stock = getStock(p);
-  if (stock <= 0) {
-    alert("This product is currently out of stock.");
-    return;
-  }
-  const found = cart.find(x => x.id === id);
-  const currentQty = found ? found.qty : 0;
-  if (currentQty + 1 > stock) {
-    alert(`Only ${stock} available in stock.`);
-    return;
-  }
-  if (found) found.qty++;
-  else cart.push({id, qty: 1});
-  saveCart();
-  renderProducts();
-  showToast("Added to Cart ✓");
-  openCart();
-}
-
-function changeQty(id, delta) {
-  const p = products.find(x => x.id === id);
-  const found = cart.find(x => x.id === id);
-  if (!found || !p) return;
-  const stock = getStock(p);
-  const nextQty = found.qty + delta;
-  if (delta > 0 && nextQty > stock) {
-    alert(`Only ${stock} available in stock.`);
-    return;
-  }
-  found.qty = nextQty;
-  if (found.qty <= 0) cart = cart.filter(x => x.id !== id);
-  saveCart();
-  renderProducts();
-}
-
-function removeItem(id) {
-  cart = cart.filter(x => x.id !== id);
-  saveCart();
-  renderProducts();
-}
-
-function renderCart() {
-  cart = cart.filter(x => {
-    const p = products.find(y => y.id === x.id);
-    const stock = p ? getStock(p) : 0;
-    if (!p || stock <= 0) return false;
-    if (x.qty > stock) x.qty = stock;
-    return x.qty > 0;
-  });
-
-  const count = cart.reduce((s, x) => s + x.qty, 0);
-  const total = cart.reduce((s, x) => {
-    const p = products.find(y => y.id === x.id);
-    return s + (p ? x.qty * getSaleInfo(p).finalPrice : 0);
-  }, 0);
-  document.getElementById("cartCount").textContent = count;
-  document.getElementById("cartTotal").textContent = money(total);
-
-  document.getElementById("cartItems").innerHTML = cart.length ? cart.map(x => {
-    const p = products.find(y => y.id === x.id);
-    if (!p) return "";
-    const stock = getStock(p);
-    const sale = getSaleInfo(p);
-    const unitPriceLine = sale.hasSale
-      ? `<span style="font-weight:800;color:var(--brown)">${money(sale.finalPrice)}</span> <s style="font-size:11.5px;color:var(--muted)">${money(sale.originalPrice)}</s>`
-      : `<span style="font-weight:700;color:var(--muted)">${money(sale.finalPrice)}</span>`;
-    return `
-      <div class="cart-row">
-        <div class="cart-thumb"><img src="${getImgs(p)[0]}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
-        <div>
-          <div style="font-weight:800">${escapeHtml(p.name)} ${sale.hasSale ? `<span class="save-chip">${escapeHtml(sale.labelText)}</span>` : ""}</div>
-          <div style="font-size:13px">${unitPriceLine} • <span style="font-size:11.5px;color:var(--muted)">In stock: ${stock}</span></div>
-          <div class="qty-box">
-            <button onclick="changeQty(${p.id},-1)">−</button>
-            <span style="font-weight:800">${x.qty}</span>
-            <button ${x.qty >= stock ? "disabled" : ""} onclick="changeQty(${p.id},1)">+</button>
-          </div>
-        </div>
-        <button class="del-btn" onclick="removeItem(${p.id})">Remove</button>
-      </div>
-    `;
-  }).join("") : '<div class="empty-msg">Your Cart is empty 🛍️<br>Add pieces to get started</div>';
-  localStorage.setItem("ns_cart", JSON.stringify(cart));
-}
-
-function openCart() {
-  renderCart();
-  const drawer = document.getElementById("drawer");
-  drawer.scrollTop = 0;
-  drawer.classList.add("open");
-  document.getElementById("overlay").classList.add("show");
-}
-
-function closeCart() {
-  document.getElementById("drawer").classList.remove("open");
-  document.getElementById("overlay").classList.remove("show");
-}
-
-/* Payment Selection & Pre-WhatsApp Confirmation */
-function selectPayment(method) {
-  selectedPayment = method;
-  document.getElementById("pay-cod").classList.toggle("active", method === "cod");
-  document.getElementById("pay-instapay").classList.toggle("active", method === "instapay");
-  document.getElementById("instapayBox").classList.toggle("show", method === "instapay");
-  resetOrderConfirmation();
-}
-
-function resetOrderConfirmation() {
-  pendingOrderData = null;
-  document.getElementById("confirmBox").classList.remove("show");
-  document.getElementById("prepareOrderBtn").style.display = "block";
-}
-
-function getPaymentLabel() {
-  if (selectedPayment === "instapay") {
-    return `InstaPay / Telda (${INSTAPAY_LINK})`;
-  }
-  return "Cash on Delivery";
-}
-
-function prepareOrderConfirmation() {
-  if (!cart.length) {
-    alert("Your Cart is empty. Add at least one item first.");
-    return;
-  }
-
-  const orderItems = [];
-  for (const item of cart) {
-    const p = products.find(y => y.id === item.id);
-    const stock = p ? getStock(p) : 0;
-    if (!p || stock <= 0) {
-      alert(`"${p ? p.name : "Selected item"}" is sold out. Please remove it from your Cart.`);
-      renderCart();
-      renderProducts();
-      return;
-    }
-    if (item.qty > stock) {
-      alert(`Requested quantity for "${p.name}" (${item.qty}) exceeds available stock (${stock}).`);
-      renderCart();
-      return;
-    }
-    const sale = getSaleInfo(p);
-    orderItems.push({
-      id: p.id,
-      product_id: p.id,
-      name: sale.hasSale ? `${p.name} (${sale.labelText})` : p.name,
-      price: sale.finalPrice,
-      qty: item.qty
-    });
-  }
-
-  const name = document.getElementById("customerName").value.trim();
-  const phone = document.getElementById("customerPhone").value.trim();
-  const address = document.getElementById("customerAddress").value.trim();
-  if (!name || !phone || !address) {
-    alert("Please enter your full name, phone number, and delivery address.");
-    return;
-  }
-  if (!/^(\+?20|0)?1[0125][0-9]{8}$/.test(phone.replace(/[\s-]/g, ""))) {
-    if (!confirm("That phone number looks unusual. Continue anyway?")) return;
-  }
-
-  const lines = orderItems.map(it => `• ${it.name} × ${it.qty} = ${money(it.price * it.qty)}`);
-  const total = orderItems.reduce((s, it) => s + it.qty * it.price, 0);
-  const paymentText = getPaymentLabel();
-
-  pendingOrderData = {
-    name,
-    phone,
-    address,
-    lines,
-    total,
-    paymentText,
-    items: orderItems,
-    createdAt: new Date().toLocaleString("en-US")
-  };
-
-  document.getElementById("confirmSummary").innerHTML = `
-    <div><b>Order #:</b> Will be assigned when you submit</div>
-    <div><b>Name:</b> ${escapeHtml(name)} (${escapeHtml(phone)})</div>
-    <div><b>Payment:</b> ${escapeHtml(paymentText)}</div>
-    <div><b>Total:</b> ${money(total)}</div>
-  `;
-  document.getElementById("confirmBox").classList.add("show");
-  document.getElementById("prepareOrderBtn").style.display = "none";
-  showToast("Order details ready — review and submit");
-  setTimeout(() => {
-    document.getElementById("confirmBox").scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, 60);
-}
-
-async function recordOrderToAdmin(data) {
-  const { data: result, error } = await sb.rpc("create_ns_order", {
-    p_customer_name: data.name,
-    p_customer_phone: data.phone,
-    p_customer_address: data.address,
-    p_payment_text: data.paymentText,
-    p_items: data.items,
-    p_total: data.total
-  });
-  if (error) throw error;
-  return "NS-" + result;
-}
-
-async function finalizeAndSendWhatsApp() {
-  if (!pendingOrderData) { prepareOrderConfirmation(); return; }
-  const submitButton = document.querySelector(".wa-btn");
-  if (submitButton) { submitButton.disabled = true; submitButton.textContent = "Saving order..."; }
-  try {
-    const orderNumber = await recordOrderToAdmin(pendingOrderData);
-    const { name, phone, address, lines, total, paymentText } = pendingOrderData;
-    cart = [];
-    localStorage.setItem("ns_cart", JSON.stringify(cart));
-    renderCart();
-    renderProducts();
-    resetOrderConfirmation();
-    closeCart();
-    const msg = `New Order — NS Store\nOrder #: #${orderNumber}\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentText}\n\nItems:\n${lines.join("\n")}\n\nTotal: ${money(total)}\n\nSaved in NS Store database and awaiting Admin confirmation.`;
-    const number = WHATSAPP_NUMBER.replace(/\D/g, "");
-    window.open(`https://wa.me/${number}?text=${encodeURIComponent(msg)}`, "_blank");
-    showToast(`Order #${orderNumber} saved ✓`);
-  } catch (err) {
-    console.error(err);
-    alert("Order was not saved, so WhatsApp was not opened. Please try again.\n" + (err.message || "Unknown error"));
-  } finally {
-    if (submitButton) { submitButton.disabled = false; submitButton.textContent = "Confirm & Send on WhatsApp"; }
-  }
-}
-
-function showDetails(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  activeModalId = id;
-  activeModalImg = (cardIdxMap[id] || 0) % getImgs(p).length;
-  paintModal();
-  document.getElementById("modalWrap").classList.add("show");
-}
-
-function paintModal() {
-  const p = products.find(x => x.id === activeModalId);
-  if (!p) return;
-  const imgs = getImgs(p);
-  const idx = activeModalImg % imgs.length;
-  const stock = getStock(p);
-  const sale = getSaleInfo(p);
-  const inCartQty = (cart.find(c => c.id === p.id) || {}).qty || 0;
-  const canAddMore = stock > 0 && inCartQty < stock;
-
-  document.getElementById("modal").innerHTML = `
-    <button class="x-btn" style="position:absolute;right:16px;top:16px;z-index:4" onclick="closeDetails()">×</button>
-    <div class="stage">
-      <img src="${imgs[idx]}" alt="${escapeHtml(p.name)} - ${idx + 1}" decoding="async">
-      ${imgs.length > 1 ? `
-        <button class="arrow-btn prev-pos" onclick="stepModal(-1)" aria-label="Previous">‹</button>
-        <button class="arrow-btn next-pos" onclick="stepModal(1)" aria-label="Next">›</button>
-      ` : ""}
-      <span class="stage-tag">${idx + 1} / ${imgs.length}</span>
-    </div>
-    <div class="strip">
-      ${imgs.map((u, i) => `<button class="${i === idx ? 'active' : ''}" onclick="pickModal(${i})"><img src="${u}" alt="Photo ${i + 1}" loading="lazy"></button>`).join("")}
-    </div>
-    <div class="card-meta-line">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <span class="card-cat">${escapeHtml(p.category)}</span>
-        ${sale.hasSale ? `<span class="sale-badge">${escapeHtml(sale.badgeText)}</span>` : ""}
-      </div>
-      ${stockBadgeHtml(stock)}
-    </div>
-    <h3 style="margin:4px 0 6px;font-size:21px;font-weight:800;color:var(--brown-deep)">${escapeHtml(p.name)}</h3>
-    <p style="margin:0 0 12px;color:var(--muted);font-size:14px">${escapeHtml(p.desc)}</p>
-    ${priceHtml(p, true)}
-    <button class="btn-add" style="width:100%;padding:12px;border-radius:12px;font-size:14px" ${canAddMore ? "" : "disabled"} onclick="addToCart(${p.id});closeDetails()">${stock <= 0 ? "Sold Out" : (canAddMore ? "Add to Cart" : "Max in Cart")}</button>
-  `;
-}
-
-function stepModal(d) {
-  const p = products.find(x => x.id === activeModalId);
-  if (!p) return;
-  const len = getImgs(p).length;
-  activeModalImg = (activeModalImg + d + len) % len;
-  paintModal();
-}
-
-function pickModal(i) {
-  activeModalImg = i;
-  paintModal();
-}
-
-function closeDetails() {
-  activeModalId = null;
-  document.getElementById("modalWrap").classList.remove("show");
-}
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    closeDetails();
-    closeAdminLogin();
-    closeSaleModal();
-  }
-  if (activeModalId === null) return;
-  if (e.key === "ArrowLeft") stepModal(-1);
-  else if (e.key === "ArrowRight") stepModal(1);
-});
-
-function renderReviews() {
-  document.getElementById("reviewGrid").innerHTML = reviews.map((r, index) => `
-    <div class="rev-card">
-      <div>
-        <div class="rev-top-row">
-          <div class="stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div>
-          ${isAdmin ? `<button class="rev-del-btn" onclick="deleteReview(${index})">Delete</button>` : ""}
-        </div>
-        <p>“${escapeHtml(r.text)}”</p>
-      </div>
-      <strong>${escapeHtml(r.name)}</strong>
-    </div>
-  `).join("");
-}
-
-function deleteReview(index) {
-  if (!isAdmin) return;
-  if (!confirm("Delete this review?")) return;
-  reviews.splice(index, 1);
-  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
-  renderReviews();
-  showToast("Review deleted ✓");
-}
-
-function addReview() {
-  const name = document.getElementById("reviewName").value.trim();
-  const text = document.getElementById("reviewText").value.trim();
-  const stars = Number(document.getElementById("reviewStars").value);
-  if (!name || !text) {
-    alert("Please enter your name and review first.");
-    return;
-  }
-  reviews.unshift({name, text, stars});
-  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
-  renderReviews();
-  document.getElementById("reviewName").value = "";
-  document.getElementById("reviewText").value = "";
-  showToast("Thanks for your review! ★");
-}
-
-async function initializeSupabaseAdmin() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    const { data: allowed, error } = await sb.rpc("is_ns_admin");
-    isAdmin = !error && allowed === true;
-    if (isAdmin) await Promise.all([loadOrders(), loadProductsFromDatabase({ seedIfEmpty: true })]);
-    else await sb.auth.signOut();
-  }
-  if (!isAdmin) await loadProductsFromDatabase();
-  await loadSharedLogo();
-  syncAdminUI();
-  sb.channel("ns-store-live")
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
-      if (isAdmin) loadOrders();
-    })
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_products" }, () => {
-      loadProductsFromDatabase();
-    })
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_store_settings" }, () => {
-      loadSharedLogo();
-    })
-    .subscribe();
-}
-
-document.getElementById("year").textContent = new Date().getFullYear();
-applyLogo(logoValue, false);
-initInstaPayDisplay();
-renderFilters();
-renderProducts();
-renderCart();
-syncAdminUI();
-initializeSupabaseAdmin();
-</script>
-</body>
-</html>
+let isAdmin =

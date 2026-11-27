@@ -224,13 +224,19 @@ header {
   color: #faf6f0;
   border: 1px solid var(--brown);
   border-radius: 999px;
-  padding: 9px 18px;
+  padding: 9px 16px;
   font-weight: 700;
   font-size: 13.5px;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   box-shadow: 0 8px 20px rgba(59, 35, 22, 0.18);
+}
+
+.cart-trigger svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
 }
 
 .cart-trigger:hover {
@@ -1864,7 +1870,12 @@ footer p {
       <span class="brand-name">NS Accessories</span>
     </a>
     <div class="nav-right">
-      <button class="cart-trigger" onclick="openCart()">
+      <button class="cart-trigger" onclick="openCart()" aria-label="Open shopping cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M2.5 3h3l2.2 11.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L22 7H6.3"></path>
+        </svg>
         <span>Cart</span>
         <span class="badge-num" id="cartCount">0</span>
       </button>
@@ -1993,7 +2004,7 @@ footer p {
               <input id="cpnCode" placeholder="e.g. VIP3 or SAVE20" style="text-transform:uppercase">
             </div>
             <div>
-              <label>Usage Limit (Max People) *</label>
+              <label>Usage Limit (Max Confirmed Orders) *</label>
               <input id="cpnLimit" type="number" min="1" value="3" placeholder="e.g. 3">
             </div>
           </div>
@@ -2011,7 +2022,7 @@ footer p {
             </div>
           </div>
           <button type="button" class="btn-add" style="width:100%;padding:11px;border-radius:11px" onclick="adminCreateCoupon()">Save Coupon to Database</button>
-          <p class="note-txt">Once a coupon reaches its usage limit (for example 3 uses), it automatically stops working for any additional orders.</p>
+          <p class="note-txt">Coupon usage is counted only when you confirm an order, and returned automatically if a confirmed order is cancelled.</p>
         </div>
 
         <div class="admin-card">
@@ -2118,7 +2129,14 @@ footer p {
 
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <h2 style="margin:0;font-size:22px;font-weight:700;color:var(--brown-deep)">Shopping Cart</h2>
+    <h2 style="margin:0;font-size:22px;font-weight:700;color:var(--brown-deep);display:inline-flex;align-items:center;gap:8px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="9" cy="20" r="1.5"></circle>
+        <circle cx="18" cy="20" r="1.5"></circle>
+        <path d="M2.5 3h3l2.2 11.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L22 7H6.3"></path>
+      </svg>
+      <span>Shopping Cart</span>
+    </h2>
     <button class="x-btn" onclick="closeCart()">×</button>
   </div>
   <div class="cart-list" id="cartItems"></div>
@@ -2190,7 +2208,7 @@ footer p {
     </div>
 
     <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">Confirm &amp; Generate Order #</button>
-    <p class="note-txt">Your order is numbered and logged first; stock is deducted once confirmed in the Admin panel.</p>
+    <p class="note-txt">Your order is numbered and logged first; stock and coupon usage are counted once confirmed in the Admin panel.</p>
   </div>
 </aside>
 
@@ -2826,7 +2844,7 @@ function renderAdminCoupons() {
             <span class="coupon-badge ${activeNow ? 'on' : 'off'}">${activeNow ? 'Active' : (exhausted ? 'Limit Reached' : 'Disabled')}</span>
           </div>
           <div style="font-size:11.5px;color:var(--muted);margin-top:3px">
-            Used: <b>${Number(c.used_count)}</b> / <b>${Number(c.usage_limit)}</b> people
+            Confirmed uses: <b>${Number(c.used_count)}</b> / <b>${Number(c.usage_limit)}</b>
           </div>
         </div>
         <div class="manage-item-actions">
@@ -2902,7 +2920,7 @@ async function applyCouponCode() {
     };
     inputEl.value = row.code;
     msgEl.className = "coupon-msg ok";
-    msgEl.textContent = `${row.message} (${appliedCoupon.remainingUses} use(s) remaining)`;
+    msgEl.textContent = `${row.message} (${appliedCoupon.remainingUses} confirmed use(s) left)`;
     resetOrderConfirmation();
     renderCartTotals();
     showToast(`Coupon ${row.code} applied ✓`);
@@ -2967,6 +2985,8 @@ function mapDbOrder(row) {
     phone: row.customer_phone,
     address: row.customer_address,
     paymentText: row.payment_text,
+    couponCode: row.coupon_code || "",
+    couponDeducted: !!row.coupon_deducted,
     items: row.items || [],
     total: Number(row.total || 0),
     createdAt: new Date(row.created_at).toLocaleString("en-US"),
@@ -2990,30 +3010,35 @@ async function confirmOrderAndDeductStock(orderNumber) {
   const numericNo = Number(String(orderNumber).replace("NS-", ""));
   const { error } = await sb.rpc("confirm_ns_order", { p_order_number: numericNo });
   if (error) {
-    alert("Couldn't confirm order. Stock was not changed. " + error.message);
+    alert("Couldn't confirm order. Stock or coupon count was not changed. " + error.message);
     return;
   }
-  await Promise.all([loadOrders(), loadProductsFromDatabase()]);
-  showToast(`Order #${orderNumber} confirmed and stock deducted ✓`);
+  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
+  showToast(`Order #${orderNumber} confirmed ✓`);
 }
 
 async function cancelOrderInAdmin(orderNumber) {
   const order = orders.find(o => o.orderNumber === orderNumber);
   if (!order || order.status === "cancelled") return;
-  if (!confirm(`Cancel order #${orderNumber}? If it was confirmed, its quantities will be returned to stock.`)) return;
+  if (!confirm(`Cancel order #${orderNumber}? Stock and coupon usage will be restored if they were counted.`)) return;
   const numericNo = Number(String(orderNumber).replace("NS-", ""));
   const { error } = await sb.rpc("cancel_ns_order", { p_order_number: numericNo });
   if (error) { alert("Couldn't cancel order: " + error.message); return; }
-  await Promise.all([loadOrders(), loadProductsFromDatabase()]);
+  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
   showToast(`Order #${orderNumber} cancelled`);
 }
 
 async function deleteOrderFromHistory(orderNumber) {
+  const order = orders.find(o => o.orderNumber === orderNumber);
   if (!confirm(`Permanently delete order #${orderNumber} from history?`)) return;
   const numericNo = Number(String(orderNumber).replace("NS-", ""));
+  if (order && order.status !== "cancelled" && (order.stockDeducted || order.couponDeducted)) {
+    const { error: cancelErr } = await sb.rpc("cancel_ns_order", { p_order_number: numericNo });
+    if (cancelErr) { alert("Couldn't restore stock/coupon before delete: " + cancelErr.message); return; }
+  }
   const { error } = await sb.from("ns_orders").delete().eq("order_number", numericNo);
   if (error) { alert("Couldn't delete order: " + error.message); return; }
-  await loadOrders();
+  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
   showToast("Order removed from log");
 }
 
@@ -3029,7 +3054,7 @@ function renderAdminOrders() {
 
   box.innerHTML = orders.map(o => {
     let badgeClass = "pending";
-    let badgeText = "Pending Admin Confirm (Stock Not Deducted)";
+    let badgeText = "Pending Admin Confirm";
     if (o.status === "confirmed") {
       badgeClass = "confirmed";
       badgeText = "Confirmed ✓";

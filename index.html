@@ -1,3 +1,191 @@
+-- 1) Support extended order statuses (pending, confirmed, shipped, delivered, cancelled)
+alter table public.ns_orders drop constraint if exists ns_orders_status_check;
+alter table public.ns_orders
+  add constraint ns_orders_status_check
+  check (status in ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled'));
+
+-- 2) Allow shipped/delivered transitions safely in confirm_ns_order
+create or replace function public.confirm_ns_order(p_order_number bigint)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  o public.ns_orders%rowtype;
+  cpn public.ns_coupons%rowtype;
+  item jsonb;
+  product_id bigint;
+  item_qty integer;
+  current_stock integer;
+begin
+  if not public.is_ns_admin() then raise exception 'Not authorized'; end if;
+
+  select * into o
+  from public.ns_orders
+  where order_number = p_order_number
+  for update;
+
+  if not found then raise exception 'Order not found'; end if;
+  if o.status in ('confirmed', 'shipped', 'delivered') and o.stock_deducted then return; end if;
+  if o.status <> 'pending' then raise exception 'Only pending orders can be confirmed'; end if;
+
+  if coalesce(trim(o.coupon_code), '') <> '' and not o.coupon_deducted then
+    select * into cpn
+    from public.ns_coupons
+    where upper(code) = upper(trim(o.coupon_code))
+    for update;
+
+    if not found then
+      raise exception 'Coupon "%" no longer exists.', o.coupon_code;
+    end if;
+
+    if not cpn.is_active then
+      raise exception 'Coupon "%" is inactive.', o.coupon_code;
+    end if;
+
+    if cpn.used_count >= cpn.usage_limit then
+      raise exception 'Coupon "%" has already reached its usage limit (%).', o.coupon_code, cpn.usage_limit;
+    end if;
+
+    update public.ns_coupons
+    set used_count = used_count + 1
+    where id = cpn.id;
+  end if;
+
+  for item in select value from jsonb_array_elements(o.items)
+  loop
+    product_id := coalesce(item->>'product_id', item->>'id')::bigint;
+    item_qty := (item->>'qty')::integer;
+    if product_id is null or item_qty is null or item_qty < 1 then
+      raise exception 'Order contains an invalid product or quantity';
+    end if;
+
+    select stock into current_stock
+    from public.ns_products
+    where id = product_id
+    for update;
+
+    if not found then raise exception 'A product in this order no longer exists (product ID %)', product_id; end if;
+    if current_stock < item_qty then
+      raise exception 'Insufficient stock for product ID %. Available: %, requested: %', product_id, current_stock, item_qty;
+    end if;
+
+    update public.ns_products
+    set stock = stock - item_qty, updated_at = now()
+    where id = product_id;
+  end loop;
+
+  update public.ns_orders
+  set status = 'confirmed',
+      stock_deducted = true,
+      coupon_deducted = case when coalesce(trim(o.coupon_code), '') <> '' then true else o.coupon_deducted end
+  where order_number = p_order_number;
+
+  if coalesce(trim(o.customer_email), '') <> '' then
+    update public.ns_customers
+    set confirmed_orders_count = confirmed_orders_count + 1,
+        total_spent = total_spent + o.total,
+        updated_at = now()
+    where lower(email) = lower(trim(o.customer_email));
+  end if;
+end;
+$$;
+revoke all on function public.confirm_ns_order(bigint) from public, anon;
+grant execute on function public.confirm_ns_order(bigint) to authenticated;
+
+-- 3) Admin status setter (e.g. shipped, delivered, confirmed)
+create or replace function public.set_ns_order_status(p_order_number bigint, p_next_status text)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  o public.ns_orders%rowtype;
+  v_status text := lower(trim(coalesce(p_next_status, '')));
+begin
+  if not public.is_ns_admin() then raise exception 'Not authorized'; end if;
+  if v_status not in ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled') then
+    raise exception 'Invalid status';
+  end if;
+
+  if v_status = 'cancelled' then
+    perform public.cancel_ns_order(p_order_number);
+    return;
+  end if;
+
+  select * into o
+  from public.ns_orders
+  where order_number = p_order_number
+  for update;
+
+  if not found then raise exception 'Order not found'; end if;
+
+  if v_status in ('confirmed', 'shipped', 'delivered') and not o.stock_deducted then
+    perform public.confirm_ns_order(p_order_number);
+  end if;
+
+  update public.ns_orders
+  set status = v_status
+  where order_number = p_order_number;
+end;
+$$;
+revoke all on function public.set_ns_order_status(bigint, text) from public, anon;
+grant execute on function public.set_ns_order_status(bigint, text) to authenticated;
+
+-- 4) Customer order tracking RPC by email (safe non-sensitive order summary)
+create or replace function public.track_ns_orders_by_email(p_email text)
+returns table (
+  order_number bigint,
+  status text,
+  customer_name text,
+  governorate text,
+  subtotal numeric,
+  discount_amount numeric,
+  shipping_fee numeric,
+  total numeric,
+  items jsonb,
+  created_at timestamptz
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_clean_email text := lower(trim(coalesce(p_email, '')));
+begin
+  if v_clean_email = '' or v_clean_email !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]{2,}$' then
+    raise exception 'Please enter a valid email address';
+  end if;
+
+  return query
+  select
+    o.order_number,
+    o.status,
+    o.customer_name,
+    o.governorate,
+    o.subtotal,
+    o.discount_amount,
+    o.shipping_fee,
+    o.total,
+    o.items,
+    o.created_at
+  from public.ns_orders o
+  where lower(trim(o.customer_email)) = v_clean_email
+  order by o.created_at desc
+  limit 25;
+end;
+$$;
+revoke all on function public.track_ns_orders_by_email(text) from public;
+grant execute on function public.track_ns_orders_by_email(text) to anon, authenticated;
+```[cite: 3]
+
+---
+
+### ثانياً: ملف `index.html` — الجزء الأول (الستايل، نافذة تتبع الطلبات بالإيميل، نافذة تعديل صور المنتج، وبداية السكربت)
+
+```html
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
@@ -170,7 +358,21 @@ header {
   text-shadow: 0 1px 0 rgba(255, 253, 249, 0.9), 0 3px 6px rgba(36, 19, 10, 0.14);
 }
 
-.nav-right { display: flex; justify-content: flex-end; }
+.nav-right { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+.track-trigger {
+  background: var(--paper);
+  color: var(--brown);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.track-trigger:hover { border-color: var(--brown); background: var(--brown-soft); }
+
 .cart-trigger {
   background: var(--brown);
   color: #faf6f0;
@@ -296,6 +498,48 @@ header {
 .preview-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .preview-strip img { width: 58px; height: 58px; object-fit: cover; border-radius: 10px; border: 1.5px solid var(--brown); }
 
+.img-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.img-editor-tile {
+  position: relative;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+  aspect-ratio: 1 / 1;
+}
+.img-editor-tile img { width: 100%; height: 100%; object-fit: cover; }
+.img-tile-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(185, 28, 28, 0.92);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+.img-tile-badge {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: rgba(36, 19, 10, 0.78);
+  color: #faf6f0;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
 .admin-manage-list { max-height: 360px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 .manage-item {
   background: var(--paper);
@@ -309,7 +553,7 @@ header {
 }
 .manage-item-info { display: flex; align-items: center; gap: 10px; }
 .manage-item-info img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
-.manage-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.manage-item-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
 .sale-edit-btn {
   border: 1px solid rgba(182, 130, 70, 0.6);
   background: #f8efe2;
@@ -323,7 +567,7 @@ header {
 .coupon-badge.on { background: var(--ok-soft); color: #166534; }
 .coupon-badge.off { background: #fee2e2; color: #991b1b; }
 
-.orders-list { display: flex; flex-direction: column; gap: 12px; max-height: 460px; overflow-y: auto; }
+.orders-list { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
 .order-card { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
 .order-card-head {
   display: flex;
@@ -338,6 +582,8 @@ header {
 .status-pill { padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800; }
 .status-pill.pending { background: #f8efe2; color: #8a561e; }
 .status-pill.confirmed { background: var(--ok-soft); color: #166534; }
+.status-pill.shipped { background: #e0f2fe; color: #075985; }
+.status-pill.delivered { background: #dcfce7; color: #14532d; }
 .status-pill.cancelled { background: #fee2e2; color: #991b1b; }
 .order-items-box {
   background: var(--paper);
@@ -347,10 +593,19 @@ header {
   font-size: 12.5px;
   margin: 8px 0;
 }
-.order-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.order-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
 .btn-confirm-order {
   background: var(--ok);
   color: #fff;
+  border: 0;
+  border-radius: 9px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.btn-status-order {
+  background: var(--brown);
+  color: #faf6f0;
   border: 0;
   border-radius: 9px;
   padding: 6px 12px;
@@ -727,7 +982,6 @@ footer {
 }
 footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 
-/* Cart Drawer (Products Only + Checkout Button) */
 .backdrop {
   position: fixed;
   inset: 0;
@@ -847,7 +1101,6 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 }
 .go-checkout-btn:hover:not(:disabled) { background: var(--brown-deep); }
 
-/* Checkout Page (Opens after clicking Checkout in Cart) */
 .checkout-page {
   display: none;
   position: fixed;
@@ -1132,8 +1385,8 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   background: var(--paper);
   border: 2px solid var(--brown);
   border-radius: var(--r-md);
-  width: min(390px, 100%);
-  padding: 26px;
+  width: min(410px, 100%);
+  padding: 24px;
   position: relative;
   box-shadow: var(--shadow-lg);
   text-align: center;
@@ -1148,6 +1401,42 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   place-items: center;
   font-size: 24px;
   margin: 0 auto 12px;
+}
+
+.track-quick-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0 14px;
+}
+.track-quick-btn {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--brown-deep);
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.track-quick-btn.active {
+  background: var(--brown-soft);
+  border-color: var(--brown);
+  color: var(--brown);
+}
+.track-results {
+  max-height: 300px;
+  overflow-y: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.track-order-item {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: 12.5px;
 }
 
 .stage { position: relative; height: 300px; border-radius: 16px; overflow: hidden; background: var(--bg-warm); margin-bottom: 12px; }
@@ -1193,7 +1482,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 .strip button img { width: 100%; height: 100%; object-fit: cover; }
 .strip button.active { border-color: var(--brown); opacity: 1; }
 
-.empty-msg { text-align: center; color: var(--muted); padding: 28px 0; font-size: 14px; }
+.empty-msg { text-align: center; color: var(--muted); padding: 24px 0; font-size: 14px; }
 
 .toast {
   position: fixed;
@@ -1236,6 +1525,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   .container { padding: 20px 14px 0; }
   .logo-3d-wrap { width: 42px; height: 42px; }
   .brand-name { font-size: 22px; }
+  .track-trigger span { display: none; }
   .editorial-hero { padding: 22px 18px; gap: 22px; }
   .collage-tall { height: 240px; }
   .collage-box { min-height: 112px; }
@@ -1285,6 +1575,9 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       <span class="brand-name">NS Accessories</span>
     </a>
     <div class="nav-right">
+      <button type="button" class="track-trigger" onclick="openTrackModal()" aria-label="Track orders">
+        <span>📦 Orders</span>
+      </button>
       <button class="cart-trigger" onclick="openCart()" aria-label="Open cart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="9" cy="21" r="1"></circle>
@@ -1398,7 +1691,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
         <div class="admin-card">
           <h3>Existing Products (<span id="admProdCount">0</span>)</h3>
           <div class="admin-manage-list" id="admProdList"></div>
-          <p class="note-txt" style="margin-top:10px">Click <b>Sale</b> on any item to set or clear a Sale discount anytime, or <b>Delete</b> to remove it.</p>
+          <p class="note-txt" style="margin-top:10px">Use <b>Images</b> to add, remove, or replace product photos, <b>Sale</b> to edit discounts, or <b>Delete</b> to remove.</p>
         </div>
       </div>
     </div>
@@ -1530,7 +1823,6 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   <p>© <span id="year"></span> NS. All rights reserved.</p>
 </footer>
 
-<!-- Step 1: Cart Drawer (Products Only + Checkout Button) -->
 <div class="backdrop" id="overlay" onclick="closeCart()"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart">
   <div class="drawer-head">
@@ -1547,7 +1839,6 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   </div>
 </aside>
 
-<!-- Step 2: Dedicated Checkout Page (With Email Field) -->
 <section class="checkout-page" id="checkoutPage" aria-label="Checkout">
   <div class="checkout-shell">
     <div class="checkout-head">
@@ -1663,6 +1954,33 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   <div class="modal-card" id="modal"></div>
 </div>
 
+<div class="modal-layer" id="imgEditWrap" onclick="if(event.target===this)closeImgEditModal()">
+  <div class="modal-card" style="width:min(480px,100%)">
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeImgEditModal()">×</button>
+    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--brown)">🖼️ Edit Product Photos</h3>
+    <div id="imgEditProdTitle" style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px"></div>
+
+    <div class="img-editor-grid" id="imgEditGrid"></div>
+
+    <div class="inp-group">
+      <label for="addEditImgFiles">Upload New Photos (up to 4 total)</label>
+      <input id="addEditImgFiles" type="file" accept="image/*" multiple onchange="handleEditModalFiles(event)">
+    </div>
+    <div class="inp-group">
+      <label for="addEditImgUrl">Or Add Photo URL</label>
+      <div style="display:flex;gap:8px">
+        <input id="addEditImgUrl" placeholder="https://example.com/photo.jpg" style="margin-bottom:0">
+        <button type="button" class="btn-info" style="padding:0 14px;border-radius:10px;font-weight:800" onclick="appendEditModalUrl()">Add</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button type="button" class="btn-add" style="padding:10px;border-radius:11px" onclick="saveEditedProductImages()">Save Photos</button>
+      <button type="button" class="btn-info" style="padding:10px 14px;border-radius:11px" onclick="closeImgEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-layer" id="saleModalWrap" onclick="if(event.target===this)closeSaleModal()">
   <div class="modal-card" style="width:min(420px,100%)">
     <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeSaleModal()">×</button>
@@ -1688,6 +2006,50 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
     <div style="display:flex;gap:8px">
       <button type="button" class="btn-add" style="padding:10px;border-radius:11px" onclick="saveEditedProductSale()">Save Sale</button>
       <button type="button" class="del-btn" style="padding:10px 14px;border-radius:11px" onclick="clearEditedProductSale()">Remove Sale</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-layer" id="trackWrap" onclick="if(event.target===this)closeTrackModal()">
+  <div class="login-card" style="text-align:left">
+    <button class="x-btn" style="position:absolute;right:14px;top:14px" onclick="closeTrackModal()">×</button>
+    <div class="login-icon">📦</div>
+    <h3 style="margin:0 0 4px;font-size:21px;font-weight:800;color:var(--brown-deep);text-align:center">Track Your Orders</h3>
+    <p style="margin:0 0 12px;font-size:12.5px;color:var(--muted);text-align:center">Enter your email on any phone or browser to check your live order status</p>
+
+    <div class="track-quick-row">
+      <button type="button" class="track-quick-btn active" id="trackModeOrdersBtn" onclick="setTrackMode('orders')">📦 Orders</button>
+      <button type="button" class="track-quick-btn" id="trackModeProfileBtn" onclick="setTrackMode('profile')">👤 Profile</button>
+    </div>
+
+    <div id="trackOrdersPane">
+      <div class="inp-group">
+        <label for="trackEmailInput">Customer Email</label>
+        <div style="display:flex;gap:8px">
+          <input id="trackEmailInput" type="email" placeholder="name@example.com" style="margin-bottom:0" onkeydown="if(event.key==='Enter')searchOrdersByEmail()">
+          <button type="button" class="btn-add" style="padding:0 16px;border-radius:10px" onclick="searchOrdersByEmail()">→</button>
+        </div>
+      </div>
+      <div class="track-results" id="trackResults">
+        <div class="empty-msg">Enter your email to see confirmed, shipped, delivered, or cancelled orders.</div>
+      </div>
+    </div>
+
+    <div id="trackProfilePane" style="display:none">
+      <div class="inp-group">
+        <label for="profName">Full Name</label>
+        <input id="profName" placeholder="Your full name">
+      </div>
+      <div class="inp-group">
+        <label for="profEmail">Email</label>
+        <input id="profEmail" type="email" placeholder="name@example.com">
+      </div>
+      <div class="inp-group">
+        <label for="profPhone">Phone</label>
+        <input id="profPhone" type="tel" placeholder="01xxxxxxxxx">
+      </div>
+      <button type="button" class="btn-add" style="width:100%;padding:10px;border-radius:11px" onclick="saveCustomerLocalProfile()">Save Details</button>
+      <p class="note-txt">Saves your details locally on this device to autofill checkout &amp; order lookup.</p>
     </div>
   </div>
 </div>
@@ -1818,6 +2180,8 @@ let isAdmin = false;
 let activeAdminTab = "orders";
 let uploadedAdminImgs = [];
 let editingSaleProductId = null;
+let editingImagesProductId = null;
+let editingImagesList = [];
 let selectedPayment = "cod";
 let pendingOrderData = null;
 let brandClickCount = 0;
@@ -1837,6 +2201,15 @@ let activeModalImg = 0;
 const money = n => Number(n).toLocaleString("en-US") + " " + CURRENCY;
 const getStock = p => Math.max(0, Number(p.stock ?? 0));
 const getImgs = p => Array.isArray(p.images) && p.images.length ? p.images.slice(0, 4) : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"];
+
+function statusLabelText(st) {
+  const s = String(st || "pending").toLowerCase();
+  if (s === "shipped") return "SHIPPED";
+  if (s === "delivered") return "DELIVERED";
+  if (s === "confirmed") return "CONFIRMED";
+  if (s === "cancelled") return "CANCELLED";
+  return "PENDING";
+}
 
 function applyLogo(src) {
   const clean = (src || "").trim();
@@ -2051,6 +2424,104 @@ function clearEditedProductSale() {
   saveEditedProductSale();
 }
 
+/* Product Images Editor Modal */
+function openImgEditModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editingImagesProductId = id;
+  editingImagesList = [...getImgs(p)];
+  document.getElementById("imgEditProdTitle").textContent = `${p.name} (${editingImagesList.length}/4 photos)`;
+  document.getElementById("addEditImgFiles").value = "";
+  document.getElementById("addEditImgUrl").value = "";
+  renderImgEditGrid();
+  document.getElementById("imgEditWrap").classList.add("show");
+}
+
+function closeImgEditModal() {
+  editingImagesProductId = null;
+  editingImagesList = [];
+  document.getElementById("imgEditWrap").classList.remove("show");
+}
+
+function renderImgEditGrid() {
+  const grid = document.getElementById("imgEditGrid");
+  const p = products.find(x => x.id === editingImagesProductId);
+  if (p) {
+    document.getElementById("imgEditProdTitle").textContent = `${p.name} (${editingImagesList.length}/4 photos)`;
+  }
+  if (!editingImagesList.length) {
+    grid.innerHTML = '<div class="empty-msg" style="grid-column:1/-1">No photos selected — upload or add a URL below.</div>';
+    return;
+  }
+  grid.innerHTML = editingImagesList.map((src, idx) => `
+    <div class="img-editor-tile">
+      <img src="${escapeHtml(src)}" alt="">
+      <span class="img-tile-badge">${idx === 0 ? "Main" : `#${idx + 1}`}</span>
+      <button type="button" class="img-tile-remove" title="Remove photo" onclick="removeEditModalImg(${idx})">×</button>
+    </div>
+  `).join("");
+}
+
+function removeEditModalImg(idx) {
+  editingImagesList.splice(idx, 1);
+  renderImgEditGrid();
+}
+
+function handleEditModalFiles(e) {
+  const files = Array.from(e.target.files || []);
+  if (!files.length) return;
+  const availableSlots = Math.max(0, 4 - editingImagesList.length);
+  files.slice(0, availableSlots).forEach(file => {
+    resizeImageToDataUrl(file, 750, 0.78).then(dataUrl => {
+      if (editingImagesList.length < 4) {
+        editingImagesList.push(dataUrl);
+        renderImgEditGrid();
+      }
+    });
+  });
+}
+
+function appendEditModalUrl() {
+  const inp = document.getElementById("addEditImgUrl");
+  const url = inp.value.trim();
+  if (!url) return;
+  if (editingImagesList.length >= 4) {
+    alert("Maximum 4 photos per product.");
+    return;
+  }
+  editingImagesList.push(url);
+  inp.value = "";
+  renderImgEditGrid();
+}
+
+async function saveEditedProductImages() {
+  if (!isAdmin) { alert("Sign in as Admin first."); return; }
+  const p = products.find(x => x.id === editingImagesProductId);
+  if (!p) return;
+
+  const fallbackImgs = ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=75"];
+  const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
+
+  let finalImgs = fallbackImgs;
+  try {
+    if (editingImagesList.length) {
+      showToast("Saving product photos...");
+      finalImgs = await uploadProductImagesToStorage(editingImagesList.slice(0, 4), slug);
+    }
+  } catch (err) {
+    alert("Photo upload failed: " + (err.message || err));
+    return;
+  }
+
+  const { error } = await sb.from("ns_products").update({ images: finalImgs }).eq("id", p.id);
+  if (error) { alert("Could not update product photos: " + error.message); return; }
+
+  cardIdxMap[p.id] = 0;
+  closeImgEditModal();
+  await loadProductsFromDatabase();
+  showToast("Product photos updated ✓");
+}
+
 function stockBadgeHtml(stock) {
   if (stock <= 0) return '<span class="stock-pill out">Sold Out</span>';
   if (stock <= 3) return `<span class="stock-pill low">Only ${stock} left</span>`;
@@ -2254,7 +2725,7 @@ function renderAdminCoupons() {
         <div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             <b style="font-size:14px;color:var(--brown-deep)">${escapeHtml(c.code)}</b>
-            <span class="sale-chip" style="background:#f5e6d3;color:var(--brown);padding:2px 8px;border-radius:7px;font-size:11px;font-weight:800">${escapeHtml(discLabel)}</span>
+            <span style="background:#f5e6d3;color:var(--brown);padding:2px 8px;border-radius:7px;font-size:11px;font-weight:800">${escapeHtml(discLabel)}</span>
             <span class="coupon-badge ${usable ? "on" : "off"}">${usable ? "Active" : "Inactive / Exhausted"}</span>
           </div>
           <div style="font-size:12px;color:var(--muted);margin-top:3px">
@@ -2471,9 +2942,9 @@ function renderAdminOrders() {
         <div class="order-card-head">
           <div>
             <b>Order #NS-${o.order_number}</b>
-            <span class="status-pill ${o.status}">${o.status.toUpperCase()}</span>
+            <span class="status-pill ${o.status}">${escapeHtml(statusLabelText(o.status))}</span>
             ${o.stock_deducted ? '<span class="status-pill confirmed" style="margin-left:4px">Stock Deducted</span>' : ""}
-            ${o.coupon_code ? `<span class="sale-chip" style="background:#f5e6d3;color:var(--brown);padding:2px 8px;border-radius:7px;font-size:11px;font-weight:800;margin-left:4px">Coupon: ${escapeHtml(o.coupon_code)}</span>` : ""}
+            ${o.coupon_code ? `<span style="background:#f5e6d3;color:var(--brown);padding:2px 8px;border-radius:7px;font-size:11px;font-weight:800;margin-left:4px">Coupon: ${escapeHtml(o.coupon_code)}</span>` : ""}
           </div>
           <span style="font-size:11.5px;color:var(--muted)">${escapeHtml(dateStr)}</span>
         </div>
@@ -2488,7 +2959,9 @@ function renderAdminOrders() {
         <div style="font-weight:800;color:var(--brown);font-size:14.5px">Total: ${money(o.total)}</div>
         ${breakdownHtml}
         <div class="order-actions">
-          ${o.status !== "confirmed" ? `<button class="btn-confirm-order" onclick="adminConfirmOrder(${o.order_number})">✓ Confirm &amp; Deduct Stock</button>` : ""}
+          ${o.status === "pending" ? `<button class="btn-confirm-order" onclick="adminConfirmOrder(${o.order_number})">✓ Confirm &amp; Deduct Stock</button>` : ""}
+          ${o.status !== "shipped" && o.status !== "cancelled" ? `<button class="btn-status-order" onclick="adminSetOrderStatus(${o.order_number}, 'shipped')">🚚 Shipped</button>` : ""}
+          ${o.status !== "delivered" && o.status !== "cancelled" ? `<button class="btn-status-order" onclick="adminSetOrderStatus(${o.order_number}, 'delivered')">📦 Delivered</button>` : ""}
           ${o.status !== "cancelled" ? `<button class="btn-cancel-order" onclick="adminCancelOrder(${o.order_number})">✕ Cancel Order</button>` : ""}
         </div>
       </div>
@@ -2502,6 +2975,17 @@ async function adminConfirmOrder(orderNumber) {
   if (error) { alert("Could not confirm order: " + error.message); return; }
   await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
   showToast(`Order #NS-${orderNumber} confirmed & stock updated ✓`);
+}
+
+async function adminSetOrderStatus(orderNumber, nextStatus) {
+  if (!isAdmin) return;
+  const { error } = await sb.rpc("set_ns_order_status", {
+    p_order_number: orderNumber,
+    p_next_status: nextStatus
+  });
+  if (error) { alert("Could not update status: " + error.message); return; }
+  await Promise.all([loadOrders(), loadProductsFromDatabase(), loadCoupons()]);
+  showToast(`Order #NS-${orderNumber} marked as ${statusLabelText(nextStatus)} ✓`);
 }
 
 async function adminCancelOrder(orderNumber) {
@@ -2667,9 +3151,94 @@ function renderAdminManageList() {
           </div>
         </div>
         <div class="manage-item-actions">
+          <button type="button" class="sale-edit-btn" onclick="openImgEditModal(${p.id})">Images (${getImgs(p).length})</button>
           <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">${s.hasSale ? "Edit Sale" : "Sale"}</button>
           <button type="button" class="del-btn" onclick="deleteProduct(${p.id})">Delete</button>
         </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* Customer Order Tracking & Profile Modal */
+function openTrackModal() {
+  const saved = JSON.parse(localStorage.getItem("ns_customer_profile") || "null");
+  const checkoutEmail = document.getElementById("customerEmail")?.value.trim() || "";
+  const defaultEmail = saved?.email || checkoutEmail || "";
+  if (defaultEmail && !document.getElementById("trackEmailInput").value.trim()) {
+    document.getElementById("trackEmailInput").value = defaultEmail;
+  }
+  if (saved) {
+    document.getElementById("profName").value = saved.name || "";
+    document.getElementById("profEmail").value = saved.email || "";
+    document.getElementById("profPhone").value = saved.phone || "";
+  }
+  setTrackMode("orders");
+  document.getElementById("trackWrap").classList.add("show");
+  if (defaultEmail) searchOrdersByEmail();
+}
+
+function closeTrackModal() {
+  document.getElementById("trackWrap").classList.remove("show");
+}
+
+function setTrackMode(mode) {
+  const isOrders = mode === "orders";
+  document.getElementById("trackModeOrdersBtn").classList.toggle("active", isOrders);
+  document.getElementById("trackModeProfileBtn").classList.toggle("active", !isOrders);
+  document.getElementById("trackOrdersPane").style.display = isOrders ? "" : "none";
+  document.getElementById("trackProfilePane").style.display = isOrders ? "none" : "";
+}
+
+function saveCustomerLocalProfile() {
+  const name = document.getElementById("profName").value.trim();
+  const email = document.getElementById("profEmail").value.trim().toLowerCase();
+  const phone = document.getElementById("profPhone").value.trim();
+  localStorage.setItem("ns_customer_profile", JSON.stringify({ name, email, phone }));
+  if (name && !document.getElementById("customerName").value.trim()) document.getElementById("customerName").value = name;
+  if (email && !document.getElementById("customerEmail").value.trim()) document.getElementById("customerEmail").value = email;
+  if (phone && !document.getElementById("customerPhone").value.trim()) document.getElementById("customerPhone").value = phone;
+  if (email) document.getElementById("trackEmailInput").value = email;
+  showToast("Details saved ✓");
+  setTrackMode("orders");
+  if (email) searchOrdersByEmail();
+}
+
+async function searchOrdersByEmail() {
+  const email = document.getElementById("trackEmailInput").value.trim().toLowerCase();
+  const box = document.getElementById("trackResults");
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    box.innerHTML = '<div class="empty-msg">Please enter a valid email address.</div>';
+    return;
+  }
+
+  box.innerHTML = '<div class="empty-msg">Searching orders...</div>';
+  const { data, error } = await sb.rpc("track_ns_orders_by_email", { p_email: email });
+  if (error) {
+    box.innerHTML = `<div class="empty-msg">${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  const list = Array.isArray(data) ? data : [];
+  if (!list.length) {
+    box.innerHTML = '<div class="empty-msg">No orders found for this email yet.</div>';
+    return;
+  }
+
+  box.innerHTML = list.map(o => {
+    const st = String(o.status || "pending").toLowerCase();
+    const itemsArr = Array.isArray(o.items) ? o.items : [];
+    const itemsTxt = itemsArr.map(i => `${escapeHtml(i.name)} × ${i.qty}`).join(" • ");
+    const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString("en-GB") : "";
+    return `
+      <div class="track-order-item">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px">
+          <b>Order #NS-${o.order_number}</b>
+          <span class="status-pill ${escapeHtml(st)}">${escapeHtml(statusLabelText(st))}</span>
+        </div>
+        <div style="color:var(--muted);font-size:11.5px;margin-bottom:5px">${escapeHtml(dateStr)}${o.governorate ? ` • ${escapeHtml(o.governorate)}` : ""}</div>
+        <div style="color:var(--ink);margin-bottom:5px">${itemsTxt}</div>
+        <div style="font-weight:800;color:var(--brown)">Total: ${money(o.total)}</div>
       </div>
     `;
   }).join("");
@@ -2939,6 +3508,12 @@ function closeCart() {
 
 function openCheckoutPage() {
   if (!cart.length) { showToast("Your cart is empty"); return; }
+  const saved = JSON.parse(localStorage.getItem("ns_customer_profile") || "null");
+  if (saved) {
+    if (saved.name && !document.getElementById("customerName").value.trim()) document.getElementById("customerName").value = saved.name;
+    if (saved.email && !document.getElementById("customerEmail").value.trim()) document.getElementById("customerEmail").value = saved.email;
+    if (saved.phone && !document.getElementById("customerPhone").value.trim()) document.getElementById("customerPhone").value = saved.phone;
+  }
   closeCart();
   updateOrderTotalsDisplay();
   document.getElementById("checkoutPage").classList.add("show");
@@ -3138,6 +3713,13 @@ async function finalizeWebsiteOrder() {
       await loadProductsFromDatabase();
       return;
     }
+
+    localStorage.setItem("ns_customer_profile", JSON.stringify({
+      name: pendingOrderData.name,
+      email: pendingOrderData.email,
+      phone: pendingOrderData.phone
+    }));
+    document.getElementById("trackEmailInput").value = pendingOrderData.email;
 
     const createdOrder = { ...pendingOrderData, orderNumber };
     let dispatchNote = "Saved on the website with status PENDING. An admin will confirm your order and update stock.";

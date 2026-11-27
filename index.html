@@ -380,6 +380,34 @@ header {
 .coupon-badge.on { background: var(--ok-soft); color: #166534; }
 .coupon-badge.off { background: #fee2e2; color: #991b1b; }
 
+.orders-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.order-stat-box {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: center;
+}
+.order-stat-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--brown-deep);
+  line-height: 1.2;
+}
+.order-stat-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 3px;
+}
+@media (max-width: 620px) {
+  .orders-stats-grid { grid-template-columns: 1fr; }
+}
 .orders-list { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
 .order-card { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
 .order-card-head {
@@ -1419,7 +1447,21 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       <button type="button" class="adm-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')">🎟️ Coupons (<span id="admCouponsCount">0</span>)</button>
     </div>
 
-    <div id="adminTabOrders">
+   <div id="adminTabOrders">
+      <div class="orders-stats-grid">
+        <div class="order-stat-box">
+          <div class="order-stat-num" id="statTotalOrders">0</div>
+          <div class="order-stat-label">Total Orders</div>
+        </div>
+        <div class="order-stat-box">
+          <div class="order-stat-num" id="statShippedOrders">0</div>
+          <div class="order-stat-label">Shipped</div>
+        </div>
+        <div class="order-stat-box">
+          <div class="order-stat-num" id="statDeliveredOrders">0</div>
+          <div class="order-stat-label">Delivered</div>
+        </div>
+      </div>
       <div class="orders-list" id="admOrdersList"></div>
     </div>
 
@@ -2719,6 +2761,14 @@ function renderAdminOrders() {
   const list = document.getElementById("admOrdersList");
   const totalEl = document.getElementById("admOrdersTotal");
   const stripPendingEl = document.getElementById("stripPendingCount");
+  const shippedCount = orders.filter(o => o.status === "shipped").length;
+  const deliveredCount = orders.filter(o => o.status === "delivered").length;
+  const statTotalEl = document.getElementById("statTotalOrders");
+  const statShippedEl = document.getElementById("statShippedOrders");
+  const statDeliveredEl = document.getElementById("statDeliveredOrders");
+  if (statTotalEl) statTotalEl.textContent = orders.length;
+  if (statShippedEl) statShippedEl.textContent = shippedCount;
+  if (statDeliveredEl) statDeliveredEl.textContent = deliveredCount;
   if (!list) return;
 
   const pendingCount = orders.filter(o => o.status === "pending").length;

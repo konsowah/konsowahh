@@ -186,6 +186,7 @@ header {
   padding: 8px 13px;
   font-weight: 800;
   font-size: 12.5px;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -538,6 +539,7 @@ header {
   border-radius: 999px;
   font-weight: 800;
   font-size: 13.5px;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -721,15 +723,16 @@ header {
 .rev-top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .stars { color: var(--bronze-light); letter-spacing: 1.5px; font-size: 13px; line-height: 1.2; }
 .rev-del-btn {
-  background: rgba(185, 28, 28, 0.9);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: #fee2e2;
+  color: var(--danger);
+  border: 1px solid #fca5a5;
   border-radius: 8px;
-  padding: 2px 8px;
+  padding: 3px 9px;
   font-size: 11px;
   font-weight: 800;
   z-index: 2;
 }
+.rev-del-btn:hover { background: var(--danger); color: #fff; }
 .rev-card p { color: #f4ece1; font-size: 13px; line-height: 1.6; margin: 9px 0 11px; }
 .rev-card strong {
   font-size: 12.5px;
@@ -793,8 +796,7 @@ footer {
   border-top: 3px solid var(--bronze);
 }
 footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
-
-.backdrop {
+  .backdrop {
   position: fixed;
   inset: 0;
   background: rgba(36, 19, 10, 0.55);
@@ -1128,38 +1130,55 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 
 .pending-status-card {
   display: none;
-  background: #fffdf9;
-  border: 1.5px solid var(--bronze);
+  background: var(--ok-soft);
+  border: 1.5px solid #86efac;
   border-radius: 14px;
-  padding: 14px;
-  margin-top: 10px;
+  padding: 16px;
+  margin-top: 12px;
   box-shadow: var(--shadow);
 }
 .pending-status-card.show { display: block; }
 .pending-status-badge {
   display: inline-block;
-  background: #f8efe2;
-  color: #8a561e;
-  border: 1px solid rgba(182, 130, 70, 0.5);
+  background: #14532d;
+  color: #fff;
   border-radius: 999px;
   padding: 3px 10px;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
   margin-bottom: 8px;
 }
-.pending-status-title { font-size: 15px; font-weight: 800; color: var(--brown-deep); margin: 0 0 6px; }
+.pending-status-title { font-size: 16px; font-weight: 800; color: #14532d; margin: 0 0 6px; }
 .pending-status-copy { font-size: 12.5px; color: var(--ink); line-height: 1.6; margin: 0 0 10px; }
-.pending-dispatch-note {
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 7px 10px;
-  border-radius: 9px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  color: var(--muted);
-  margin-bottom: 10px;
+.track-link-box {
+  background: var(--paper);
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
 }
-.pending-dispatch-note.sent { background: var(--ok-soft); border-color: #86efac; color: #166534; }
+.track-link-url {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brown-deep);
+  word-break: break-all;
+  margin: 4px 0 8px;
+}
+.track-link-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.track-direct-btn {
+  background: var(--brown);
+  color: #faf6f0;
+  text-decoration: none;
+  border: 0;
+  border-radius: 9px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+}
+.track-direct-btn:hover { background: var(--brown-deep); }
 
 .checkout-back-btn {
   background: transparent;
@@ -1171,6 +1190,46 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 }
 .checkout-back-btn:hover { background: var(--brown-soft); }
 .note-txt { font-size: 11px; color: var(--muted); margin: 6px 0 0; }
+
+.track-page {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  overflow-y: auto;
+  background: var(--bg);
+  padding: 24px 16px 48px;
+}
+.track-page.show { display: block; }
+.track-shell { width: min(820px, 100%); margin: 0 auto; }
+.track-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 0 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.track-page-head h2 { margin: 0; color: var(--brown-deep); font-size: 32px; }
+.track-permalink-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--brown-soft);
+  border: 1px solid rgba(182, 130, 70, 0.45);
+  border-radius: 12px;
+  padding: 9px 13px;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+.track-permalink-val {
+  font-weight: 700;
+  color: var(--brown-deep);
+  word-break: break-all;
+}
 
 .modal-layer {
   position: fixed;
@@ -1236,7 +1295,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   color: var(--brown);
 }
 .track-results {
-  max-height: 300px;
+  max-height: 420px;
   overflow-y: auto;
   text-align: left;
   display: flex;
@@ -1247,7 +1306,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   background: var(--bg);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 11px 13px;
+  padding: 12px 14px;
   font-size: 12.5px;
 }
 
@@ -1318,8 +1377,8 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 
 @media (max-width: 760px) {
   .checkout-layout { grid-template-columns: 1fr; }
-  .checkout-page { padding: 14px 12px 30px; }
-  .checkout-head h2 { font-size: 27px; }
+  .checkout-page, .track-page { padding: 14px 12px 30px; }
+  .checkout-head h2, .track-page-head h2 { font-size: 27px; }
   .checkout-panel { padding: 15px; }
 }
 
@@ -1369,11 +1428,12 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 </div>
 
 <div class="admin-strip" id="adminStrip">
-  <span>🔐 Admin Mode Active — Orders, Stock, Sales &amp; Coupons</span>
+  <span>🔐 Admin Mode Active — Orders, Stock, Sales, Coupons &amp; Reviews</span>
   <div class="admin-strip-actions">
     <button class="admin-mini-btn" onclick="switchAdminTab('orders');scrollToAdmin()">Orders (<span id="stripPendingCount">0</span>)</button>
     <button class="admin-mini-btn" onclick="switchAdminTab('products');scrollToAdmin()">Products</button>
     <button class="admin-mini-btn" onclick="switchAdminTab('coupons');scrollToAdmin()">Coupons</button>
+    <button class="admin-mini-btn" onclick="switchAdminTab('reviews');scrollToAdmin()">Reviews</button>
     <button class="admin-mini-btn out" onclick="logoutAdmin()">Log Out</button>
   </div>
 </div>
@@ -1390,9 +1450,9 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       <span class="brand-name">NS Accessories</span>
     </a>
     <div class="nav-right">
-      <button type="button" class="track-trigger" onclick="openTrackModal()" aria-label="Track your order">
+      <a href="#track-order" class="track-trigger" onclick="openTrackPage(event)" aria-label="Track your order">
         📦 Track Order
-      </button>
+      </a>
       <button class="cart-trigger" onclick="openCart()" aria-label="Open cart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="9" cy="21" r="1"></circle>
@@ -1419,6 +1479,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
       <button type="button" class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 Orders (<span id="admOrdersTotal">0</span>)</button>
       <button type="button" class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">🛍️ Products &amp; Logo</button>
       <button type="button" class="adm-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')">🎟️ Coupons (<span id="admCouponsCount">0</span>)</button>
+      <button type="button" class="adm-tab-btn" id="tabBtnReviews" onclick="switchAdminTab('reviews')">⭐ Reviews (<span id="admReviewsCount">0</span>)</button>
     </div>
 
     <div id="adminTabOrders">
@@ -1562,16 +1623,23 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
         </div>
       </div>
     </div>
+
+    <div id="adminTabReviews" style="display:none">
+      <div class="admin-card">
+        <h3>Manage Customer Reviews (Feedback)</h3>
+        <div class="admin-manage-list" id="admReviewsList"></div>
+      </div>
+    </div>
   </section>
 
   <section class="editorial-hero">
     <div class="hero-inner">
       <span class="hero-eyebrow">✦ Signature Pieces &amp; Everyday Luxury</span>
       <h1>Refined <em>accessories</em> crafted for every moment.</h1>
-      <p>Browse our collection, inspect every angle up close, place your order in seconds, and track your order live using your email anytime.</p>
+      <p>Browse our collection, inspect every angle up close, place your order in seconds, and track your order live using your tracking link and email anytime.</p>
       <div class="hero-cta-row">
         <a class="cta-brown" href="#products">Explore Collection ↓</a>
-        <button type="button" class="cta-track-hero" onclick="openTrackModal()">📦 Track Your Order</button>
+        <a href="#track-order" class="cta-track-hero" onclick="openTrackPage(event)">📦 Track Your Order</a>
       </div>
     </div>
   </section>
@@ -1624,7 +1692,7 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   <section class="block-sec" id="about">
     <div class="about-banner">
       <h2>About NS Accessories</h2>
-      <p>A dedicated boutique space bringing together timeless accessories and everyday essentials—designed so you can examine every detail from multiple angles, place orders smoothly, and track your order status anytime.</p>
+      <p>A dedicated boutique space bringing together timeless accessories and everyday essentials—designed so you can examine every detail from multiple angles, place orders smoothly on the website, and track your order status anytime.</p>
     </div>
   </section>
 </main>
@@ -1750,13 +1818,74 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
         <button type="button" class="confirm-trigger-btn" id="prepareOrderBtn" onclick="prepareOrderConfirmation()">Review Order</button>
 
         <div class="pending-status-card" id="pendingStatusCard">
-          <span class="pending-status-badge">STATUS: PENDING</span>
+          <span class="pending-status-badge">ORDER CONFIRMED ON WEBSITE</span>
           <h4 class="pending-status-title" id="pendingOrderHeading">Order #NS-0000 is pending</h4>
           <p class="pending-status-copy" id="pendingOrderMessage"></p>
-          <div class="pending-dispatch-note" id="pendingDispatchNote"></div>
+          <div class="track-link-box">
+            <div style="font-size:11.5px;font-weight:800;color:var(--brown)">Your Tracking Page Link:</div>
+            <span class="track-link-url" id="confirmedTrackUrl"></span>
+            <div class="track-link-actions">
+              <a class="track-direct-btn" id="confirmedTrackGoBtn" href="#track-order" onclick="openTrackPage(event)">Open Tracking Page →</a>
+              <button type="button" class="instapay-copy-btn" onclick="copyTrackingLink()">Copy Tracking Link</button>
+            </div>
+          </div>
           <button type="button" class="btn-info" style="width:100%;padding:9px;border-radius:10px" onclick="hidePendingStatusCard()">Place Another Order</button>
         </div>
         <p class="note-txt">Shipping is calculated automatically from your governorate. Orders are saved on the website and stock is deducted when an admin confirms the order.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="track-page" id="trackPage" aria-label="Track Your Order Page">
+  <div class="track-shell">
+    <div class="track-page-head">
+      <div>
+        <div class="hero-eyebrow" style="margin:0 0 3px">NS ACCESSORIES • ORDER TRACKING PAGE</div>
+        <h2>Track Your Order</h2>
+      </div>
+      <button class="checkout-back-btn" type="button" onclick="closeTrackPage()">← Back to Store</button>
+    </div>
+
+    <div class="checkout-panel">
+      <div class="track-permalink-bar">
+        <span>Permanent Tracking Link: <span class="track-permalink-val" id="trackPermalinkText"></span></span>
+        <button type="button" class="instapay-copy-btn" onclick="copyTrackingLink()">Copy Link</button>
+      </div>
+
+      <div class="track-quick-row">
+        <button type="button" class="track-quick-btn active" id="trackModeOrdersBtn" onclick="setTrackMode('orders')">📦 Track Orders</button>
+        <button type="button" class="track-quick-btn" id="trackModeProfileBtn" onclick="setTrackMode('profile')">👤 Saved Profile</button>
+      </div>
+
+      <div id="trackOrdersPane">
+        <div class="inp-group">
+          <label for="trackEmailInput">Customer Email *</label>
+          <div style="display:flex;gap:8px">
+            <input id="trackEmailInput" type="email" placeholder="name@example.com" style="margin-bottom:0" onkeydown="if(event.key==='Enter')searchOrdersByEmail()">
+            <button type="button" class="btn-add" style="padding:0 18px;border-radius:10px" onclick="searchOrdersByEmail()">Check Status →</button>
+          </div>
+        </div>
+        <div class="track-results" id="trackResults">
+          <div class="empty-msg">Enter your email to see confirmed, shipped, delivered, or cancelled orders.</div>
+        </div>
+      </div>
+
+      <div id="trackProfilePane" style="display:none">
+        <div class="inp-group">
+          <label for="profName">Full Name</label>
+          <input id="profName" placeholder="Your full name">
+        </div>
+        <div class="inp-group">
+          <label for="profEmail">Email</label>
+          <input id="profEmail" type="email" placeholder="name@example.com">
+        </div>
+        <div class="inp-group">
+          <label for="profPhone">Phone</label>
+          <input id="profPhone" type="tel" placeholder="01xxxxxxxxx">
+        </div>
+        <button type="button" class="btn-add" style="width:100%;padding:10px;border-radius:11px" onclick="saveCustomerLocalProfile()">Save Details</button>
+        <p class="note-txt">Saves your details locally on this device to autofill checkout &amp; order lookup.</p>
       </div>
     </div>
   </div>
@@ -1822,50 +1951,6 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
   </div>
 </div>
 
-<div class="modal-layer" id="trackWrap" onclick="if(event.target===this)closeTrackModal()">
-  <div class="login-card" style="text-align:left">
-    <button class="x-btn" style="position:absolute;right:14px;top:14px" onclick="closeTrackModal()">×</button>
-    <div class="login-icon">📦</div>
-    <h3 style="margin:0 0 4px;font-size:21px;font-weight:800;color:var(--brown-deep);text-align:center">Track Your Orders</h3>
-    <p style="margin:0 0 12px;font-size:12.5px;color:var(--muted);text-align:center">Enter your email on any phone or browser to check your live order status</p>
-
-    <div class="track-quick-row">
-      <button type="button" class="track-quick-btn active" id="trackModeOrdersBtn" onclick="setTrackMode('orders')">📦 Orders</button>
-      <button type="button" class="track-quick-btn" id="trackModeProfileBtn" onclick="setTrackMode('profile')">👤 Profile</button>
-    </div>
-
-    <div id="trackOrdersPane">
-      <div class="inp-group">
-        <label for="trackEmailInput">Customer Email</label>
-        <div style="display:flex;gap:8px">
-          <input id="trackEmailInput" type="email" placeholder="name@example.com" style="margin-bottom:0" onkeydown="if(event.key==='Enter')searchOrdersByEmail()">
-          <button type="button" class="btn-add" style="padding:0 16px;border-radius:10px" onclick="searchOrdersByEmail()">→</button>
-        </div>
-      </div>
-      <div class="track-results" id="trackResults">
-        <div class="empty-msg">Enter your email to see confirmed, shipped, delivered, or cancelled orders.</div>
-      </div>
-    </div>
-
-    <div id="trackProfilePane" style="display:none">
-      <div class="inp-group">
-        <label for="profName">Full Name</label>
-        <input id="profName" placeholder="Your full name">
-      </div>
-      <div class="inp-group">
-        <label for="profEmail">Email</label>
-        <input id="profEmail" type="email" placeholder="name@example.com">
-      </div>
-      <div class="inp-group">
-        <label for="profPhone">Phone</label>
-        <input id="profPhone" type="tel" placeholder="01xxxxxxxxx">
-      </div>
-      <button type="button" class="btn-add" style="width:100%;padding:10px;border-radius:11px" onclick="saveCustomerLocalProfile()">Save Details</button>
-      <p class="note-txt">Saves your details locally on this device to autofill checkout &amp; order lookup.</p>
-    </div>
-  </div>
-</div>
-
 <div class="modal-layer" id="loginWrap" onclick="if(event.target===this)closeAdminLogin()">
   <div class="login-card">
     <button class="x-btn" style="position:absolute;right:14px;top:14px" onclick="closeAdminLogin()">×</button>
@@ -1885,7 +1970,6 @@ footer p { margin: 6px 0; color: rgba(250, 246, 240, 0.75); font-size: 13px; }
 </div>
 
 <div class="toast" id="toast">Added to Cart ✓</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://wgcbtfumziqmetevjgdw.supabase.co";
@@ -1895,10 +1979,65 @@ const CURRENCY = "EGP";
 const INSTAPAY_LINK = "https://ipn.eg/S/konsowah.telda/instapay/8TAMzu";
 const CUSTOM_LOGO_SRC = "";
 
-const DIRECT_WHATSAPP_WEBHOOK_URL = "";
-const DIRECT_WHATSAPP_WEBHOOK_TOKEN = "";
-
 localStorage.removeItem("ns_products");
+
+function getTrackingPageUrl() {
+  const base = `${window.location.origin}${window.location.pathname}`;
+  return `${base}#track-order`;
+}
+
+function initTrackingLinks() {
+  const url = getTrackingPageUrl();
+  const permEl = document.getElementById("trackPermalinkText");
+  const confUrlEl = document.getElementById("confirmedTrackUrl");
+  const confGoEl = document.getElementById("confirmedTrackGoBtn");
+  if (permEl) permEl.textContent = url;
+  if (confUrlEl) confUrlEl.textContent = url;
+  if (confGoEl) confGoEl.href = url;
+}
+
+function copyTrackingLink() {
+  const url = getTrackingPageUrl();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast("Tracking link copied ✓");
+  }).catch(() => {
+    alert("Tracking link: " + url);
+  });
+}
+
+function openTrackPage(ev, presetEmail = "") {
+  if (ev) ev.preventDefault();
+  closeCart();
+  const saved = JSON.parse(localStorage.getItem("ns_customer_profile") || "null");
+  const checkoutEmail = document.getElementById("customerEmail")?.value.trim() || "";
+  const targetEmail = (presetEmail || saved?.email || checkoutEmail || document.getElementById("trackEmailInput").value.trim() || "").toLowerCase();
+
+  if (targetEmail) {
+    document.getElementById("trackEmailInput").value = targetEmail;
+  }
+  if (saved) {
+    document.getElementById("profName").value = saved.name || "";
+    document.getElementById("profEmail").value = saved.email || "";
+    document.getElementById("profPhone").value = saved.phone || "";
+  }
+  setTrackMode("orders");
+  initTrackingLinks();
+  document.getElementById("trackPage").classList.add("show");
+  document.getElementById("trackPage").scrollTop = 0;
+  if (window.location.hash !== "#track-order") {
+    history.replaceState(null, "", "#track-order");
+  }
+  if (targetEmail) {
+    searchOrdersByEmail();
+  }
+}
+
+function closeTrackPage() {
+  document.getElementById("trackPage").classList.remove("show");
+  if (window.location.hash === "#track-order") {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+}
 
 function normalizeSaleFields(p) {
   const basePrice = Math.max(1, Number(p.price) || 1);
@@ -2419,7 +2558,8 @@ async function logoutAdmin() {
   syncAdminUI();
   showToast("Signed out of Admin");
 }
-  function syncAdminUI() {
+
+function syncAdminUI() {
   const strip = document.getElementById("adminStrip");
   const panel = document.getElementById("adminPanel");
   if (isAdmin) {
@@ -2429,10 +2569,12 @@ async function logoutAdmin() {
     renderAdminOrders();
     renderAdminManageList();
     renderAdminCoupons();
+    renderAdminReviewsList();
   } else {
     strip.classList.remove("active");
     panel.classList.remove("active");
   }
+  renderReviews();
 }
 
 function switchAdminTab(tab) {
@@ -2440,9 +2582,12 @@ function switchAdminTab(tab) {
   document.getElementById("adminTabOrders").style.display = tab === "orders" ? "" : "none";
   document.getElementById("adminTabProducts").style.display = tab === "products" ? "" : "none";
   document.getElementById("adminTabCoupons").style.display = tab === "coupons" ? "" : "none";
+  document.getElementById("adminTabReviews").style.display = tab === "reviews" ? "" : "none";
   document.getElementById("tabBtnOrders").classList.toggle("active", tab === "orders");
   document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
   document.getElementById("tabBtnCoupons").classList.toggle("active", tab === "coupons");
+  document.getElementById("tabBtnReviews").classList.toggle("active", tab === "reviews");
+  if (tab === "reviews") renderAdminReviewsList();
 }
 
 function scrollToAdmin() {
@@ -2991,27 +3136,6 @@ function renderAdminManageList() {
   }).join("");
 }
 
-function openTrackModal() {
-  const saved = JSON.parse(localStorage.getItem("ns_customer_profile") || "null");
-  const checkoutEmail = document.getElementById("customerEmail")?.value.trim() || "";
-  const defaultEmail = saved?.email || checkoutEmail || "";
-  if (defaultEmail && !document.getElementById("trackEmailInput").value.trim()) {
-    document.getElementById("trackEmailInput").value = defaultEmail;
-  }
-  if (saved) {
-    document.getElementById("profName").value = saved.name || "";
-    document.getElementById("profEmail").value = saved.email || "";
-    document.getElementById("profPhone").value = saved.phone || "";
-  }
-  setTrackMode("orders");
-  document.getElementById("trackWrap").classList.add("show");
-  if (defaultEmail) searchOrdersByEmail();
-}
-
-function closeTrackModal() {
-  document.getElementById("trackWrap").classList.remove("show");
-}
-
 function setTrackMode(mode) {
   const isOrders = mode === "orders";
   document.getElementById("trackModeOrdersBtn").classList.toggle("active", isOrders);
@@ -3373,60 +3497,6 @@ function hidePendingStatusCard() {
   document.getElementById("pendingStatusCard").classList.remove("show");
 }
 
-function buildOrderSummaryText(order) {
-  const lines = order.items.map(i => `• ${i.name} × ${i.qty} = ${money(i.lineTotal)}`);
-  const discountLine = order.discount > 0 ? `Coupon (${order.couponCode}): -${money(order.discount)}` : "";
-  const shippingLine = order.shippingFee === 0 ? "Shipping: FREE" : `Shipping (${order.governorate}): ${money(order.shippingFee)}`;
-  return [
-    `Order #NS-${order.orderNumber} (PENDING)`,
-    `Name: ${order.name}`,
-    order.email ? `Email: ${order.email}` : "",
-    `Phone: ${order.phone}`,
-    `Governorate: ${order.governorate}`,
-    `Address: ${order.address}`,
-    `Payment: ${order.paymentLabel}`,
-    `Items:\n${lines.join("\n")}`,
-    `Subtotal: ${money(order.subtotal)}`,
-    discountLine,
-    shippingLine,
-    `Total: ${money(order.total)}`
-  ].filter(Boolean).join("\n");
-}
-
-async function dispatchWhatsAppNotificationIfConfigured(order) {
-  if (!DIRECT_WHATSAPP_WEBHOOK_URL) {
-    return { sent: false, reason: "Order saved on website as PENDING; direct WhatsApp webhook is not configured." };
-  }
-  const headers = { "Content-Type": "application/json" };
-  if (DIRECT_WHATSAPP_WEBHOOK_TOKEN) headers["Authorization"] = `Bearer ${DIRECT_WHATSAPP_WEBHOOK_TOKEN}`;
-  const res = await fetch(DIRECT_WHATSAPP_WEBHOOK_URL, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      event: "order.pending",
-      order_number: order.orderNumber,
-      status: "pending",
-      customer: {
-        name: order.name,
-        email: order.email,
-        phone: order.phone,
-        governorate: order.governorate,
-        address: order.address
-      },
-      payment_method: order.paymentLabel,
-      coupon_code: order.couponCode || null,
-      subtotal: order.subtotal,
-      discount_amount: order.discount,
-      shipping_fee: order.shippingFee,
-      total: order.total,
-      items: order.items,
-      summary_text: buildOrderSummaryText(order)
-    })
-  });
-  if (!res.ok) throw new Error(`Webhook responded with ${res.status}`);
-  return { sent: true, reason: "Order saved as PENDING and sent directly to WhatsApp." };
-}
-
 function prepareOrderConfirmation() {
   if (!cart.length) { alert("Your cart is empty."); return; }
   const name = document.getElementById("customerName").value.trim();
@@ -3552,18 +3622,6 @@ async function finalizeWebsiteOrder() {
     document.getElementById("trackEmailInput").value = pendingOrderData.email;
 
     const createdOrder = { ...pendingOrderData, orderNumber };
-    let dispatchNote = "Saved on the website with status PENDING. An admin will confirm your order and update stock.";
-    let dispatchSent = false;
-
-    try {
-      const dispatchRes = await dispatchWhatsAppNotificationIfConfigured(createdOrder);
-      dispatchNote = dispatchRes.reason;
-      dispatchSent = dispatchRes.sent;
-    } catch (whErr) {
-      console.warn("Direct WhatsApp webhook failed:", whErr);
-      dispatchNote = "Order saved as PENDING on the website; direct WhatsApp webhook could not be reached.";
-    }
-
     cart = [];
     saveCart();
     appliedCoupon = null;
@@ -3573,16 +3631,16 @@ async function finalizeWebsiteOrder() {
     renderCart();
     resetOrderConfirmation();
 
-    document.getElementById("pendingOrderHeading").textContent = `Order #NS-${orderNumber} is pending`;
+    const trackUrl = getTrackingPageUrl();
+    document.getElementById("pendingOrderHeading").textContent = `Order #NS-${orderNumber} confirmed on website`;
     document.getElementById("pendingOrderMessage").textContent =
-      `Your order (${money(createdOrder.total)}) has been recorded on the website with status PENDING. Stock will be deducted once an admin confirms it.`;
-    const noteEl = document.getElementById("pendingDispatchNote");
-    noteEl.textContent = dispatchNote;
-    noteEl.classList.toggle("sent", dispatchSent);
+      `Your order (${money(createdOrder.total)}) has been recorded with status PENDING. Stock will be deducted once an admin confirms it. Use your tracking link below anytime:`;
+    document.getElementById("confirmedTrackUrl").textContent = trackUrl;
+    document.getElementById("confirmedTrackGoBtn").href = trackUrl;
     document.getElementById("pendingStatusCard").classList.add("show");
 
     if (isAdmin) await Promise.all([loadOrders(), loadCoupons()]);
-    showToast(`Order #NS-${orderNumber} recorded (Pending) ✓`);
+    showToast(`Order #NS-${orderNumber} recorded ✓`);
   } finally {
     if (confirmBtn) confirmBtn.disabled = false;
   }
@@ -3605,6 +3663,34 @@ function renderReviews() {
       </div>
     `;
   }).join("");
+  renderAdminReviewsList();
+}
+
+function renderAdminReviewsList() {
+  const list = document.getElementById("admReviewsList");
+  const countEl = document.getElementById("admReviewsCount");
+  if (countEl) countEl.textContent = reviews.length;
+  if (!list) return;
+
+  if (!reviews.length) {
+    list.innerHTML = '<div class="empty-msg">No customer reviews right now.</div>';
+    return;
+  }
+
+  list.innerHTML = reviews.map((r, idx) => {
+    const s = Math.max(1, Math.min(5, Number(r.stars) || 5));
+    return `
+      <div class="manage-item">
+        <div>
+          <div style="font-weight:800;font-size:13px;color:var(--brown-deep)">${escapeHtml(r.name)} • ${"★".repeat(s)}${"☆".repeat(5 - s)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">"${escapeHtml(r.text)}"</div>
+        </div>
+        <div class="manage-item-actions">
+          <button type="button" class="del-btn" onclick="deleteReview(${idx})">Delete Feedback</button>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function addReview() {
@@ -3621,11 +3707,12 @@ function addReview() {
 }
 
 function deleteReview(idx) {
-  if (!isAdmin) return;
+  if (!isAdmin) { alert("Sign in as Admin first."); return; }
+  if (!confirm("Delete this feedback?")) return;
   reviews.splice(idx, 1);
   localStorage.setItem("ns_reviews", JSON.stringify(reviews));
   renderReviews();
-  showToast("Review deleted");
+  showToast("Feedback deleted ✓");
 }
 
 function subscribeRealtime() {
@@ -3656,12 +3743,29 @@ async function initAuthSession() {
   if (isAdmin) await Promise.all([loadOrders(), loadCoupons()]);
 }
 
+function checkInitialTrackingRoute() {
+  const params = new URLSearchParams(window.location.search);
+  if (window.location.hash === "#track-order" || params.get("track") === "1") {
+    openTrackPage(null, params.get("email") || "");
+  }
+}
+
+window.addEventListener("hashchange", () => {
+  if (window.location.hash === "#track-order") {
+    openTrackPage(null);
+  } else if (document.getElementById("trackPage").classList.contains("show")) {
+    document.getElementById("trackPage").classList.remove("show");
+  }
+});
+
 document.getElementById("year").textContent = new Date().getFullYear();
+initTrackingLinks();
 initInstaPayDisplay();
 updateSalePreviewCalc();
 updateCouponFormLabel();
 renderReviews();
 renderCart();
+checkInitialTrackingRoute();
 (async () => {
   await Promise.all([loadSharedLogo(), loadProductsFromDatabase(), initAuthSession()]);
   subscribeRealtime();

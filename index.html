@@ -2151,7 +2151,7 @@
       .manage-item-actions {
         width: 100%;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 6px;
       }
       .manage-item-actions button {
@@ -3280,6 +3280,26 @@
   </div>
 </div>
 
+<div class="modal-layer" id="priceEditWrap" onclick="if(event.target===this)closePriceEditModal()">
+  <div class="modal-card" style="width:min(420px,100%)">
+    <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closePriceEditModal()">×</button>
+    <h3 style="margin:0 0 4px;font-size:19px;font-weight:800;color:var(--brown)">💰 تعديل سعر المنتج</h3>
+    <div id="priceEditProdTitle" style="font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px"></div>
+
+    <div class="inp-group">
+      <label for="editBasePriceInput">السعر الأساسي الجديد (EGP) *</label>
+      <input id="editBasePriceInput" type="number" min="1" step="any" placeholder="مثال: 750" oninput="updatePriceEditCalc()">
+    </div>
+
+    <div class="sale-live-calc" id="priceEditCalc" style="margin-bottom:14px"></div>
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="btn-add" style="padding:10px;flex:1" onclick="saveEditedProductPrice()">حفظ السعر للجميع ✓</button>
+      <button type="button" class="btn-info" style="padding:10px 14px" onclick="closePriceEditModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-layer" id="saleModalWrap" onclick="if(event.target===this)closeSaleModal()">
   <div class="modal-card" style="width:min(420px,100%)">
     <button class="x-btn" style="position:absolute;right:16px;top:16px" onclick="closeSaleModal()">×</button>
@@ -3507,6 +3527,7 @@ let activeAdminTab = "orders";
 let activeOrderCategory = "latest";
 let latestOrdersOpen = false;
 let uploadedAdminImgs = [];
+let editingPriceProductId = null;
 let editingSaleProductId = null;
 let editingImagesProductId = null;
 let editingImagesList = [];
@@ -4180,6 +4201,95 @@ function updateSalePreviewCalc() {
   }
   const info = computeSaleInfo(price, type, val);
   calcEl.innerHTML = `Sale Price: <b>${money(info.finalPrice)}</b> instead of <s style="color:var(--muted)">${money(info.originalPrice)}</s> (Save ${money(info.savedAmount)})`;
+}
+
+function openPriceEditModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editingPriceProductId = id;
+  document.getElementById("priceEditProdTitle").textContent = `${p.name} • القسم: ${p.category}`;
+  document.getElementById("editBasePriceInput").value = p.price;
+  updatePriceEditCalc();
+  document.getElementById("priceEditWrap").classList.add("show");
+  setTimeout(() => document.getElementById("editBasePriceInput")?.focus(), 80);
+}
+
+function closePriceEditModal() {
+  editingPriceProductId = null;
+  document.getElementById("priceEditWrap").classList.remove("show");
+}
+
+function updatePriceEditCalc() {
+  const p = products.find(x => x.id === editingPriceProductId);
+  if (!p) return;
+  const nextPrice = Number(document.getElementById("editBasePriceInput").value) || 0;
+  const calcEl = document.getElementById("priceEditCalc");
+  if (!calcEl) return;
+  if (nextPrice <= 0) {
+    calcEl.textContent = "أدخل سعراً أكبر من 0 EGP.";
+    return;
+  }
+  const previewSale = computeSaleInfo(nextPrice, p.saleType, p.saleValue);
+  if (previewSale.hasSale) {
+    calcEl.innerHTML = `السعر الأساسي: <b>${money(nextPrice)}</b> • السعر النهائي مع الخصم الحالي: <b style="color:var(--gold-deep)">${money(previewSale.finalPrice)}</b>`;
+  } else {
+    calcEl.innerHTML = `السعر النهائي للعملاء: <b>${money(nextPrice)}</b>`;
+  }
+}
+
+async function saveEditedProductPrice() {
+  if (!isAdmin) { alert("Sign in as Admin first."); return; }
+  const p = products.find(x => x.id === editingPriceProductId);
+  if (!p) return;
+  const nextPrice = Number(document.getElementById("editBasePriceInput").value);
+  if (!nextPrice || nextPrice <= 0) {
+    alert("من فضلك أدخل سعراً صحيحاً أكبر من صفر.");
+    return;
+  }
+
+  let nextSaleType = p.saleType || "none";
+  let nextSaleValue = Number(p.saleValue || 0);
+  if (nextSaleType === "amount" && nextSaleValue >= nextPrice) {
+    nextSaleType = "none";
+    nextSaleValue = 0;
+  }
+
+  const { error } = await sb
+    .from("ns_products")
+    .update({ price: nextPrice, sale_type: nextSaleType, sale_value: nextSaleValue })
+    .eq("id", p.id);
+
+  if (error) {
+    alert("تعذر تعديل السعر: " + error.message);
+    return;
+  }
+
+  Object.assign(p, normalizeSaleFields({
+    ...p,
+    price: nextPrice,
+    saleType: nextSaleType,
+    saleValue: nextSaleValue
+  }));
+
+  closePriceEditModal();
+  await refreshAllStorefrontAndAdminViews();
+  showToast(`تم تحديث سعر "${p.name}" للجميع ✓`);
+}
+
+async function refreshAllStorefrontAndAdminViews() {
+  renderCart();
+  renderCategoryShowcase();
+  renderFooterCollectionLinks();
+  if (isAdmin) {
+    renderAdminManageList();
+    renderAdminCategoriesList();
+  }
+  if (document.getElementById("categoryPage").classList.contains("show") && activeCategoryPage) {
+    renderCategoryPageContent(activeCategoryPage);
+  }
+  if (document.getElementById("modalWrap").classList.contains("show") && activeModalId !== null) {
+    renderModal();
+  }
 }
 
 function openSaleModal(id) {
@@ -5255,6 +5365,7 @@ function renderAdminManageList() {
             </select>
           </div>
           <div class="manage-item-actions" dir="ltr">
+            <button type="button" class="sale-edit-btn" onclick="openPriceEditModal(${p.id})">Edit Price</button>
             <button type="button" class="sale-edit-btn" onclick="openImgEditModal(${p.id})">Images (${getImgs(p).length})</button>
             <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">${s.hasSale ? "Edit Sale" : "Sale"}</button>
             <button type="button" class="del-btn" onclick="deleteProduct(${p.id})">Delete</button>

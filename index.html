@@ -2223,10 +2223,10 @@
     </div>
     <div class="hero-stagger" id="heroStaggerBox">
       <div class="hero-shot hero-shot-top" id="heroShotTopWrap">
-        <img id="heroImg1" src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80" alt="NS Accessories hero piece 1">
+        <img id="heroImg1" src="" alt="NS Accessories hero piece 1" style="opacity:0;transition:opacity 0.22s ease">
       </div>
       <div class="hero-shot hero-shot-bottom" id="heroShotBottomWrap">
-        <img id="heroImg2" src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80" alt="NS Accessories hero piece 2">
+        <img id="heroImg2" src="" alt="NS Accessories hero piece 2" style="opacity:0;transition:opacity 0.22s ease">
       </div>
     </div>
   </section>
@@ -2921,7 +2921,6 @@ async function fetchStoreSettingsRow() {
 }
 
 async function loadSharedLogo() {
-  applyHeroPhotos(DEFAULT_HERO_PHOTOS);
   try {
     const data = await fetchStoreSettingsRow();
     if (!data) return;
@@ -3160,18 +3159,34 @@ const DEFAULT_HERO_PHOTOS = [
   "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80"
 ];
-let heroPhotos = [...DEFAULT_HERO_PHOTOS];
+let heroPhotos = ["", ""];
 let pendingHeroUploads = ["", ""];
 
+function setSingleHeroImg(imgEl, url) {
+  if (!imgEl) return;
+  const clean = (url || "").trim();
+  if (!clean) {
+    imgEl.removeAttribute("src");
+    imgEl.style.opacity = "0";
+    return;
+  }
+  if (imgEl.getAttribute("src") === clean) {
+    imgEl.style.opacity = "1";
+    return;
+  }
+  imgEl.style.opacity = "0";
+  imgEl.onload = () => { imgEl.style.opacity = "1"; };
+  imgEl.onerror = () => { imgEl.style.opacity = "0"; };
+  imgEl.src = clean;
+}
+
 function applyHeroPhotos(photosArr) {
-  const p1 = (photosArr?.[0] || "").trim() || DEFAULT_HERO_PHOTOS[0];
-  const p2 = (photosArr?.[1] || "").trim() || DEFAULT_HERO_PHOTOS[1];
+  const p1 = (photosArr?.[0] || "").trim();
+  const p2 = (photosArr?.[1] || "").trim();
   heroPhotos = [p1, p2];
 
-  const img1 = document.getElementById("heroImg1");
-  const img2 = document.getElementById("heroImg2");
-  if (img1 && img1.src !== p1) img1.src = p1;
-  if (img2 && img2.src !== p2) img2.src = p2;
+  setSingleHeroImg(document.getElementById("heroImg1"), p1);
+  setSingleHeroImg(document.getElementById("heroImg2"), p2);
 
   populateAdminHeroInputs();
 }
@@ -3238,7 +3253,7 @@ async function saveHeroPhotosFromAdmin() {
   try {
     showToast("Saving hero photos for everyone...");
     const uploaded = await uploadProductImagesToStorage([raw1, raw2], "hero-showcase");
-    const nextPhotos = [uploaded[0] || DEFAULT_HERO_PHOTOS[0], uploaded[1] || DEFAULT_HERO_PHOTOS[1]];
+    const nextPhotos = [uploaded[0] || heroPhotos[0] || "", uploaded[1] || heroPhotos[1] || ""];
 
     await saveSharedHeroImages(nextPhotos);
 

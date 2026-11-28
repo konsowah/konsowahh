@@ -1121,57 +1121,89 @@
     .btn-info:hover { border-color: var(--gold); background: var(--gold-pale); }
 
     /* =========================================================================
-       REVIEWS SECTION — SOFT / ROUNDED STYLING ONLY
+       REVIEWS SECTION — MATCHED TO REFERENCE DESIGN
        ========================================================================= */
-    #reviews .sec-head { border-bottom-color: var(--line); }
-    .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    #reviews .sec-head {
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin: 56px 0 24px;
+    }
+    .rev-add-toggle-btn {
+      background: var(--paper);
+      color: var(--brown-deep);
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      padding: 9px 16px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(36, 20, 9, 0.04);
+    }
+    .rev-add-toggle-btn:hover {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
     .rev-card {
       position: relative;
-      background: linear-gradient(180deg, #ffffff 0%, #fcf8f1 100%);
-      border: 1px solid rgba(203, 180, 148, 0.82);
-      border-radius: 16px;
-      padding: 22px 22px 20px;
-      box-shadow: 0 16px 34px -16px rgba(36, 20, 9, 0.22), 0 4px 12px -6px rgba(197, 148, 58, 0.14);
+      background: var(--paper);
+      border: 1px solid var(--line-strong);
+      border-radius: 22px;
+      padding: 24px 24px 20px;
+      box-shadow: 0 8px 20px -12px rgba(36, 20, 9, 0.12);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 12px;
-      transition: transform 0.26s ease, box-shadow 0.26s ease, border-color 0.26s ease;
+      gap: 14px;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
     }
     .rev-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 24px 44px -16px rgba(36, 20, 9, 0.28), 0 8px 18px -8px rgba(197, 148, 58, 0.22);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px -14px rgba(36, 20, 9, 0.18);
       border-color: var(--gold);
-    }
-    .rev-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding-bottom: 11px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid rgba(214, 196, 170, 0.72);
-    }
-    .rev-card strong {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--brown-deep);
-      letter-spacing: 0.1px;
     }
     .stars {
       color: var(--gold);
-      font-size: 14px;
-      letter-spacing: 1.5px;
+      font-size: 13px;
+      letter-spacing: 2px;
       line-height: 1;
       white-space: nowrap;
     }
     .rev-card p {
-      margin: 0;
-      color: #4c3b2f;
-      font-size: 13.8px;
-      line-height: 1.72;
+      margin: 16px 0 18px;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.62;
       font-style: normal;
       font-weight: 500;
+    }
+    .rev-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 12.5px;
+    }
+    .rev-card strong {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--brown-deep);
+    }
+    .rev-date {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
     }
     .rev-footer-actions {
       display: flex;
@@ -1188,20 +1220,47 @@
       font-size: 11px;
       font-weight: 700;
     }
-    .add-rev-box {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--r-soft-md);
-      padding: 24px;
-      margin-top: 22px;
-      box-shadow: var(--shadow);
+    .rev-modal-layer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      background: rgba(24, 12, 5, 0.58);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
     }
-    .add-rev-box h3 { margin: 0 0 14px; font-size: 17px; font-weight: 800; color: var(--brown-deep); }
-    #reviews .inp-group { margin-bottom: 12px; }
-    #reviews .inp-group label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
-    #reviews .inp-group input,
-    #reviews .inp-group select,
-    #reviews .inp-group textarea {
+    .rev-modal-layer.open { display: flex; }
+    .add-rev-box {
+      position: relative;
+      width: min(520px, 100%);
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      background: var(--paper);
+      border: 1px solid var(--line-strong);
+      border-radius: 20px;
+      padding: 24px 24px 22px;
+      margin: auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .rev-modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .add-rev-box h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--brown-deep); }
+    .rev-modal-layer .inp-group { margin-bottom: 12px; }
+    .rev-modal-layer .inp-group label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
+    .rev-modal-layer .inp-group input,
+    .rev-modal-layer .inp-group select,
+    .rev-modal-layer .inp-group textarea {
       width: 100%;
       padding: 10px 14px;
       border: 1px solid var(--line);
@@ -1210,15 +1269,15 @@
       color: var(--ink);
       font-size: 13.5px;
     }
-    #reviews .inp-group input:focus,
-    #reviews .inp-group select:focus,
-    #reviews .inp-group textarea:focus {
+    .rev-modal-layer .inp-group input:focus,
+    .rev-modal-layer .inp-group select:focus,
+    .rev-modal-layer .inp-group textarea:focus {
       outline: none;
       border-color: var(--gold);
       box-shadow: 0 0 0 3px rgba(197, 148, 58, 0.16);
     }
-    #reviews .btn-add { border-radius: var(--r-pill); }
-    .rev-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .rev-modal-layer .btn-add { border-radius: var(--r-pill); }
+    .rev-form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
     /* =========================================================================
        FOOTER & INFO PAGE — SHARP
@@ -1989,7 +2048,8 @@
       .cat-photo-scrim { padding: 14px 16px 16px; }
       .cat-photo-title { font-size: 25px; }
       .cat-photo-sub { flex-direction: column; align-items: flex-start; gap: 6px; font-size: 12px; }
-      .rev-card { padding: 16px; border-radius: 14px; }
+      .rev-card { padding: 18px; border-radius: 18px; }
+      .rev-form-grid { grid-template-columns: 1fr; }
       .add-rev-box { padding: 16px; }
       .checkout-page, .track-page, .category-page, .contact-page { padding: 18px 14px 64px; }
       .checkout-head h2, .track-page-head h2, .category-page-head h2 { font-size: 26px; }
@@ -2786,6 +2846,18 @@
 
         <div class="admin-card">
           <h3>📋 Published Products</h3>
+          <div class="inp-row" style="margin-bottom:10px" dir="rtl">
+            <div class="inp-group" style="margin-bottom:0">
+              <label for="admProdSearch">بحث باسم المنتج</label>
+              <input id="admProdSearch" placeholder="ابحث عن منتج..." oninput="renderAdminManageList()">
+            </div>
+            <div class="inp-group" style="margin-bottom:0">
+              <label for="admProdFilterCat">تصفية حسب القسم</label>
+              <select id="admProdFilterCat" onchange="renderAdminManageList()">
+                <option value="ALL">كل الأقسام</option>
+              </select>
+            </div>
+          </div>
           <div class="manage-list" id="admProdList"></div>
         </div>
       </div>
@@ -2922,35 +2994,45 @@
     <div class="sec-head">
       <div>
         <span class="sec-kicker">Client Impressions</span>
-        <h2>Customer Reviews</h2>
+        <h2>Verified Customer Reviews</h2>
+        <span class="sec-meta" style="display:block;margin-top:4px">Feedback shared by shoppers across Egypt.</span>
       </div>
-      <span class="sec-meta">Verified notes from our community</span>
+      <button type="button" class="rev-add-toggle-btn" onclick="toggleAddReviewForm()">+ Add a Review</button>
     </div>
     <div class="reviews-grid" id="reviewGrid"></div>
 
-    <div class="add-rev-box">
-      <h3>Leave a Review</h3>
-      <div class="rev-form-grid">
-        <div class="inp-group">
-          <label for="reviewName">Your Name *</label>
-          <input id="reviewName" placeholder="e.g. Salma">
+    <div class="rev-modal-layer" id="addReviewModal" onclick="if(event.target===this)closeAddReviewForm()">
+      <div class="add-rev-box" id="addReviewBox" role="dialog" aria-modal="true" aria-labelledby="addReviewTitle">
+        <div class="rev-modal-head">
+          <h3 id="addReviewTitle">Leave a Review</h3>
+          <button type="button" class="x-btn" style="border-radius:999px" onclick="closeAddReviewForm()" aria-label="Close review modal">×</button>
+        </div>
+        <div class="rev-form-grid">
+          <div class="inp-group">
+            <label for="reviewName">Your Name *</label>
+            <input id="reviewName" placeholder="e.g. Nourhan A.">
+          </div>
+          <div class="inp-group">
+            <label for="reviewDate">Date</label>
+            <input id="reviewDate" type="date">
+          </div>
+          <div class="inp-group">
+            <label for="reviewStars">Rating *</label>
+            <select id="reviewStars">
+              <option value="5">★★★★★ (5)</option>
+              <option value="4">★★★★☆ (4)</option>
+              <option value="3">★★★☆☆ (3)</option>
+              <option value="2">★★☆☆☆ (2)</option>
+              <option value="1">★☆☆☆☆ (1)</option>
+            </select>
+          </div>
         </div>
         <div class="inp-group">
-          <label for="reviewStars">Rating *</label>
-          <select id="reviewStars">
-            <option value="5">★★★★★ (5)</option>
-            <option value="4">★★★★☆ (4)</option>
-            <option value="3">★★★☆☆ (3)</option>
-            <option value="2">★★☆☆☆ (2)</option>
-            <option value="1">★☆☆☆☆ (1)</option>
-          </select>
+          <label for="reviewText">Your Comment *</label>
+          <textarea id="reviewText" rows="3" placeholder="Share your thoughts on NS Accessories..."></textarea>
         </div>
+        <button type="button" class="btn-add" style="width:100%;padding:11px 22px" onclick="addReview()">Post Review</button>
       </div>
-      <div class="inp-group">
-        <label for="reviewText">Your Comment *</label>
-        <textarea id="reviewText" rows="2" placeholder="Share your thoughts on NS Accessories..."></textarea>
-      </div>
-      <button type="button" class="btn-add" style="padding:10px 22px" onclick="addReview()">Post Review</button>
     </div>
   </section>
 </div>
@@ -3537,11 +3619,12 @@ let pendingOrderData = null;
 let brandClickCount = 0;
 let brandClickTimer = null;
 
-let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || [
-  {name: "Mariam", stars: 5, text: "Smooth ordering and my piece arrived beautifully packaged. Thanks NS!"},
-  {name: "Omar", stars: 5, text: "Great finishing and quick order confirmation."},
-  {name: "Sara", stars: 4, text: "Lovely variety of everyday accessories and very easy to browse."}
+const DEFAULT_REVIEWS = [
+  {name: "Nourhan A.", stars: 5, date: "2026-10-18", text: "The gold tone looks so rich in person and arrived neatly packed in Cairo."},
+  {name: "Mariam K.", stars: 5, date: "2026-10-27", text: "Ordered the Solstice medallion chain with InstaPay and tracked delivery smoothly."},
+  {name: "Yasmine T.", stars: 5, date: "2026-11-09", text: "Lightweight earrings that stay comfortable all day without tugging."}
 ];
+let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || DEFAULT_REVIEWS;
 
 const cardIdxMap = {};
 const hoveredSet = new Set();
@@ -3757,16 +3840,26 @@ function getProductsForCategory(catName) {
 
 function populateProductCategorySelect() {
   const sel = document.getElementById("admCat");
-  if (!sel) return;
-  const currentVal = sel.value;
   const list = getAllAvailableCategories().filter(name => name.toUpperCase() !== ALL_CATEGORY);
-  if (!list.length) {
-    sel.innerHTML = `<option value="Rings">Rings</option><option value="Bracelets">Bracelets</option>`;
-  } else {
-    sel.innerHTML = list.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  if (sel) {
+    const currentVal = sel.value;
+    if (!list.length) {
+      sel.innerHTML = `<option value="Rings">Rings</option><option value="Bracelets">Bracelets</option>`;
+    } else {
+      sel.innerHTML = list.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+    }
+    if (currentVal && Array.from(sel.options).some(o => o.value === currentVal)) {
+      sel.value = currentVal;
+    }
   }
-  if (currentVal && Array.from(sel.options).some(o => o.value === currentVal)) {
-    sel.value = currentVal;
+  const filterSel = document.getElementById("admProdFilterCat");
+  if (filterSel) {
+    const prevFilter = filterSel.value || "ALL";
+    filterSel.innerHTML = `<option value="ALL">كل الأقسام (${products.length})</option>` +
+      list.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+    if (Array.from(filterSel.options).some(o => o.value === prevFilter)) {
+      filterSel.value = prevFilter;
+    }
   }
 }
 
@@ -5313,23 +5406,34 @@ async function adminChangeProductCategory(productId, newCat) {
   const p = products.find(x => x.id === productId);
   const cleanCat = String(newCat || "").trim();
   if (!p || !cleanCat) return;
-  if (p.category.toLowerCase() === cleanCat.toLowerCase()) return;
+  if (String(p.category || "").toLowerCase() === cleanCat.toLowerCase()) return;
 
-  const { error } = await sb.from("ns_products").update({ category: cleanCat }).eq("id", p.id);
+  const { data, error } = await sb
+    .from("ns_products")
+    .update({ category: cleanCat })
+    .eq("id", p.id)
+    .select("id, category");
+
   if (error) {
     alert("تعذر تغيير قسم المنتج: " + error.message);
     renderAdminManageList();
     return;
   }
+  if (!data || !data.length) {
+    alert("لم يتم تحديث المنتج في قاعدة البيانات. تأكد من صلاحيات الأدمن وسياسات RLS.");
+    renderAdminManageList();
+    return;
+  }
 
-  p.category = cleanCat;
+  p.category = data[0].category || cleanCat;
   renderAdminManageList();
+  renderAdminCategoriesList();
   renderCategoryShowcase();
   renderFooterCollectionLinks();
   if (document.getElementById("categoryPage").classList.contains("show") && activeCategoryPage) {
     renderCategoryPageContent(activeCategoryPage);
   }
-  showToast(`تم نقل "${p.name}" إلى قسم "${cleanCat}" ✓`);
+  showToast(`تم نقل "${p.name}" إلى قسم "${p.category}" ✓`);
 }
 
 function renderAdminManageList() {
@@ -5337,7 +5441,22 @@ function renderAdminManageList() {
   const countEl = document.getElementById("admProdCount");
   if (!list) return;
   if (countEl) countEl.textContent = products.length;
-  list.innerHTML = products.map(p => {
+
+  const q = (document.getElementById("admProdSearch")?.value || "").trim().toLowerCase();
+  const catFilter = (document.getElementById("admProdFilterCat")?.value || "ALL").trim();
+
+  const filtered = products.filter(p => {
+    const matchCat = catFilter === "ALL" || String(p.category || "").toLowerCase() === catFilter.toLowerCase();
+    const matchName = !q || String(p.name || "").toLowerCase().includes(q) || String(p.category || "").toLowerCase().includes(q);
+    return matchCat && matchName;
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-msg">لا توجد منتجات مطابقة للبحث أو القسم المحدد.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(p => {
     const s = getSaleInfo(p);
     const priceSummary = s.hasSale
       ? `<span dir="ltr" style="display:inline-flex;align-items:center;gap:5px"><s style="color:var(--muted)">${escapeHtml(money(s.originalPrice))}</s> <b style="color:var(--gold-deep)">${escapeHtml(money(s.finalPrice))}</b></span>`
@@ -5862,22 +5981,49 @@ function getInitials(name) {
   return ((parts[0]?.[0] || "") + (parts[1]?.[0] || "")).toUpperCase() || "N";
 }
 
+function openAddReviewForm() {
+  const modal = document.getElementById("addReviewModal");
+  if (!modal) return;
+  modal.classList.add("open");
+  const dateEl = document.getElementById("reviewDate");
+  if (dateEl && !dateEl.value) {
+    dateEl.value = new Date().toISOString().slice(0, 10);
+  }
+  setTimeout(() => document.getElementById("reviewName")?.focus(), 60);
+}
+
+function closeAddReviewForm() {
+  const modal = document.getElementById("addReviewModal");
+  if (modal) modal.classList.remove("open");
+}
+
+function toggleAddReviewForm() {
+  const modal = document.getElementById("addReviewModal");
+  if (!modal) return;
+  if (modal.classList.contains("open")) closeAddReviewForm();
+  else openAddReviewForm();
+}
+
 function renderReviews() {
   const grid = document.getElementById("reviewGrid");
   if (!grid) return;
   grid.innerHTML = reviews.map((r, idx) => {
     const s = Math.max(1, Math.min(5, Number(r.stars) || 5));
+    const dateTxt = r.date || "2026-11-09";
     const delBtn = isAdmin ? `<div class="rev-footer-actions"><button class="rev-del-btn" onclick="deleteReview(${idx})">Delete</button></div>` : "";
     return `
       <div class="rev-card">
         <div>
-          <div class="rev-top-row">
-            <strong>${escapeHtml(r.name)}</strong>
-            <span class="stars" aria-label="${s} out of 5 stars">${"★".repeat(s)}${"☆".repeat(5 - s)}</span>
-          </div>
-          <p>${escapeHtml(r.text)}</p>
+          <span class="stars" aria-label="${s} out of 5 stars">${"★".repeat(s)}${"☆".repeat(5 - s)}</span>
+          <p>“${escapeHtml(r.text)}”</p>
         </div>
-        ${delBtn}
+        <div>
+          <div class="rev-card-footer">
+            <strong>${escapeHtml(r.name)}</strong>
+            <span class="rev-date">${escapeHtml(dateTxt)}</span>
+          </div>
+          ${delBtn}
+        </div>
       </div>
     `;
   }).join("");
@@ -5913,13 +6059,15 @@ function renderAdminReviewsList() {
 
 function addReview() {
   const name = document.getElementById("reviewName").value.trim();
+  const dateVal = (document.getElementById("reviewDate")?.value || "").trim() || new Date().toISOString().slice(0, 10);
   const stars = Number(document.getElementById("reviewStars").value);
   const text = document.getElementById("reviewText").value.trim();
   if (!name || !text) { alert("Please enter your name and comment."); return; }
-  reviews.unshift({ name, stars, text });
+  reviews.unshift({ name, stars, date: dateVal, text });
   localStorage.setItem("ns_reviews", JSON.stringify(reviews));
   document.getElementById("reviewName").value = "";
   document.getElementById("reviewText").value = "";
+  closeAddReviewForm();
   renderReviews();
   showToast("Review posted ✓");
 }

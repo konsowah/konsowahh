@@ -2141,6 +2141,90 @@
       .track-trigger, .cart-trigger { padding: 5px 6px; font-size: 9.5px; }
     }
 
+
+    /* Admin Orders Category Folders / Sub-Tabs — Responsive Across All Devices */
+    .order-cat-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .order-cat-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: var(--paper);
+      color: var(--muted);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-pill);
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .order-cat-btn:hover {
+      border-color: var(--gold);
+      color: var(--brown-deep);
+      background: var(--gold-pale);
+    }
+    .order-cat-btn.active {
+      background: linear-gradient(135deg, #56351c, #341e0e);
+      color: #fdf8ef;
+      border-color: var(--gold);
+      box-shadow: 0 6px 14px -8px rgba(36, 20, 9, 0.45);
+    }
+    .order-cat-count {
+      display: inline-grid;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(197, 148, 58, 0.18);
+      color: var(--brown-deep);
+    }
+    .order-cat-btn.active .order-cat-count {
+      background: var(--gold-pale);
+      color: var(--brown-deep);
+    }
+    .order-cat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .order-cat-header b { color: var(--brown-deep); }
+    @media (max-width: 900px) {
+      .order-cat-bar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .order-cat-btn {
+        width: 100%;
+        padding: 8px 8px;
+        font-size: 11.5px;
+        white-space: normal;
+        line-height: 1.25;
+      }
+    }
+    @media (max-width: 380px) {
+      .order-cat-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2236,6 +2320,29 @@
       </div>
       <div class="admin-card">
         <h3>Customer Orders &amp; Stock Control</h3>
+        <div class="order-cat-bar" id="orderCatBar" role="tablist" aria-label="Order categories">
+          <button type="button" class="order-cat-btn active" id="ordCat-latest" onclick="switchOrderCategory('latest')">
+            <span>🆕 Latest (Unconfirmed)</span>
+            <span class="order-cat-count" id="ordCnt-latest">0</span>
+          </button>
+          <button type="button" class="order-cat-btn" id="ordCat-confirmed" onclick="switchOrderCategory('confirmed')">
+            <span>✅ Confirmed</span>
+            <span class="order-cat-count" id="ordCnt-confirmed">0</span>
+          </button>
+          <button type="button" class="order-cat-btn" id="ordCat-shipped" onclick="switchOrderCategory('shipped')">
+            <span>🚚 Shipped</span>
+            <span class="order-cat-count" id="ordCnt-shipped">0</span>
+          </button>
+          <button type="button" class="order-cat-btn" id="ordCat-delivered" onclick="switchOrderCategory('delivered')">
+            <span>🎉 Delivered</span>
+            <span class="order-cat-count" id="ordCnt-delivered">0</span>
+          </button>
+          <button type="button" class="order-cat-btn" id="ordCat-cancelled" onclick="switchOrderCategory('cancelled')">
+            <span>❌ Cancelled</span>
+            <span class="order-cat-count" id="ordCnt-cancelled">0</span>
+          </button>
+        </div>
+        <div class="order-cat-header" id="orderCatHeader"></div>
         <div id="admOrdersList"><div class="empty-msg">No orders received yet.</div></div>
       </div>
     </div>
@@ -3088,6 +3195,7 @@ let coupons = [];
 let appliedCoupon = null;
 let isAdmin = false;
 let activeAdminTab = "orders";
+let activeOrderCategory = "latest";
 let uploadedAdminImgs = [];
 let editingSaleProductId = null;
 let editingImagesProductId = null;
@@ -4295,15 +4403,29 @@ async function loadOrders() {
   renderAdminOrders();
 }
 
+function switchOrderCategory(cat) {
+  activeOrderCategory = cat || "latest";
+  renderAdminOrders();
+}
+
 function renderAdminOrders() {
   const list = document.getElementById("admOrdersList");
   const totalEl = document.getElementById("admOrdersTotal");
   const stripPendingEl = document.getElementById("stripPendingCount");
+  const catHeaderEl = document.getElementById("orderCatHeader");
   if (!list) return;
 
-  const pendingCount = orders.filter(o => o.status === "pending").length;
-  const shippedCount = orders.filter(o => o.status === "shipped").length;
-  const deliveredCount = orders.filter(o => o.status === "delivered").length;
+  const grouped = {
+    latest: orders.filter(o => String(o.status || "pending").toLowerCase() === "pending"),
+    confirmed: orders.filter(o => String(o.status || "").toLowerCase() === "confirmed"),
+    shipped: orders.filter(o => String(o.status || "").toLowerCase() === "shipped"),
+    delivered: orders.filter(o => String(o.status || "").toLowerCase() === "delivered"),
+    cancelled: orders.filter(o => String(o.status || "").toLowerCase() === "cancelled")
+  };
+
+  const pendingCount = grouped.latest.length;
+  const shippedCount = grouped.shipped.length;
+  const deliveredCount = grouped.delivered.length;
 
   const statTotalEl = document.getElementById("statTotalOrders");
   const statShippedEl = document.getElementById("statShippedOrders");
@@ -4315,12 +4437,34 @@ function renderAdminOrders() {
   if (totalEl) totalEl.textContent = orders.length;
   if (stripPendingEl) stripPendingEl.textContent = pendingCount;
 
-  if (!orders.length) {
-    list.innerHTML = '<div class="empty-msg">No orders received yet.</div>';
+  Object.keys(grouped).forEach(key => {
+    const cntEl = document.getElementById("ordCnt-" + key);
+    const btnEl = document.getElementById("ordCat-" + key);
+    if (cntEl) cntEl.textContent = grouped[key].length;
+    if (btnEl) btnEl.classList.toggle("active", activeOrderCategory === key);
+  });
+
+  const catLabels = {
+    latest: { title: "🆕 Latest Orders (Awaiting Confirmation)", empty: "No unconfirmed orders right now — you're all caught up!" },
+    confirmed: { title: "✅ Confirmed Orders (Ready to Ship)", empty: "No confirmed orders in this folder." },
+    shipped: { title: "🚚 Shipped Orders (Out for Delivery)", empty: "No shipped orders right now." },
+    delivered: { title: "🎉 Delivered Orders (Completed)", empty: "No delivered orders yet." },
+    cancelled: { title: "❌ Cancelled Orders", empty: "No cancelled orders." }
+  };
+
+  const currentMeta = catLabels[activeOrderCategory] || catLabels.latest;
+  const visibleOrders = grouped[activeOrderCategory] || [];
+
+  if (catHeaderEl) {
+    catHeaderEl.innerHTML = `<span>Showing: <b>${currentMeta.title}</b></span><span>${visibleOrders.length} ${visibleOrders.length === 1 ? "order" : "orders"}</span>`;
+  }
+
+  if (!visibleOrders.length) {
+    list.innerHTML = `<div class="empty-msg">${currentMeta.empty}</div>`;
     return;
   }
 
-  list.innerHTML = orders.map(o => {
+  list.innerHTML = visibleOrders.map(o => {
     const itemsArr = Array.isArray(o.items) ? o.items : [];
     const itemsHtml = itemsArr.map(i =>
       `• ${escapeHtml(i.name)} × ${i.qty} (${money(Number(i.price) * Number(i.qty))})`

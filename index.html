@@ -2412,112 +2412,112 @@
       <button class="adm-tab-btn" id="tabBtnConsole" onclick="switchAdminTab('console')">🖥️ Console Info</button>
     </div>
 
-    <div id="adminTabOrders">
+    <div id="adminTabOrders" dir="rtl" style="text-align:right">
       <div class="admin-card">
-        <h3>📊 Full Orders, Shipping &amp; Sales Statistics</h3>
+        <h3>📊 إحصائيات الطلبات والشحن والمبيعات</h3>
 
         <div class="orders-stats-grid">
           <div class="ord-metric-card gold-accent">
             <div class="ord-metric-val" id="statDeliveredRevenue">0 EGP</div>
-            <div class="ord-metric-lbl">Delivered Revenue</div>
+            <div class="ord-metric-lbl">مبيعات الطلبات المسلمة (تم التسليم)</div>
           </div>
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statActiveShippingValue">0 EGP</div>
-            <div class="ord-metric-lbl">In Shipping / Prep Value</div>
+            <div class="ord-metric-lbl">قيمة طلبات قيد التجهيز والشحن</div>
           </div>
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statPendingValue">0 EGP</div>
-            <div class="ord-metric-lbl">Pending Orders Value</div>
+            <div class="ord-metric-lbl">قيمة الطلبات المعلقة (بانتظار التأكيد)</div>
           </div>
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statCanceledValue">0 EGP</div>
-            <div class="ord-metric-lbl">Canceled Orders Value</div>
+            <div class="ord-metric-lbl">قيمة الطلبات الملغية</div>
           </div>
         </div>
 
         <div class="orders-stats-grid">
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statShippingFeesTotal">0 EGP</div>
-            <div class="ord-metric-lbl">Shipping Fees (Active/Done)</div>
+            <div class="ord-metric-lbl">إجمالي مصاريف الشحن (غير الملغية)</div>
           </div>
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statAvgOrderValue">0 EGP</div>
-            <div class="ord-metric-lbl">Avg Order Value (AOV)</div>
+            <div class="ord-metric-lbl">متوسط قيمة الأوردر</div>
           </div>
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statDeliveryRate">0%</div>
-            <div class="ord-metric-lbl">Delivery Rate</div>
+            <div class="ord-metric-lbl">نسبة نجاح التسليم</div>
           </div>
           <div class="ord-metric-card">
             <div class="ord-metric-val" id="statCancelRate">0%</div>
-            <div class="ord-metric-lbl">Cancel Rate</div>
+            <div class="ord-metric-lbl">نسبة الإلغاء</div>
           </div>
         </div>
 
         <div class="orders-status-grid">
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statTotalOrders" style="color:var(--brown-deep)">0</div>
-            <div class="ord-status-lbl">Total Orders</div>
+            <div class="ord-status-lbl">إجمالي الطلبات</div>
           </div>
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statPendingOrders" style="color:#92400e">0</div>
-            <div class="ord-status-lbl">Pending</div>
+            <div class="ord-status-lbl">معلقة</div>
           </div>
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statConfirmedOrders" style="color:var(--ok)">0</div>
-            <div class="ord-status-lbl">Confirmed</div>
+            <div class="ord-status-lbl">مؤكدة</div>
           </div>
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statShippedOrders" style="color:#0369a1">0</div>
-            <div class="ord-status-lbl">Shipped</div>
+            <div class="ord-status-lbl">مشحونة</div>
           </div>
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statDeliveredOrders" style="color:#166534">0</div>
-            <div class="ord-status-lbl">Delivered</div>
+            <div class="ord-status-lbl">مسلمة</div>
           </div>
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statCancelledOrders" style="color:var(--danger)">0</div>
-            <div class="ord-status-lbl">Canceled</div>
+            <div class="ord-status-lbl">ملغية</div>
           </div>
           <div class="ord-status-tile">
             <div class="ord-status-num" id="statStockDeductedOrders" style="color:var(--gold-deep)">0</div>
-            <div class="ord-status-lbl">Stock Deducted</div>
+            <div class="ord-status-lbl">تم خصم المخزون</div>
           </div>
         </div>
 
         <button type="button" class="latest-orders-toggle-btn" id="latestOrdersToggleBtn" onclick="toggleLatestOrdersSection()" aria-expanded="false">
           <span class="latest-orders-toggle-meta">
-            <span id="latestOrdersBtnLabel">▶ Latest Orders (Click to Open)</span>
-            <span class="latest-orders-pill" id="latestOrdersBtnBadge">0 orders</span>
+            <span id="latestOrdersBtnLabel">▶ أحدث الطلبات (اضغط لفتح القائمة)</span>
+            <span class="latest-orders-pill" id="latestOrdersBtnBadge">0 طلب</span>
           </span>
-          <span id="latestOrdersBtnHint" style="font-size:11.5px;opacity:0.9">Collapsed by default</span>
+          <span id="latestOrdersBtnHint" style="font-size:11.5px;opacity:0.9">مقفولة افتراضياً</span>
         </button>
 
         <div class="latest-orders-collapsible" id="latestOrdersCollapsible">
-          <div class="order-cat-bar" id="orderCatBar" role="tablist" aria-label="Order categories">
+          <div class="order-cat-bar" id="orderCatBar" role="tablist" aria-label="تصنيفات الطلبات">
             <button type="button" class="order-cat-btn active" id="ordCat-latest" onclick="switchOrderCategory('latest')">
-              <span>🆕 Latest (Pending)</span>
+              <span>🆕 أحدث الطلبات (معلقة)</span>
               <span class="order-cat-count" id="ordCnt-latest">0</span>
             </button>
             <button type="button" class="order-cat-btn" id="ordCat-confirmed" onclick="switchOrderCategory('confirmed')">
-              <span>✅ Confirmed</span>
+              <span>✅ مؤكدة</span>
               <span class="order-cat-count" id="ordCnt-confirmed">0</span>
             </button>
             <button type="button" class="order-cat-btn" id="ordCat-shipped" onclick="switchOrderCategory('shipped')">
-              <span>🚚 Shipped</span>
+              <span>🚚 مشحونة</span>
               <span class="order-cat-count" id="ordCnt-shipped">0</span>
             </button>
             <button type="button" class="order-cat-btn" id="ordCat-delivered" onclick="switchOrderCategory('delivered')">
-              <span>🎉 Delivered</span>
+              <span>🎉 مسلمة</span>
               <span class="order-cat-count" id="ordCnt-delivered">0</span>
             </button>
             <button type="button" class="order-cat-btn" id="ordCat-cancelled" onclick="switchOrderCategory('cancelled')">
-              <span>❌ Canceled</span>
+              <span>❌ ملغية</span>
               <span class="order-cat-count" id="ordCnt-cancelled">0</span>
             </button>
           </div>
           <div class="order-cat-header" id="orderCatHeader"></div>
-          <div id="admOrdersList"><div class="empty-msg">No orders received yet.</div></div>
+          <div id="admOrdersList"><div class="empty-msg">لا توجد طلبات حتى الآن.</div></div>
         </div>
       </div>
     </div>
@@ -4599,9 +4599,9 @@ function syncLatestOrdersCollapseUI() {
 
   box.classList.toggle("open", latestOrdersOpen);
   if (btn) btn.setAttribute("aria-expanded", latestOrdersOpen ? "true" : "false");
-  if (lbl) lbl.textContent = latestOrdersOpen ? "▼ Latest Orders (Click to Collapse)" : "▶ Latest Orders (Click to Open)";
-  if (badge) badge.textContent = `${orders.length} ${orders.length === 1 ? "order" : "orders"}`;
-  if (hint) hint.textContent = latestOrdersOpen ? "Expanded • Click to hide" : "Collapsed • Click to view list";
+  if (lbl) lbl.textContent = latestOrdersOpen ? "▼ أحدث الطلبات (اضغط للإخفاء)" : "▶ أحدث الطلبات (اضغط لفتح القائمة)";
+  if (badge) badge.textContent = `${orders.length} ${orders.length === 1 ? "طلب" : "طلبات"}`;
+  if (hint) hint.textContent = latestOrdersOpen ? "مفتوحة • اضغط للإغلاق" : "مقفولة افتراضياً • اضغط للعرض";
 }
 
 function renderAdminOrders() {
@@ -4675,18 +4675,18 @@ function renderAdminOrders() {
   });
 
   const catLabels = {
-    latest: { title: "🆕 Latest Orders (Awaiting Confirmation)", empty: "No unconfirmed orders right now — you're all caught up!" },
-    confirmed: { title: "✅ Confirmed Orders (Ready to Ship)", empty: "No confirmed orders in this folder." },
-    shipped: { title: "🚚 Shipped Orders (Out for Delivery)", empty: "No shipped orders right now." },
-    delivered: { title: "🎉 Delivered Orders (Completed)", empty: "No delivered orders yet." },
-    cancelled: { title: "❌ Cancelled Orders", empty: "No cancelled orders." }
+    latest: { title: "🆕 أحدث الطلبات (بانتظار التأكيد)", empty: "لا توجد طلبات جديدة بانتظار التأكيد حالياً." },
+    confirmed: { title: "✅ الطلبات المؤكدة (جاهزة للشحن)", empty: "لا توجد طلبات مؤكدة في هذا القسم." },
+    shipped: { title: "🚚 الطلبات المشحونة (في الطريق للعميل)", empty: "لا توجد طلبات مشحونة حالياً." },
+    delivered: { title: "🎉 الطلبات المسلمة (مكتملة)", empty: "لا توجد طلبات مسلمة بعد." },
+    cancelled: { title: "❌ الطلبات الملغية", empty: "لا توجد طلبات ملغية." }
   };
 
   const currentMeta = catLabels[activeOrderCategory] || catLabels.latest;
   const visibleOrders = grouped[activeOrderCategory] || [];
 
   if (catHeaderEl) {
-    catHeaderEl.innerHTML = `<span>Showing: <b>${currentMeta.title}</b></span><span>${visibleOrders.length} ${visibleOrders.length === 1 ? "order" : "orders"}</span>`;
+    catHeaderEl.innerHTML = `<span>القسم الحالي: <b>${currentMeta.title}</b></span><span>${visibleOrders.length} ${visibleOrders.length === 1 ? "طلب" : "طلبات"}</span>`;
   }
 
   if (!visibleOrders.length) {

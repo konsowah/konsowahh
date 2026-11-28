@@ -3377,7 +3377,6 @@
             <span class="track-link-url" id="confirmedTrackUrl"></span>
             <div class="track-link-actions">
               <a class="track-direct-btn" id="confirmedTrackGoBtn" href="#track-order" onclick="openTrackPage(event)">Open Tracking Page →</a>
-              <button type="button" class="instapay-copy-btn" onclick="openAddReviewForm(event)">⭐ Write a Review</button>
               <button type="button" class="instapay-copy-btn" onclick="copyTrackingLink()">Copy Tracking Link</button>
             </div>
           </div>
@@ -5754,6 +5753,7 @@ async function searchOrdersByEmail() {
         ${estDateHtml}
         <div style="color:var(--ink);margin-bottom:5px">${itemsTxt}</div>
         <div style="font-weight:800;color:var(--brown)">Total: ${money(o.total)}</div>
+        ${st === "delivered" ? `<div style="margin-top:10px"><button type="button" class="instapay-copy-btn" onclick="openAddReviewForm(event)">⭐ Write a Review</button></div>` : ""}
       </div>
     `;
   }).join("");

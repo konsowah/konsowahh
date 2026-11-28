@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ش<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
@@ -2588,7 +2588,27 @@
       .review-overlay-card .rev-form-grid { grid-template-columns: 1fr; gap: 14px; }
     }
 
-  </style>
+  /* ===== Hero slider (product images) ===== */
+.hero-slider{position:relative;aspect-ratio:4/5;max-height:560px;width:100%;margin-inline:auto;overflow:hidden;border-radius:var(--r-sharp-sm);border:1px solid var(--line-strong);background:var(--bg-warm);box-shadow:var(--shadow-lg);cursor:pointer}
+.hs-slide{position:absolute;inset:0;opacity:0;transform:scale(1.08);transition:opacity 1.2s ease,transform 6s ease-out}
+.hs-slide.on{opacity:1;transform:scale(1)}
+.hs-slide img{width:100%;height:100%;object-fit:cover}
+.hs-shade{position:absolute;inset:auto 0 0 0;height:42%;background:linear-gradient(to top,rgba(36,20,9,.62),transparent);pointer-events:none}
+.hs-cap{position:absolute;left:18px;right:18px;bottom:20px;color:#fdf8ef;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;transition:opacity .5s}
+.hs-cap small{display:block;font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold-bright)}
+.hs-cap b{font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;line-height:1.1}
+.hs-cap span.go{font-size:12px;font-weight:700;border-bottom:1px solid var(--gold-bright);padding-bottom:2px;white-space:nowrap}
+.hs-bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright))}
+.hs-bar.run{width:100%;transition:width 4s linear}
+.hs-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--line-strong);font-size:34px}
+.hero-actions .btn-primary,.hero-actions .btn-ghost{transition:transform .25s,border-color .25s}
+.cat-photo-card{animation:ns-rise .7s cubic-bezier(.2,.8,.2,1) both}
+.cat-photo-card:nth-child(2n){animation-delay:.08s}.cat-photo-card:nth-child(3n){animation-delay:.16s}
+@keyframes ns-rise{from{opacity:0;transform:translateY(22px)}}
+@media(max-width:860px){.hero{grid-template-columns:1fr!important;padding:30px 20px!important}.hero-slider{aspect-ratio:1/1;max-height:420px}}
+@media(prefers-reduced-motion:reduce){.hs-slide,.cat-photo-card{transition:none;animation:none}}
+
+</style>
 </head>
 <body>
 <div class="top-ribbon">
@@ -3036,27 +3056,31 @@
     </div>
   </section>
 
-  <section class="hero">
+    <section class="hero">
     <div class="hero-content">
-      <span class="hero-eyebrow">NS ACCESSORIES • CURATED COLLECTION</span>
-      <h1>Everyday pieces crafted to stay with you.</h1>
-      <p>Explore curated collections across dedicated category pages, add your favorites to your cart, and confirm your order directly on the website.</p>
+      <span class="hero-eyebrow">NS ACCESSORIES • NEW PIECES</span>
+      <h1>Small details, worn every day.</h1>
+      <p>Simple accessories chosen to go with everything you wear. Pick a category and find the piece that feels like you.</p>
       <div class="hero-actions">
         <a class="btn-primary" href="#products">Browse Categories</a>
         <a class="btn-ghost" href="#track-order" onclick="openTrackPage(event)">📦 Track Your Order</a>
       </div>
     </div>
-    <div class="hero-stagger" id="heroStaggerBox">
-      <div class="hero-shot hero-shot-top" id="heroShotTopWrap">
-        <img id="heroImg1" src="" alt="NS Accessories hero piece 1" style="opacity:0;transition:opacity 0.22s ease">
-      </div>
-      <div class="hero-shot hero-shot-bottom" id="heroShotBottomWrap">
-        <img id="heroImg2" src="" alt="NS Accessories hero piece 2" style="opacity:0;transition:opacity 0.22s ease">
-      </div>
+    <div class="hero-slider" id="heroSlider" aria-label="Featured pieces">
+      <div class="hs-empty" id="hsEmpty">✦</div>
+      <div class="hs-slide" id="hsA"><img alt=""></div>
+      <div class="hs-slide" id="hsB"><img alt=""></div>
+      <div class="hs-shade"></div>
+      <div class="hs-cap" id="hsCap"><div><small id="hsCat"></small><b id="hsName"></b></div><span class="go">View →</span></div>
+      <div class="hs-bar" id="hsBar"></div>
+    </div>
+    <div class="hero-stagger" id="heroStaggerBox" style="display:none">
+      <div class="hero-shot hero-shot-top" id="heroShotTopWrap"><img id="heroImg1" src="" alt=""></div>
+      <div class="hero-shot hero-shot-bottom" id="heroShotBottomWrap"><img id="heroImg2" src="" alt=""></div>
     </div>
   </section>
 
-  <section id="products">
+<section id="products">
     <div class="sec-head">
       <div>
         <span class="sec-kicker">Curated Selection</span>
@@ -6573,5 +6597,41 @@ checkInitialRoutes();
   subscribeRealtime();
 })();
 </script>
+<script>
+/* Hero slider: random transitions between real product images */
+(function(){
+  const box=document.getElementById('heroSlider');if(!box)return;
+  const slides=[document.getElementById('hsA'),document.getElementById('hsB')];
+  const cap=document.getElementById('hsCap'),nm=document.getElementById('hsName'),ct=document.getElementById('hsCat'),bar=document.getElementById('hsBar'),empty=document.getElementById('hsEmpty');
+  let pool=[],sig='',cur=null,front=0,timer=null;
+  const collect=()=>{const a=[];try{(products||[]).forEach(p=>getImgs(p).forEach(u=>u&&a.push({u,id:p.id,name:p.name||'',cat:p.category||''})));}catch(e){}return a;};
+  function nextItem(){
+    if(!pool.length)return null;if(pool.length===1)return pool[0];
+    let it;do{it=pool[Math.floor(Math.random()*pool.length)];}while(cur&&it.u===cur.u);return it;
+  }
+  function show(it){
+    if(!it)return;empty.style.display='none';
+    const back=1-front,el=slides[back],img=el.querySelector('img');
+    const go=()=>{
+      el.classList.add('on');slides[front].classList.remove('on');front=back;cur=it;
+      cap.style.opacity=0;setTimeout(()=>{nm.textContent=it.name;ct.textContent=it.cat;cap.style.opacity=1;},350);
+      bar.classList.remove('run');bar.style.width='0';void bar.offsetWidth;bar.style.width='';bar.classList.add('run');
+    };
+    el.classList.remove('on');img.onload=go;img.onerror=()=>{};img.src=it.u;
+    if(img.complete&&img.naturalWidth)go();
+  }
+  function tick(){show(nextItem());}
+  function refresh(){
+    const next=collect(),s=next.length+'|'+next.map(x=>x.id+x.u.length+x.u.slice(-16)).join(',');
+    if(s===sig)return;sig=s;pool=next;
+    clearInterval(timer);
+    if(!pool.length){empty.style.display='grid';return;}
+    tick();if(pool.length>1)timer=setInterval(tick,4200);
+  }
+  box.addEventListener('click',()=>{if(cur&&typeof openDetails==='function')openDetails(cur.id);});
+  refresh();setInterval(refresh,1500);
+})();
+</script>
+
 </body>
 </html>

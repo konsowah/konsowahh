@@ -1969,6 +1969,7 @@
         </p>
         <div class="hero-actions">
           <a href="#categories" class="btn-primary">Shop by Category</a>
+          <a href="#track-order" class="btn-ghost" id="heroTrackBtn">Track Your Order</a>
           <a href="#reviews" class="btn-ghost">Customer Reviews</a>
         </div>
       </div>
@@ -2074,7 +2075,36 @@
             <div class="inp-row">
               <div class="inp-group">
                 <label>Governorate / City *</label>
-                <input type="text" id="coCity" required placeholder="Cairo, Giza, Alexandria..." />
+                <select id="coCity" required>
+                  <option value="" disabled selected>Select Governorate</option>
+                  <option value="Monufia" data-ship="40">Monufia (المنوفية — 40 EGP)</option>
+                  <option value="Cairo" data-ship="80">Cairo (القاهرة — 80 EGP)</option>
+                  <option value="Giza" data-ship="80">Giza (الجيزة — 80 EGP)</option>
+                  <option value="Gharbia" data-ship="50">Gharbia (الغربية — 50 EGP)</option>
+                  <option value="Qalyubia" data-ship="65">Qalyubia (القليوبية — 65 EGP)</option>
+                  <option value="Alexandria" data-ship="75">Alexandria (الإسكندرية — 75 EGP)</option>
+                  <option value="Dakahlia" data-ship="65">Dakahlia (الدقهلية — 65 EGP)</option>
+                  <option value="Sharqia" data-ship="65">Sharqia (الشرقية — 65 EGP)</option>
+                  <option value="Kafr El Sheikh" data-ship="65">Kafr El Sheikh (كفر الشيخ — 65 EGP)</option>
+                  <option value="Beheira" data-ship="65">Beheira (البحيرة — 65 EGP)</option>
+                  <option value="Damietta" data-ship="75">Damietta (دمياط — 75 EGP)</option>
+                  <option value="Port Said" data-ship="85">Port Said (بورسعيد — 85 EGP)</option>
+                  <option value="Ismailia" data-ship="85">Ismailia (الإسماعيلية — 85 EGP)</option>
+                  <option value="Suez" data-ship="85">Suez (السويس — 85 EGP)</option>
+                  <option value="Fayoum" data-ship="85">Fayoum (الفيوم — 85 EGP)</option>
+                  <option value="Beni Suef" data-ship="85">Beni Suef (بني سويف — 85 EGP)</option>
+                  <option value="Minya" data-ship="95">Minya (المنيا — 95 EGP)</option>
+                  <option value="Assiut" data-ship="95">Assiut (أسيوط — 95 EGP)</option>
+                  <option value="Sohag" data-ship="100">Sohag (سوهاج — 100 EGP)</option>
+                  <option value="Qena" data-ship="100">Qena (قنا — 100 EGP)</option>
+                  <option value="Luxor" data-ship="105">Luxor (الأقصر — 105 EGP)</option>
+                  <option value="Aswan" data-ship="110">Aswan (أسوان — 110 EGP)</option>
+                  <option value="Red Sea" data-ship="110">Red Sea (البحر الأحمر — 110 EGP)</option>
+                  <option value="New Valley" data-ship="115">New Valley (الوادي الجديد — 115 EGP)</option>
+                  <option value="Matrouh" data-ship="115">Matrouh (مطروح — 115 EGP)</option>
+                  <option value="North Sinai" data-ship="115">North Sinai (شمال سيناء — 115 EGP)</option>
+                  <option value="South Sinai" data-ship="115">South Sinai (جنوب سيناء — 115 EGP)</option>
+                </select>
               </div>
               <div class="inp-group">
                 <label>Delivery Address *</label>
@@ -2141,7 +2171,7 @@
                 <span>Discount (<span id="coAppliedCode"></span>)</span>
                 <span id="coDiscountVal">-0.00 EGP</span>
               </div>
-              <div class="sum-line"><span>Shipping</span><span id="coShippingVal">60.00 EGP</span></div>
+              <div class="sum-line"><span>Shipping (<span id="coShippingCityLabel">Select Governorate</span>)</span><span id="coShippingVal">0.00 EGP</span></div>
               <div class="sum-line total"><span>Total</span><span id="coTotalVal">0.00 EGP</span></div>
             </div>
 
@@ -2165,7 +2195,7 @@
 
       <div class="track-search-card">
         <form id="trackOrderForm" class="track-search-row">
-          <input type="text" id="trackQueryInput" required placeholder="Enter Order ID (e.g. NS-...) or Email used at checkout" />
+          <input type="text" id="trackQueryInput" required placeholder="Enter your Email or Order ID (e.g. you@example.com or NS-...)" autocomplete="email" />
           <button type="submit" class="btn-primary">Find Order</button>
         </form>
       </div>
@@ -2281,7 +2311,7 @@
       <form id="adminLoginForm">
         <div class="inp-group">
           <label>Admin Username</label>
-          <input type="text" id="admUser" required placeholder="Enter admin username" autocomplete="username" />
+          <input type="text" id="admUser" required placeholder="Enter admin username or email" autocomplete="username" />
         </div>
         <div class="inp-group">
           <label>Admin Password</label>
@@ -2365,6 +2395,9 @@
   <footer>
     <div>&copy; <span id="yearSpan"></span> NS ACCESSORIES. All rights reserved.</div>
     <div class="footer-right">
+      <a href="#categories" class="footer-link">Categories</a>
+      <a href="#reviews" class="footer-link">Reviews</a>
+      <a href="#contactPage" class="footer-link" id="footerContactLink">Contact</a>
       <a href="#track-order" class="footer-link" id="footerTrackLink">Track Your Order</a>
       <span class="konsowah-credit" id="konsowahTrigger" title="About KONSOWAH">
         <span class="konsowah-dot"></span>
@@ -2381,7 +2414,36 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvdnFneHFkZm5qZXdqbGJ4cG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzA2NzgsImV4cCI6MjA4OTUwNjY3OH0.X3e01h691c4R7sO1-Qexn4wJ1050-059f-4e8d-9b2a-1c3d4e5f6a7b";
 
     const INSTAPAY_HANDLE = "NS.ACCESSORIES@instapay";
-    const SHIPPING_FEE = 60;
+    const SHIPPING_RATES = {
+      "Monufia": 40,
+      "Cairo": 80,
+      "Giza": 80,
+      "Gharbia": 50,
+      "Qalyubia": 65,
+      "Alexandria": 75,
+      "Dakahlia": 65,
+      "Sharqia": 65,
+      "Kafr El Sheikh": 65,
+      "Beheira": 65,
+      "Damietta": 75,
+      "Port Said": 85,
+      "Ismailia": 85,
+      "Suez": 85,
+      "Fayoum": 85,
+      "Beni Suef": 85,
+      "Minya": 95,
+      "Assiut": 95,
+      "Sohag": 100,
+      "Qena": 100,
+      "Luxor": 105,
+      "Aswan": 110,
+      "Red Sea": 110,
+      "New Valley": 115,
+      "Matrouh": 115,
+      "North Sinai": 115,
+      "South Sinai": 115
+    };
+    const DEFAULT_SHIPPING_FEE = 80;
     const STORAGE_BUCKET = "store-assets";
 
     const DEFAULT_CATEGORIES = [
@@ -2478,7 +2540,8 @@
       products: "ns_acc_products_v1",
       categories: "ns_acc_categories_v1",
       reviews: "ns_acc_reviews_v1",
-      brandLogo: "ns_acc_brand_logo_v1"
+      brandLogo: "ns_acc_brand_logo_v1",
+      lastTrackEmail: "ns_acc_last_track_email_v1"
     };
 
     const ORDER_STEPS = [
@@ -2521,6 +2584,7 @@
       orders: readLS(KEYS.orders, []),
       coupons: readLS(KEYS.coupons, DEFAULT_COUPONS),
       brandLogo: readLS(KEYS.brandLogo, ""),
+      lastTrackQuery: readLS(KEYS.lastTrackEmail, ""),
       isAdmin: Boolean(readLS(KEYS.adminSession, false)),
       adminPanelOpen: Boolean(readLS(KEYS.adminPanelOpen, true)),
       activeCategoryPage: null,
@@ -2546,7 +2610,20 @@
       t.textContent = msg;
       t.classList.add("show");
       clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+    }
+
+    function getShippingForCity(cityValue, hasItems) {
+      if (!hasItems) return 0;
+      const clean = String(cityValue || "").trim();
+      if (!clean) return 0;
+      if (Object.prototype.hasOwnProperty.call(SHIPPING_RATES, clean)) {
+        return Number(SHIPPING_RATES[clean]);
+      }
+      const lower = clean.toLowerCase();
+      if (lower.includes("monuf") || lower.includes("menouf") || clean.includes("منوف")) return 40;
+      if (lower.includes("cairo") || lower.includes("giza") || clean.includes("قاهر") || clean.includes("جيز")) return 80;
+      return DEFAULT_SHIPPING_FEE;
     }
 
     function getEffectivePrice(p) {
@@ -3154,10 +3231,11 @@
         }
       }
 
-      const shipping = cleanItems.length > 0 ? SHIPPING_FEE : 0;
+      const selectedCity = ($("coCity")?.value || "").trim();
+      const shipping = getShippingForCity(selectedCity, cleanItems.length > 0);
       const total = Math.max(0, subtotal - discount + shipping);
 
-      return { items: cleanItems, subtotal, discount, couponCode, shipping, total };
+      return { items: cleanItems, subtotal, discount, couponCode, shipping, total, city: selectedCity };
     }
 
     function renderCart() {
@@ -3204,7 +3282,7 @@
     function renderCheckoutSummary() {
       const listEl = $("coItemsList");
       if (!listEl) return;
-      const { items, subtotal, discount, couponCode, shipping, total } = calculateCartTotals();
+      const { items, subtotal, discount, couponCode, shipping, total, city } = calculateCartTotals();
 
       if (!items.length) {
         listEl.innerHTML = `<div class="empty-state">No items in cart.</div>`;
@@ -3218,6 +3296,7 @@
       }
 
       if ($("coSubtotal")) $("coSubtotal").textContent = fmt(subtotal);
+      if ($("coShippingCityLabel")) $("coShippingCityLabel").textContent = city || "Select Governorate";
       if ($("coShippingVal")) $("coShippingVal").textContent = fmt(shipping);
       if ($("coTotalVal")) $("coTotalVal").textContent = fmt(total);
 
@@ -3253,7 +3332,7 @@
 
     async function handlePlaceOrder(e) {
       e.preventDefault();
-      const { items, subtotal, discount, couponCode, shipping, total } = calculateCartTotals();
+      const { items, subtotal, discount, couponCode, shipping, total, city } = calculateCartTotals();
       if (!items.length) {
         showToast("Your cart is empty.");
         return;
@@ -3262,12 +3341,11 @@
       const customerName = ($("coName")?.value || "").trim();
       const phone = ($("coPhone")?.value || "").trim();
       const email = ($("coEmail")?.value || "").trim();
-      const city = ($("coCity")?.value || "").trim();
       const address = ($("coAddress")?.value || "").trim();
       const notes = ($("coNotes")?.value || "").trim();
 
       if (!customerName || !phone || !email || !city || !address) {
-        showToast("Please fill in all required delivery fields.");
+        showToast("Please fill in all required delivery fields including governorate.");
         return;
       }
 
@@ -3336,7 +3414,9 @@
         }
 
         state.orders.unshift(newOrder);
+        state.lastTrackQuery = email;
         writeLS(KEYS.orders, state.orders);
+        writeLS(KEYS.lastTrackEmail, state.lastTrackQuery);
 
         state.cart = [];
         state.appliedCoupon = null;
@@ -3354,7 +3434,7 @@
 
         $("checkoutPage").classList.remove("show");
         showToast(`Order ${orderId} placed! Total: ${fmt(total)}`);
-        openTrackingPage(orderId);
+        openTrackingPage(email || orderId);
         if (state.isAdmin) renderAdminOrders();
       } finally {
         if (btn) {
@@ -3371,9 +3451,10 @@
       closeAllOverlays();
       $("trackPage").classList.add("show");
       $("trackPage").scrollTop = 0;
-      if (prefillQuery) {
-        $("trackQueryInput").value = prefillQuery;
-        runOrderSearch(prefillQuery);
+      const initialQ = (prefillQuery || state.lastTrackQuery || "").trim();
+      if (initialQ) {
+        $("trackQueryInput").value = initialQ;
+        runOrderSearch(initialQ);
       } else {
         renderTrackResults([]);
       }
@@ -3382,6 +3463,8 @@
     async function runOrderSearch(query) {
       const q = String(query || "").trim().toLowerCase();
       if (!q) return;
+      state.lastTrackQuery = String(query || "").trim();
+      writeLS(KEYS.lastTrackEmail, state.lastTrackQuery);
 
       let matches = state.orders.filter(
         (o) => String(o.id || "").toLowerCase() === q ||
@@ -3415,7 +3498,7 @@
       if (!area) return;
 
       if (!orders || !orders.length) {
-        area.innerHTML = `<div class="empty-state">Enter your Order ID (e.g. NS-...) or Email address to check your order status, total amount, and estimated delivery date.</div>`;
+        area.innerHTML = `<div class="empty-state">Enter the Email address used at checkout (or your Order ID) to check your order status, total amount, and estimated delivery date.</div>`;
         return;
       }
 
@@ -3458,14 +3541,15 @@
 
             <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin-bottom:10px;">
               <span>Customer: <b>${escapeHtml(ord.customerName)}</b></span>
-              <span>City: <b>${escapeHtml(ord.city)}</b></span>
+              <span>Email: <b>${escapeHtml(ord.email)}</b></span>
+              <span>Governorate: <b>${escapeHtml(ord.city)}</b></span>
               <span>Estimated Delivery: <b>${ord.estimatedDelivery ? escapeHtml(ord.estimatedDelivery) : "To be updated"}</b></span>
             </div>
 
             <div class="order-items-box">
               ${itemsHtml}
               ${Number(ord.discount) > 0 ? `<div class="sum-line discount"><span>Discount (${escapeHtml(ord.couponCode || "Coupon")})</span><span>-${fmt(ord.discount)}</span></div>` : ``}
-              <div class="sum-line"><span>Shipping</span><span>${fmt(ord.shipping)}</span></div>
+              <div class="sum-line"><span>Shipping (${escapeHtml(ord.city || "Standard")})</span><span>${fmt(ord.shipping)}</span></div>
               <div class="sum-line total"><span>Total Amount</span><span>${fmt(ord.total)}</span></div>
             </div>
 
@@ -3841,7 +3925,7 @@
             <div class="order-items-box">
               ${itemsHtml}
               ${Number(ord.discount) > 0 ? `<div class="sum-line discount"><span>Discount (${escapeHtml(ord.couponCode || "")})</span><span>-${fmt(ord.discount)}</span></div>` : ``}
-              <div class="sum-line"><span>Shipping</span><span>${fmt(ord.shipping)}</span></div>
+              <div class="sum-line"><span>Shipping (${escapeHtml(ord.city || "Standard")})</span><span>${fmt(ord.shipping)}</span></div>
               <div class="sum-line total"><span>Total</span><span>${fmt(ord.total)}</span></div>
             </div>
 
@@ -3994,6 +4078,7 @@
     function bindEvents() {
       if ($("yearSpan")) $("yearSpan").textContent = String(new Date().getFullYear());
       if ($("instaPayHandleDisplay")) $("instaPayHandleDisplay").textContent = INSTAPAY_HANDLE;
+      $("coCity")?.addEventListener("change", renderCheckoutSummary);
 
       // Triple-click brand logo for Admin Login
       let brandClicks = 0;
@@ -4024,11 +4109,13 @@
         const p = ($("admPass")?.value || "").trim();
         if (!u || !p) return;
 
-        let ok = (u.toLowerCase() === "admin" && p === "ns2026");
-        if (sb) {
+        const uLower = u.toLowerCase();
+        let ok = ((uLower === "admin" || uLower === "akonsowah2008@gmail.com") && p === "ns2026");
+
+        if (sb && !ok) {
           try {
-            const { data } = await sb.rpc("verify_admin_login", { p_username: u, p_password: p });
-            if (data === true) ok = true;
+            const { data, error } = await sb.rpc("verify_admin_login", { p_username: u, p_password: p });
+            if (!error && data === true) ok = true;
           } catch {
             // Fallback check already evaluated
           }
@@ -4461,6 +4548,10 @@
         e.preventDefault();
         openTrackingPage();
       });
+      $("heroTrackBtn")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        openTrackingPage();
+      });
       $("footerTrackLink")?.addEventListener("click", (e) => {
         e.preventDefault();
         openTrackingPage();
@@ -4477,11 +4568,14 @@
       });
 
       // Contact page
-      $("openContactLink")?.addEventListener("click", (e) => {
-        e.preventDefault();
+      const openContactView = (e) => {
+        if (e) e.preventDefault();
         closeAllOverlays();
         $("contactPage")?.classList.add("show");
-      });
+        $("contactPage").scrollTop = 0;
+      };
+      $("openContactLink")?.addEventListener("click", openContactView);
+      $("footerContactLink")?.addEventListener("click", openContactView);
       $("backFromContactBtn")?.addEventListener("click", () => {
         $("contactPage")?.classList.remove("show");
         if (window.location.hash === "#contactPage") {

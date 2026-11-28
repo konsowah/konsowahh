@@ -2406,7 +2406,8 @@
 
     <div class="admin-tabs">
       <button class="adm-tab-btn active" id="tabBtnOrders" onclick="switchAdminTab('orders')">📦 Orders (<span id="admOrdersTotal">0</span>)</button>
-      <button class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">💍 Categories &amp; Products (<span id="admProdCount">0</span>)</button>
+      <button class="adm-tab-btn" id="tabBtnCategories" onclick="switchAdminTab('categories')">🗂️ Categories (<span id="admCatCount">0</span>)</button>
+      <button class="adm-tab-btn" id="tabBtnProducts" onclick="switchAdminTab('products')">💍 Products (<span id="admProdCount">0</span>)</button>
       <button class="adm-tab-btn" id="tabBtnCoupons" onclick="switchAdminTab('coupons')">🎟️ Coupons (<span id="admCouponsCount">0</span>)</button>
       <button class="adm-tab-btn" id="tabBtnReviews" onclick="switchAdminTab('reviews')">⭐ Reviews (<span id="admReviewsCount">0</span>)</button>
       <button class="adm-tab-btn" id="tabBtnConsole" onclick="switchAdminTab('console')">🖥️ Console Info</button>
@@ -2522,6 +2523,39 @@
       </div>
     </div>
 
+    <div id="adminTabCategories" style="display:none" dir="rtl">
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h3 id="catFormHeading">🗂️ إضافة أو تعديل قسم (Category)</h3>
+          <p class="note-txt" style="margin:0 0 12px">أضف قسماً جديداً أو اضغط <b>تعديل</b> على أي قسم من القائمة لتغيير اسمه وصورته وترتيبه.</p>
+          <div class="inp-row">
+            <div class="inp-group">
+              <label for="admCatName">اسم القسم *</label>
+              <input id="admCatName" placeholder="مثال: خواتم أو أساور">
+            </div>
+            <div class="inp-group">
+              <label for="admCatFile">رفع صورة القسم</label>
+              <input id="admCatFile" type="file" accept="image/*" onchange="handleCategoryFileInput(event)">
+            </div>
+          </div>
+          <div class="inp-group">
+            <label for="admCatUrl">أو رابط صورة القسم (URL)</label>
+            <input id="admCatUrl" placeholder="https://example.com/category-cover.jpg" oninput="refreshCategoryFormPreview()">
+          </div>
+          <div class="preview-strip" id="admCatPreview" style="margin-bottom:12px"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn-add" id="catSaveBtn" style="flex:1;padding:10px" onclick="adminSaveCategory()">حفظ القسم</button>
+            <button type="button" class="btn-info" id="catCancelEditBtn" style="display:none;padding:10px 14px" onclick="cancelCategoryEdit()">إلغاء التعديل</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>📋 قائمة الأقسام وصورها</h3>
+          <div class="manage-list" id="admCategoriesList" style="max-height:430px"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="adminTabProducts" style="display:none">
       <div class="admin-grid">
         <div>
@@ -2570,26 +2604,6 @@
               <button type="button" class="btn-add" style="flex:1;padding:10px" onclick="saveHeroPhotosFromAdmin()">Save Hero Photos ✓</button>
               <button type="button" class="del-btn" style="padding:10px 14px" onclick="resetHeroPhotosToDefault()">Reset Default</button>
             </div>
-          </div>
-
-          <div class="admin-card">
-            <h3>🗂️ Categories &amp; Category Photos</h3>
-            <div class="inp-row">
-              <div class="inp-group">
-                <label for="admCatName">Category Name *</label>
-                <input id="admCatName" placeholder="e.g. Rings or Bracelets">
-              </div>
-              <div class="inp-group">
-                <label for="admCatFile">Category Photo (Upload)</label>
-                <input id="admCatFile" type="file" accept="image/*" onchange="handleCategoryFileInput(event)">
-              </div>
-            </div>
-            <div class="inp-group">
-              <label for="admCatUrl">Or Category Photo URL</label>
-              <input id="admCatUrl" placeholder="https://example.com/category-cover.jpg">
-            </div>
-            <button type="button" class="btn-add" style="width:100%;padding:10px" onclick="adminSaveCategory()">Save Category</button>
-            <div class="manage-list" id="admCategoriesList" style="margin-top:14px;max-height:220px"></div>
           </div>
 
           <div class="admin-card">
@@ -3615,11 +3629,57 @@ function populateProductCategorySelect() {
   }
 }
 
+let editingCategoryId = null;
+let editingCategoryOriginalName = "";
+
+function refreshCategoryFormPreview() {
+  const prev = document.getElementById("admCatPreview");
+  const urlVal = document.getElementById("admCatUrl")?.value.trim() || "";
+  const activeCat = editingCategoryId ? categories.find(c => c.id === editingCategoryId) : null;
+  const src = uploadedCategoryImg || urlVal || (activeCat?.image_url || "");
+  if (!prev) return;
+  prev.innerHTML = src
+    ? `<img src="${escapeHtml(src)}" alt="معاينة صورة القسم">`
+    : "";
+}
+
+function startEditCategory(id) {
+  const cat = categories.find(c => c.id === id);
+  if (!cat) return;
+  editingCategoryId = cat.id;
+  editingCategoryOriginalName = cat.name;
+  uploadedCategoryImg = "";
+  const fileEl = document.getElementById("admCatFile");
+  if (fileEl) fileEl.value = "";
+  document.getElementById("admCatName").value = cat.name || "";
+  document.getElementById("admCatUrl").value = (cat.image_url && !cat.image_url.startsWith("data:")) ? cat.image_url : "";
+  document.getElementById("catFormHeading").textContent = `✏️ تعديل القسم: ${cat.name}`;
+  document.getElementById("catSaveBtn").textContent = "حفظ التعديلات ✓";
+  document.getElementById("catCancelEditBtn").style.display = "inline-block";
+  refreshCategoryFormPreview();
+  document.getElementById("admCatName").focus();
+}
+
+function cancelCategoryEdit() {
+  editingCategoryId = null;
+  editingCategoryOriginalName = "";
+  uploadedCategoryImg = "";
+  const fileEl = document.getElementById("admCatFile");
+  if (fileEl) fileEl.value = "";
+  document.getElementById("admCatName").value = "";
+  document.getElementById("admCatUrl").value = "";
+  document.getElementById("catFormHeading").textContent = "🗂️ إضافة أو تعديل قسم (Category)";
+  document.getElementById("catSaveBtn").textContent = "حفظ القسم";
+  document.getElementById("catCancelEditBtn").style.display = "none";
+  refreshCategoryFormPreview();
+}
+
 function handleCategoryFileInput(e) {
   const file = (e.target.files || [])[0];
-  if (!file) { uploadedCategoryImg = ""; return; }
+  if (!file) { uploadedCategoryImg = ""; refreshCategoryFormPreview(); return; }
   resizeImageToDataUrl(file, 900, 0.82).then(dataUrl => {
     uploadedCategoryImg = dataUrl;
+    refreshCategoryFormPreview();
   });
 }
 
@@ -3627,72 +3687,96 @@ async function adminSaveCategory() {
   if (!isAdmin) { alert("Sign in as Admin first."); return; }
   const name = document.getElementById("admCatName").value.trim();
   const urlVal = document.getElementById("admCatUrl").value.trim();
-  if (!name) { alert("Enter a category name (e.g. Rings or Bracelets)."); return; }
+  if (!name) { alert("أدخل اسم القسم أولاً."); return; }
   if (name.toUpperCase() === ALL_CATEGORY) {
-    alert('"ALL" is automatically included with all products.');
+    alert('"ALL" يتم إضافته تلقائياً لجميع المنتجات.');
     return;
   }
 
-  let finalImg = urlVal;
+  const existingCat = editingCategoryId ? categories.find(c => c.id === editingCategoryId) : null;
+  let finalImg = urlVal || (existingCat && !document.getElementById("admCatUrl").value.trim() ? existingCat.image_url : "");
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "category";
+
   try {
     if (uploadedCategoryImg) {
-      showToast("Uploading category photo...");
+      showToast("جاري رفع صورة القسم...");
       const uploaded = await uploadProductImagesToStorage([uploadedCategoryImg], `categories/${slug}`);
-      finalImg = uploaded[0] || "";
+      finalImg = uploaded[0] || finalImg;
     }
   } catch (err) {
-    alert("Category photo upload failed: " + (err.message || err));
+    alert("فشل رفع صورة القسم: " + (err.message || err));
     return;
   }
 
-  const { error } = await sb.from("ns_categories").upsert({
+  if (editingCategoryId) {
+    const { error } = await sb
+      .from("ns_categories")
+      .update({ name, image_url: finalImg || "" })
+      .eq("id", editingCategoryId);
+    if (error) { alert("تعذر تعديل القسم: " + error.message); return; }
+
+    if (editingCategoryOriginalName && editingCategoryOriginalName.toLowerCase() !== name.toLowerCase()) {
+      await sb
+        .from("ns_products")
+        .update({ category: name })
+        .ilike("category", editingCategoryOriginalName);
+      await loadProductsFromDatabase();
+    }
+    cancelCategoryEdit();
+    await loadCategoriesFromDatabase();
+    showToast(`تم تحديث القسم "${name}" ✓`);
+    return;
+  }
+
+  const { error } = await sb.from("ns_categories").insert([{
     name,
-    image_url: finalImg,
+    image_url: finalImg || "",
     sort_order: categories.length + 1
-  }, { onConflict: "name" });
+  }]);
 
-  if (error) { alert("Could not save category: " + error.message); return; }
+  if (error) { alert("تعذر حفظ القسم: " + error.message); return; }
 
-  document.getElementById("admCatName").value = "";
-  document.getElementById("admCatUrl").value = "";
-  document.getElementById("admCatFile").value = "";
-  uploadedCategoryImg = "";
+  cancelCategoryEdit();
   await loadCategoriesFromDatabase();
-  showToast(`Category "${name}" saved ✓`);
+  showToast(`تم حفظ القسم "${name}" ✓`);
 }
 
 async function deleteCategoryById(id, name) {
   if (!isAdmin) return;
-  if (!confirm(`Delete category "${name}"?`)) return;
+  if (!confirm(`حذف القسم "${name}"؟`)) return;
   const { error } = await sb.from("ns_categories").delete().eq("id", id);
-  if (error) { alert("Could not delete category: " + error.message); return; }
+  if (error) { alert("تعذر حذف القسم: " + error.message); return; }
+  if (editingCategoryId === id) cancelCategoryEdit();
   await loadCategoriesFromDatabase();
-  showToast("Category deleted ✓");
+  showToast("تم حذف القسم ✓");
 }
 
 function renderAdminCategoriesList() {
   const list = document.getElementById("admCategoriesList");
+  const countBadge = document.getElementById("admCatCount");
+  if (countBadge) countBadge.textContent = categories.length;
   if (!list) return;
   if (!categories.length) {
-    list.innerHTML = '<div class="empty-msg">No custom categories added yet (ALL is shown automatically).</div>';
+    list.innerHTML = '<div class="empty-msg">لا توجد أقسام مضافة بعد. أضف قسماً من النموذج المجاور.</div>';
     return;
   }
   list.innerHTML = categories.map(c => {
     const sampleProd = products.find(p => p.category.toLowerCase() === c.name.toLowerCase());
     const imgSrc = c.image_url || (sampleProd ? getImgs(sampleProd)[0] : "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=75");
+    const itemsInCat = products.filter(p => p.category.toLowerCase() === c.name.toLowerCase()).length;
     return `
       <div class="manage-item">
         <div class="manage-item-info">
           <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(c.name)}">
           <div>
-            <div style="font-weight:800;font-size:13px;color:var(--brown-deep)">${escapeHtml(c.name)}</div>
-            <div style="font-size:11.5px;color:var(--muted)">Click to preview category page</div>
+            <div style="font-weight:800;font-size:13.5px;color:var(--brown-deep)">${escapeHtml(c.name)}</div>
+            <div style="font-size:11.5px;color:var(--muted)">${itemsInCat} ${itemsInCat === 1 ? "منتج" : "منتجات"} • ${c.image_url ? "صورة مخصصة" : "صورة افتراضية"}</div>
           </div>
         </div>
         <div class="manage-item-actions">
-          <button type="button" class="sale-edit-btn" onclick="openCategoryPage('${escapeHtml(c.name)}')">Open Page</button>
-          <button type="button" class="del-btn" onclick="deleteCategoryById(${c.id}, '${escapeHtml(c.name)}')">Delete</button>
+          <button type="button" class="sale-edit-btn" onclick="startEditCategory(${c.id})">✏️ تعديل الاسم والصورة</button>
+          <button type="button" class="sale-edit-btn" onclick="openCategoryPage('${escapeHtml(c.name)}')">فتح الصفحة</button>
+          <button type="button" class="del-btn" onclick="deleteCategoryById(${c.id}, '${escapeHtml(c.name)}')">حذف</button>
         </div>
       </div>
     `;
@@ -4294,18 +4378,24 @@ function syncAdminUI() {
 function switchAdminTab(tab) {
   activeAdminTab = tab;
   document.getElementById("adminTabOrders").style.display = tab === "orders" ? "" : "none";
+  document.getElementById("adminTabCategories").style.display = tab === "categories" ? "" : "none";
   document.getElementById("adminTabProducts").style.display = tab === "products" ? "" : "none";
   document.getElementById("adminTabCoupons").style.display = tab === "coupons" ? "" : "none";
   document.getElementById("adminTabReviews").style.display = tab === "reviews" ? "" : "none";
   document.getElementById("adminTabConsole").style.display = tab === "console" ? "" : "none";
   document.getElementById("tabBtnOrders").classList.toggle("active", tab === "orders");
+  document.getElementById("tabBtnCategories").classList.toggle("active", tab === "categories");
   document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
   document.getElementById("tabBtnCoupons").classList.toggle("active", tab === "coupons");
   document.getElementById("tabBtnReviews").classList.toggle("active", tab === "reviews");
   document.getElementById("tabBtnConsole").classList.toggle("active", tab === "console");
+  if (tab === "categories") {
+    renderAdminCategoriesList();
+    refreshCategoryFormPreview();
+  }
   if (tab === "products") {
     populateProductCategorySelect();
-    renderAdminCategoriesList();
+    renderAdminManageList();
   }
   if (tab === "reviews") renderAdminReviewsList();
   if (tab === "console") populateAdminConsoleForm();

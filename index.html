@@ -2511,6 +2511,92 @@
       }
     }
 
+  
+    /* Dedicated / Overlay Review Page (#add-review) */
+    .review-overlay-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 56;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(197, 148, 58, 0.14), transparent 38%),
+        radial-gradient(circle at 88% 8%, rgba(74, 46, 25, 0.08), transparent 42%),
+        var(--bg);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 28px 20px 80px;
+    }
+    .review-overlay-page.show { display: block; }
+    .review-overlay-shell {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .review-overlay-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-bottom: 16px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .review-overlay-head h2 {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--brown-deep);
+    }
+    .review-overlay-card {
+      background: var(--paper);
+      border: 1.5px solid rgba(197, 148, 58, 0.5);
+      border-radius: 22px;
+      padding: 26px 24px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 20px;
+    }
+    .review-link-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--gold-pale);
+      border: 1px dashed var(--gold);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      font-size: 12px;
+    }
+    .review-link-url {
+      font-weight: 800;
+      color: var(--brown-deep);
+      word-break: break-all;
+    }
+    .rev-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .rev-copy-page-btn {
+      background: var(--gold-pale);
+      color: var(--brown-deep);
+      border: 1px solid rgba(197, 148, 58, 0.55);
+      border-radius: 6px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .rev-copy-page-btn:hover {
+      border-color: var(--gold-deep);
+      background: #faeccd;
+    }
+
   </style>
 </head>
 <body>
@@ -2997,43 +3083,12 @@
         <h2>Verified Customer Reviews</h2>
         <span class="sec-meta" style="display:block;margin-top:4px">Feedback shared by shoppers across Egypt.</span>
       </div>
-      <button type="button" class="rev-add-toggle-btn" onclick="toggleAddReviewForm()">+ Add a Review</button>
-    </div>
-    <div class="reviews-grid" id="reviewGrid"></div>
-
-    <div class="rev-modal-layer" id="addReviewModal" onclick="if(event.target===this)closeAddReviewForm()">
-      <div class="add-rev-box" id="addReviewBox" role="dialog" aria-modal="true" aria-labelledby="addReviewTitle">
-        <div class="rev-modal-head">
-          <h3 id="addReviewTitle">Leave a Review</h3>
-          <button type="button" class="x-btn" style="border-radius:999px" onclick="closeAddReviewForm()" aria-label="Close review modal">×</button>
-        </div>
-        <div class="rev-form-grid">
-          <div class="inp-group">
-            <label for="reviewName">Your Name *</label>
-            <input id="reviewName" placeholder="e.g. Nourhan A.">
-          </div>
-          <div class="inp-group">
-            <label for="reviewDate">Date</label>
-            <input id="reviewDate" type="date">
-          </div>
-          <div class="inp-group">
-            <label for="reviewStars">Rating *</label>
-            <select id="reviewStars">
-              <option value="5">★★★★★ (5)</option>
-              <option value="4">★★★★☆ (4)</option>
-              <option value="3">★★★☆☆ (3)</option>
-              <option value="2">★★☆☆☆ (2)</option>
-              <option value="1">★☆☆☆☆ (1)</option>
-            </select>
-          </div>
-        </div>
-        <div class="inp-group">
-          <label for="reviewText">Your Comment *</label>
-          <textarea id="reviewText" rows="3" placeholder="Share your thoughts on NS Accessories..."></textarea>
-        </div>
-        <button type="button" class="btn-add" style="width:100%;padding:11px 22px" onclick="addReview()">Post Review</button>
+      <div class="rev-head-actions">
+        <a class="rev-add-toggle-btn" href="#add-review" onclick="openAddReviewForm(event)" style="text-decoration:none">+ Add a Review</a>
+        <button type="button" class="rev-copy-page-btn" onclick="copyReviewPageLink()" title="Copy direct link to the Review Page">🔗 Copy Review Link</button>
       </div>
     </div>
+    <div class="reviews-grid" id="reviewGrid"></div>
   </section>
 </div>
 
@@ -3080,6 +3135,60 @@
     <button type="button" class="powered-by-btn" onclick="openContactInfoPage(event)" title="Contact & Konsowah Info">POWERED BY KONSOWAH</button>
   </div>
 </footer>
+
+
+<section class="review-overlay-page" id="reviewOverlayPage" aria-label="Customer Review Page">
+  <div class="review-overlay-shell">
+    <div class="review-overlay-head">
+      <div>
+        <div class="hero-eyebrow" style="margin:0 0 3px">NS ACCESSORIES • CLIENT IMPRESSIONS</div>
+        <h2>Write a Customer Review</h2>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="instapay-copy-btn" onclick="copyReviewPageLink()">🔗 Copy Review Link</button>
+        <button type="button" class="checkout-back-btn" onclick="closeAddReviewForm()">← Back to Store</button>
+      </div>
+    </div>
+
+    <div class="review-overlay-card">
+      <div class="review-link-banner">
+        <div>
+          <span style="color:var(--muted);font-weight:700">Direct Review Page Link: </span>
+          <span class="review-link-url" id="reviewPagePermalinkText"></span>
+        </div>
+        <button type="button" class="instapay-copy-btn" onclick="copyReviewPageLink()">Copy</button>
+      </div>
+
+      <div class="rev-form-grid">
+        <div class="inp-group">
+          <label for="reviewName">Your Name *</label>
+          <input id="reviewName" placeholder="e.g. Nourhan A.">
+        </div>
+        <div class="inp-group">
+          <label for="reviewDate">Date</label>
+          <input id="reviewDate" type="date">
+        </div>
+        <div class="inp-group">
+          <label for="reviewStars">Rating *</label>
+          <select id="reviewStars">
+            <option value="5">★★★★★ (5)</option>
+            <option value="4">★★★★☆ (4)</option>
+            <option value="3">★★★☆☆ (3)</option>
+            <option value="2">★★☆☆☆ (2)</option>
+            <option value="1">★☆☆☆☆ (1)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="inp-group">
+        <label for="reviewText">Your Comment *</label>
+        <textarea id="reviewText" rows="4" placeholder="Share your thoughts on NS Accessories..."></textarea>
+      </div>
+
+      <button type="button" class="btn-add" style="width:100%;padding:12px 22px;border-radius:999px" onclick="addReview()">Post Review ✓</button>
+    </div>
+  </div>
+</section>
 
 <div class="backdrop" id="overlay" onclick="closeCart()"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart">
@@ -3624,7 +3733,56 @@ const DEFAULT_REVIEWS = [
   {name: "Mariam K.", stars: 5, date: "2026-10-27", text: "Ordered the Solstice medallion chain with InstaPay and tracked delivery smoothly."},
   {name: "Yasmine T.", stars: 5, date: "2026-11-09", text: "Lightweight earrings that stay comfortable all day without tugging."}
 ];
-let reviews = JSON.parse(localStorage.getItem("ns_reviews") || "null") || DEFAULT_REVIEWS;
+let reviews = [...DEFAULT_REVIEWS];
+
+function getReviewPageUrl() {
+  const base = `${window.location.origin}${window.location.pathname}`;
+  return `${base}#add-review`;
+}
+
+function initReviewPageLink() {
+  const url = getReviewPageUrl();
+  const el = document.getElementById("reviewPagePermalinkText");
+  if (el) el.textContent = url;
+}
+
+function copyReviewPageLink() {
+  const url = getReviewPageUrl();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast("Review page link copied ✓");
+  }).catch(() => {
+    alert("Review page link: " + url);
+  });
+}
+
+function mapDbReview(row) {
+  return {
+    id: row.id,
+    name: row.name || "Customer",
+    stars: Math.max(1, Math.min(5, Number(row.stars) || 5)),
+    date: row.review_date || (row.created_at ? String(row.created_at).slice(0, 10) : "2026-11-09"),
+    text: row.text || ""
+  };
+}
+
+async function loadReviewsFromDatabase() {
+  const { data, error } = await sb
+    .from("ns_reviews")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
+  if (error) {
+    console.warn("Could not load ns_reviews from Supabase:", error.message);
+    renderReviews();
+    return;
+  }
+  if (Array.isArray(data) && data.length > 0) {
+    reviews = data.map(mapDbReview);
+  } else {
+    reviews = [];
+  }
+  renderReviews();
+}
 
 const cardIdxMap = {};
 const hoveredSet = new Set();
@@ -5981,26 +6139,39 @@ function getInitials(name) {
   return ((parts[0]?.[0] || "") + (parts[1]?.[0] || "")).toUpperCase() || "N";
 }
 
-function openAddReviewForm() {
-  const modal = document.getElementById("addReviewModal");
-  if (!modal) return;
-  modal.classList.add("open");
+function openAddReviewForm(ev) {
+  if (ev) ev.preventDefault();
+  closeCart();
+  closeCategoryPage();
+  closeTrackPage();
+  closeContactInfoPage();
+  const page = document.getElementById("reviewOverlayPage");
+  if (!page) return;
+  initReviewPageLink();
+  page.classList.add("show");
+  page.scrollTop = 0;
   const dateEl = document.getElementById("reviewDate");
   if (dateEl && !dateEl.value) {
     dateEl.value = new Date().toISOString().slice(0, 10);
+  }
+  if (window.location.hash !== "#add-review") {
+    history.replaceState(null, "", "#add-review");
   }
   setTimeout(() => document.getElementById("reviewName")?.focus(), 60);
 }
 
 function closeAddReviewForm() {
-  const modal = document.getElementById("addReviewModal");
-  if (modal) modal.classList.remove("open");
+  const page = document.getElementById("reviewOverlayPage");
+  if (page) page.classList.remove("show");
+  if (window.location.hash === "#add-review") {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
 }
 
 function toggleAddReviewForm() {
-  const modal = document.getElementById("addReviewModal");
-  if (!modal) return;
-  if (modal.classList.contains("open")) closeAddReviewForm();
+  const page = document.getElementById("reviewOverlayPage");
+  if (!page) return;
+  if (page.classList.contains("show")) closeAddReviewForm();
   else openAddReviewForm();
 }
 
@@ -6057,27 +6228,44 @@ function renderAdminReviewsList() {
   }).join("");
 }
 
-function addReview() {
+async function addReview() {
   const name = document.getElementById("reviewName").value.trim();
   const dateVal = (document.getElementById("reviewDate")?.value || "").trim() || new Date().toISOString().slice(0, 10);
-  const stars = Number(document.getElementById("reviewStars").value);
+  const stars = Math.max(1, Math.min(5, Number(document.getElementById("reviewStars").value) || 5));
   const text = document.getElementById("reviewText").value.trim();
   if (!name || !text) { alert("Please enter your name and comment."); return; }
-  reviews.unshift({ name, stars, date: dateVal, text });
-  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
+
+  const { error } = await sb.from("ns_reviews").insert([{
+    name,
+    stars,
+    review_date: dateVal,
+    text
+  }]);
+
+  if (error) {
+    alert("Could not publish review: " + error.message);
+    return;
+  }
+
   document.getElementById("reviewName").value = "";
   document.getElementById("reviewText").value = "";
   closeAddReviewForm();
-  renderReviews();
-  showToast("Review posted ✓");
+  await loadReviewsFromDatabase();
+  showToast("Review published for everyone ✓");
 }
 
-function deleteReview(idx) {
+async function deleteReview(idx) {
   if (!isAdmin) { alert("Sign in as Admin first."); return; }
   if (!confirm("Delete this feedback?")) return;
-  reviews.splice(idx, 1);
-  localStorage.setItem("ns_reviews", JSON.stringify(reviews));
-  renderReviews();
+  const target = reviews[idx];
+  if (target && target.id !== undefined && target.id !== null) {
+    const { error } = await sb.from("ns_reviews").delete().eq("id", target.id);
+    if (error) { alert("Could not delete feedback: " + error.message); return; }
+    await loadReviewsFromDatabase();
+  } else {
+    reviews.splice(idx, 1);
+    renderReviews();
+  }
   showToast("Feedback deleted ✓");
 }
 
@@ -6094,6 +6282,9 @@ function subscribeRealtime() {
     })
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_konsowah_info" }, () => {
       loadSharedConsoleInfo();
+    })
+    .on("postgres_changes", { event: "*", schema: "public", table: "ns_reviews" }, () => {
+      loadReviewsFromDatabase();
     })
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_orders" }, () => {
       if (isAdmin) loadOrders();
@@ -6121,11 +6312,24 @@ function checkInitialTrackingRoute() {
   }
 }
 
+function checkInitialReviewRoute() {
+  const params = new URLSearchParams(window.location.search);
+  if (window.location.hash === "#add-review" || params.get("review") === "1") {
+    openAddReviewForm(null);
+  }
+}
+
 window.addEventListener("hashchange", () => {
   if (window.location.hash === "#track-order") {
     openTrackPage(null);
   } else if (document.getElementById("trackPage").classList.contains("show")) {
     document.getElementById("trackPage").classList.remove("show");
+  }
+
+  if (window.location.hash === "#add-review") {
+    openAddReviewForm(null);
+  } else if (document.getElementById("reviewOverlayPage")?.classList.contains("show")) {
+    document.getElementById("reviewOverlayPage").classList.remove("show");
   }
 });
 
@@ -6422,14 +6626,16 @@ function renderSavedContactSummary() {
 document.getElementById("year").textContent = new Date().getFullYear();
 syncFooterSocialUI();
 initTrackingLinks();
+initReviewPageLink();
 initInstaPayDisplay();
 updateSalePreviewCalc();
 updateCouponFormLabel();
 renderReviews();
 renderCart();
 checkInitialTrackingRoute();
+checkInitialReviewRoute();
 (async () => {
-  await Promise.all([loadSharedLogo(), loadSharedConsoleInfo(), loadCategoriesFromDatabase(), loadProductsFromDatabase(), initAuthSession()]);
+  await Promise.all([loadSharedLogo(), loadSharedConsoleInfo(), loadCategoriesFromDatabase(), loadProductsFromDatabase(), loadReviewsFromDatabase(), initAuthSession()]);
   subscribeRealtime();
 })();
 </script>

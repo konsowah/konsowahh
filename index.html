@@ -45,7 +45,7 @@
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: clip; }
     body {
       margin: 0;
       background:
@@ -55,8 +55,17 @@
       color: var(--ink);
       font-family: 'Plus Jakarta Sans', sans-serif;
       line-height: 1.65;
-      overflow-x: hidden;
-      padding-bottom: 32px;
+      overflow-x: clip;
+      padding-bottom: 48px;
+      min-height: 100dvh;
+    }
+    section, .container, .admin-panel, .checkout-page, .track-page, .category-page, .contact-page {
+      min-width: 0;
+      max-width: 100%;
+    }
+    h1, h2, h3, .card-title, .cat-photo-title, .brand-name {
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     h1, h2, .serif-title { font-family: 'Cormorant Garamond', Georgia, serif; }
     button, input, textarea, select { font: inherit; }
@@ -1862,24 +1871,52 @@
 
     @media (max-width: 900px) {
       .grid-products, .reviews-grid, .admin-grid, .checkout-layout, .category-showcase-grid, .footer-inner { grid-template-columns: 1fr; }
-      .nav { grid-template-columns: auto 1fr auto; padding: 12px 14px; gap: 8px; }
+      .container { padding: 18px 14px 0; }
+      .nav { grid-template-columns: auto minmax(0, 1fr) auto; padding: 10px 12px; gap: 6px; }
       .links { display: none; }
-      .logo-3d-wrap { width: 36px; height: 36px; }
-      .brand-name { font-size: 20px; letter-spacing: 0.5px; }
-      .track-trigger { padding: 7px 10px; font-size: 11.5px; }
-      .cart-trigger { padding: 7px 11px; font-size: 12px; }
-      .floating-cart-btn { right: 14px; bottom: 14px; padding: 10px 14px; font-size: 12px; }
-      .hero { grid-template-columns: 1fr; padding: 28px 22px; gap: 24px; }
-      .hero-stagger { gap: 12px; padding: 4px 0; }
-      .hero-shot-top { transform: translateY(-8px); }
-      .hero-shot-bottom { transform: translateY(8px); }
-      .hero-shot-top:hover { transform: translateY(-10px); }
-      .hero-shot-bottom:hover { transform: translateY(6px); }
-      .cat-photo-card { height: 250px; }
-      .admin-strip { margin: 8px 12px 0; }
+      .brand { min-width: 0; gap: 6px; }
+      .logo-3d-wrap { width: 30px; height: 30px; }
+      .brand-name { font-size: 15px; letter-spacing: 0.3px; overflow: hidden; text-overflow: ellipsis; }
+      .nav-right { gap: 5px; }
+      .track-trigger { padding: 6px 8px; font-size: 10.5px; gap: 4px; }
+      .cart-trigger { padding: 6px 8px; font-size: 11px; gap: 5px; }
+      .badge-num { min-width: 18px; height: 18px; font-size: 10px; }
+      .floating-cart-btn { right: 12px; bottom: 12px; padding: 9px 12px; font-size: 11.5px; }
+      .hero { grid-template-columns: 1fr; padding: 24px 16px; gap: 22px; }
+      .hero h1 { font-size: clamp(32px, 8.5vw, 42px); }
+      .hero p { font-size: 13.5px; margin-bottom: 20px; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn-primary, .hero-actions .btn-ghost { justify-content: center; width: 100%; }
+      .hero-stagger { gap: 10px; padding: 4px 0; }
+      .hero-shot-top { transform: translateY(-6px); }
+      .hero-shot-bottom { transform: translateY(6px); }
+      .hero-shot-top:hover { transform: translateY(-8px); }
+      .hero-shot-bottom:hover { transform: translateY(4px); }
+      .sec-head { margin: 38px 0 16px; gap: 6px; }
+      .sec-head h2 { font-size: 28px; }
+      .cat-photo-card { height: 245px; }
+      .cat-photo-scrim { padding: 14px 16px 16px; }
+      .cat-photo-title { font-size: 25px; }
+      .cat-photo-sub { flex-direction: column; align-items: flex-start; gap: 6px; font-size: 12px; }
+      .rev-card { padding: 16px; border-radius: 14px; }
+      .add-rev-box { padding: 16px; }
+      .checkout-page, .track-page, .category-page, .contact-page { padding: 18px 14px 64px; }
+      .checkout-head h2, .track-page-head h2, .category-page-head h2 { font-size: 26px; }
+      .checkout-panel { padding: 16px; }
+      .admin-panel { padding: 16px; }
+      .admin-strip { margin: 8px 10px 0; padding: 10px 12px; flex-direction: column; align-items: flex-start; }
+      footer { padding: 36px 16px 48px; margin-top: 44px; }
     }
     @media (max-width: 560px) {
       .inp-row, .rev-form-grid, .pay-methods, .admin-stats-bar, .img-editor-grid { grid-template-columns: 1fr; }
+      .brand-name { font-size: 13.5px; }
+      .track-trigger { padding: 6px 7px; font-size: 10px; }
+      .cart-trigger { padding: 6px 7px; font-size: 10.5px; }
+      .card-actions { flex-direction: column; }
+      .card-actions .btn-add, .card-actions .btn-info { width: 100%; }
+      .coupon-row { flex-wrap: wrap; }
+      .coupon-row input { min-width: 100%; }
+      .track-quick-row { flex-direction: column; }
     }
   </style>
 </head>

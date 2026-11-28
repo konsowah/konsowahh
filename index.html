@@ -1934,6 +1934,62 @@
     .strip button.active { border-color: var(--gold); }
     .strip img { width: 100%; height: 100%; object-fit: cover; }
 
+    /* ===== Product details modal — new layout (header + 2 columns) ===== */
+    #modal.modal-card {
+      padding: 0;
+      width: 100%;
+      max-width: min(680px, calc(100vw - 24px));
+      background: var(--paper);
+    }
+    #modal .pd-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    #modal .pd-title {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--brown-deep);
+      padding-right: 0;
+    }
+    #modal .pd-close { flex-shrink: 0; width: 34px; height: 34px; }
+    #modal .pd-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 20px;
+      padding: 20px 22px 24px;
+      align-items: start;
+    }
+    #modal .pd-media { min-width: 0; }
+    #modal .pd-media .stage { aspect-ratio: 1 / 1; margin-bottom: 10px; }
+    #modal .pd-media .strip { margin-bottom: 0; gap: 8px; }
+    #modal .pd-media .strip button {
+      width: 54px;
+      height: 54px;
+      border: 1px solid var(--line-strong);
+    }
+    #modal .pd-media .strip button.active { border-color: var(--brown); }
+    #modal .pd-info { min-width: 0; display: flex; flex-direction: column; }
+    #modal .pd-info .card-cat { font-size: 11px; letter-spacing: 1.4px; margin-bottom: 12px; }
+    #modal .pd-info .price-box { margin: 0 0 8px; }
+    #modal .pd-info .card-price { font-size: 26px !important; font-weight: 800; color: var(--brown-deep); }
+    #modal .pd-info .card-price.sale-active { color: var(--gold-deep); }
+    #modal .pd-stock { font-size: 13px; font-weight: 700; color: var(--ok); margin-bottom: 14px; }
+    #modal .pd-stock.low { color: #92400e; }
+    #modal .pd-stock.out { color: var(--danger); }
+    #modal .pd-desc { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+    #modal .pd-add { width: 100%; padding: 13px 14px; font-size: 14px; }
+    @media (max-width: 560px) {
+      #modal .pd-head { padding: 14px 14px; }
+      #modal .pd-title { font-size: 22px !important; }
+      #modal .pd-body { grid-template-columns: 1fr; gap: 16px; padding: 14px 14px 18px; }
+    }
+
     .img-editor-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -5746,29 +5802,38 @@ function renderModal() {
   const stock = getStock(p);
   const soldOut = stock <= 0;
 
+  const stockText = soldOut ? "Sold Out" : (stock <= 3 ? `Only ${stock} left` : `${stock} available in inventory`);
+  const stockCls = soldOut ? "out" : (stock <= 3 ? "low" : "");
+
   document.getElementById("modal").innerHTML = `
-    <button class="x-btn" style="position:absolute;right:16px;top:16px;z-index:2" onclick="closeDetails()">×</button>
-    <div class="card-cat">${escapeHtml(p.category)}</div>
-    <h2 style="margin:2px 0 10px;font-size:28px;font-weight:700;color:var(--brown-deep)">${escapeHtml(p.name)}</h2>
-    <div class="stage">
-      <img src="${escapeHtml(imgs[activeModalImg])}" alt="${escapeHtml(p.name)}">
-      ${imgs.length > 1 ? `
-        <button class="arrow-btn prev-pos" onclick="stepModal(-1)">‹</button>
-        <button class="arrow-btn next-pos" onclick="stepModal(1)">›</button>
-      ` : ``}
-      <span class="stage-tag">${activeModalImg + 1} / ${imgs.length}</span>
+    <div class="pd-head">
+      <h2 class="pd-title">${escapeHtml(p.name)}</h2>
+      <button class="x-btn pd-close" onclick="closeDetails()">×</button>
     </div>
-    ${imgs.length > 1 ? `
-      <div class="strip">
-        ${imgs.map((src, i) => `<button class="${i === activeModalImg ? "active" : ""}" onclick="pickModal(${i})"><img src="${escapeHtml(src)}" alt=""></button>`).join("")}
+    <div class="pd-body">
+      <div class="pd-media">
+        <div class="stage">
+          <img src="${escapeHtml(imgs[activeModalImg])}" alt="${escapeHtml(p.name)}">
+          ${imgs.length > 1 ? `
+            <button class="arrow-btn prev-pos" onclick="stepModal(-1)">‹</button>
+            <button class="arrow-btn next-pos" onclick="stepModal(1)">›</button>
+          ` : ``}
+          <span class="stage-tag">${activeModalImg + 1} / ${imgs.length}</span>
+        </div>
+        ${imgs.length > 1 ? `
+          <div class="strip">
+            ${imgs.map((src, i) => `<button class="${i === activeModalImg ? "active" : ""}" onclick="pickModal(${i})"><img src="${escapeHtml(src)}" alt=""></button>`).join("")}
+          </div>
+        ` : ``}
       </div>
-    ` : ``}
-    <p style="margin:0 0 12px;color:var(--muted);font-size:14px">${escapeHtml(p.desc)}</p>
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-      ${priceHtml(p, true)}
-      ${stockBadgeHtml(stock)}
+      <div class="pd-info">
+        <div class="card-cat">${escapeHtml(p.category)}</div>
+        ${priceHtml(p, true)}
+        <div class="pd-stock ${stockCls}">${stockText}</div>
+        <p class="pd-desc">${escapeHtml(p.desc)}</p>
+        <button class="btn-add pd-add" ${soldOut ? "disabled" : ""} onclick="addToCart(${p.id});closeDetails()">${soldOut ? "Sold Out" : "Add to Cart"}</button>
+      </div>
     </div>
-    <button class="btn-add" style="width:100%;padding:12px" ${soldOut ? "disabled" : ""} onclick="addToCart(${p.id});closeDetails()">${soldOut ? "Sold Out" : "Add to Cart"}</button>
   `;
 }
 

@@ -1918,15 +1918,238 @@
       .coupon-row input { min-width: 100%; }
       .track-quick-row { flex-direction: column; }
     }
+
+    /* Comprehensive cross-device & mobile full-visibility stabilization */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+    .nav > *, .hero > *, .admin-grid > *, .checkout-layout > *,
+    .category-showcase-grid > *, .grid-products > *, .reviews-grid > *,
+    .footer-inner > *, .inp-row > *, .rev-form-grid > *, .pay-methods > *,
+    .admin-stats-bar > *, .img-editor-grid > *,
+    .manage-item > *, .order-card-head > *, .category-page-head > *,
+    .checkout-head > *, .track-page-head > *, .admin-head > *,
+    .cart-row > *, .checkout-item > * {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    /* Fixed full-screen overlay pages: ensure full scrollability, safe padding, and zero clipped edges */
+    .checkout-page, .track-page, .category-page, .contact-page {
+      width: 100%;
+      max-width: 100vw;
+      height: 100dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    }
+    .checkout-shell, .track-shell, .category-page-shell {
+      width: 100%;
+      max-width: 100%;
+    }
+    @media (min-width: 901px) {
+      .checkout-shell, .track-shell { max-width: 1040px; }
+      .category-page-shell { max-width: 1240px; }
+    }
+
+    /* Modals & Cart Drawer: prevent clipping on small phones */
+    .modal-layer {
+      padding: 12px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-card, .login-card {
+      width: 100%;
+      max-width: min(620px, calc(100vw - 24px));
+      max-height: calc(100dvh - 24px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .login-card { max-width: min(390px, calc(100vw - 24px)); }
+    .drawer {
+      width: min(420px, 100vw);
+      max-width: 100vw;
+      height: 100dvh;
+    }
+
+    @media (max-width: 900px) {
+      /* Admin panel & admin menu full visibility on mobile */
+      .admin-panel {
+        padding: 14px 12px;
+        margin-bottom: 24px;
+        border-radius: 14px;
+      }
+      .admin-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .admin-head h2 { font-size: 22px; }
+      .admin-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+      }
+      .adm-tab-btn {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 11.5px;
+        text-align: center;
+        white-space: normal;
+        line-height: 1.3;
+      }
+      .admin-panel .admin-card {
+        padding: 13px 12px;
+        margin-bottom: 12px;
+      }
+      .admin-panel .admin-card h3 { font-size: 15px; }
+      .logo-editor-box {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+        gap: 10px;
+      }
+      .logo-editor-actions { min-width: 0; width: 100%; }
+      .logo-editor-actions > div {
+        flex-direction: column;
+        width: 100%;
+      }
+      .logo-editor-actions input[type="file"],
+      .logo-editor-actions input {
+        width: 100%;
+        max-width: 100%;
+        font-size: 12.5px;
+      }
+      .manage-list {
+        max-height: none;
+        overflow-y: visible;
+      }
+      .manage-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px;
+      }
+      .manage-item-info {
+        width: 100%;
+        align-items: flex-start;
+      }
+      .manage-item-actions {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 6px;
+      }
+      .manage-item-actions button {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 7px 9px;
+      }
+      .order-card {
+        padding: 12px;
+        font-size: 12.5px;
+        word-break: break-word;
+      }
+      .order-card-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      .delivery-date-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .delivery-date-input { width: 100%; }
+      .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .order-actions button,
+      .order-actions select {
+        width: 100%;
+        text-align: center;
+      }
+
+      /* Track page, Category page, Checkout & Contact page mobile adjustments */
+      .checkout-head, .track-page-head, .category-page-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+      }
+      .category-page-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .category-switch-bar {
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .cat-page-pill {
+        padding: 7px 12px;
+        font-size: 11px;
+      }
+      #trackOrdersPane .inp-group > div {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      #trackOrdersPane .inp-group > div button {
+        width: 100%;
+        padding: 11px 14px !important;
+      }
+      .track-permalink-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .track-permalink-bar button { width: 100%; }
+      .track-results { max-height: none; }
+      .checkout-items { max-height: none; }
+      .checkout-item, .cart-row {
+        grid-template-columns: 54px minmax(0, 1fr);
+        gap: 10px;
+      }
+      .checkout-item img, .cart-thumb {
+        width: 54px;
+        height: 54px;
+      }
+      .checkout-item .del-btn, .cart-row .del-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+        text-align: center;
+      }
+      .modal-card { padding: 18px 14px; }
+      .modal-card h2 {
+        font-size: 22px !important;
+        padding-right: 34px;
+      }
+      .img-editor-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 400px) {
+      .admin-tabs { grid-template-columns: 1fr; }
+      .brand-name { font-size: 12.5px; }
+      .track-trigger, .cart-trigger { padding: 5px 6px; font-size: 9.5px; }
+    }
+
   </style>
 </head>
 <body>
 <div class="top-ribbon">
   <div class="top-ribbon-track">
-    <span>✦ NS ACCESSORIES • Sales Up To 30 % • Free Shipping on Orders 2,000+ EGP • Track you order ✦</span>
-    <span>✦ NS ACCESSORIES • Sales Up To 30 % • Free Shipping on Orders 2,000+ EGP • Track you order ✦</span>
-    <span>✦ NS ACCESSORIES • Sales Up To 30 % • Free Shipping on Orders 2,000+ EGP • Track you order ✦</span>
-    <span>✦ NS ACCESSORIES • Sales Up To 30 % • Free Shipping on Orders 2,000+ EGP • Track you order ✦</span>
+    <span>✦ NS ACCESSORIES • Dedicated Category Pages • Free Shipping on Orders 2,000+ EGP ✦</span>
+    <span>✦ NS ACCESSORIES • Dedicated Category Pages • Free Shipping on Orders 2,000+ EGP ✦</span>
+    <span>✦ NS ACCESSORIES • Dedicated Category Pages • Free Shipping on Orders 2,000+ EGP ✦</span>
+    <span>✦ NS ACCESSORIES • Dedicated Category Pages • Free Shipping on Orders 2,000+ EGP ✦</span>
   </div>
 </div>
 

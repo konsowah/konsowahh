@@ -2893,7 +2893,7 @@ function applyLogo(src) {
 async function saveSharedLogo(src) {
   if (!isAdmin) throw new Error("Only an authorized admin can change the store logo.");
   const clean = (src || "").trim();
-  const { error } = await sb.from("ns_store_settings").upsert({ id: "main", logo_url: clean }, { onConflict: "id" });
+  const { error } = await sb.from("ns_store_settings").upsert({ id: 1, logo_url: clean }, { onConflict: "id" });
   if (error) throw error;
   applyLogo(clean);
 }
@@ -2905,7 +2905,7 @@ async function loadSharedLogo() {
   } else {
     applyHeroPhotos(DEFAULT_HERO_PHOTOS);
   }
-  const { data, error } = await sb.from("ns_store_settings").select("*").eq("id", "main").maybeSingle();
+  const { data, error } = await sb.from("ns_store_settings").select("*").eq("id", 1).maybeSingle();
   if (error) { console.warn("Could not load shared NS settings:", error.message); return; }
   applyLogo(data?.logo_url || "");
   if (Array.isArray(data?.hero_images) && data.hero_images.length >= 2) {
@@ -3201,9 +3201,9 @@ async function saveHeroPhotosFromAdmin() {
     const uploaded = await uploadProductImagesToStorage([raw1, raw2], "hero-showcase");
     const nextPhotos = [uploaded[0] || DEFAULT_HERO_PHOTOS[0], uploaded[1] || DEFAULT_HERO_PHOTOS[1]];
 
-    const { data: currentRow } = await sb.from("ns_store_settings").select("logo_url").eq("id", "main").maybeSingle();
+    const { data: currentRow } = await sb.from("ns_store_settings").select("logo_url").eq("id", 1).maybeSingle();
     const { error } = await sb.from("ns_store_settings").upsert({
-      id: "main",
+      id: 1,
       logo_url: currentRow?.logo_url ?? logoValue ?? "",
       hero_images: nextPhotos
     }, { onConflict: "id" });
@@ -3237,9 +3237,9 @@ async function resetHeroPhotosToDefault() {
   if (document.getElementById("admHeroFile2")) document.getElementById("admHeroFile2").value = "";
   localStorage.removeItem("ns_hero_photos_v1");
   try {
-    const { data: currentRow } = await sb.from("ns_store_settings").select("logo_url").eq("id", "main").maybeSingle();
+    const { data: currentRow } = await sb.from("ns_store_settings").select("logo_url").eq("id", 1).maybeSingle();
     await sb.from("ns_store_settings").upsert({
-      id: "main",
+      id: 1,
       logo_url: currentRow?.logo_url ?? logoValue ?? "",
       hero_images: DEFAULT_HERO_PHOTOS
     }, { onConflict: "id" });

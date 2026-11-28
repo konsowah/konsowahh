@@ -2893,24 +2893,44 @@ function applyLogo(src) {
 async function saveSharedLogo(src) {
   if (!isAdmin) throw new Error("Only an authorized admin can change the store logo.");
   const clean = (src || "").trim();
-  const { error } = await sb.from("ns_store_settings").upsert({ id: 1, logo_url: clean }, { onConflict: "id" });
-  if (error) throw error;
+  const existing = await fetchStoreSettingsRow();
+  if (existing && existing.id !== undefined && existing.id !== null) {
+    const { error } = await sb
+      .from("ns_store_settings")
+      .update({ logo_url: clean })
+      .eq("id", existing.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb
+      .from("ns_store_settings")
+      .insert([{ logo_url: clean, hero_images: DEFAULT_HERO_PHOTOS }]);
+    if (error) throw error;
+  }
   applyLogo(clean);
 }
 
+async function fetchStoreSettingsRow() {
+  const { data, error } = await sb
+    .from("ns_store_settings")
+    .select("*")
+    .order("id", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data || null;
+}
+
 async function loadSharedLogo() {
-  const localHero = JSON.parse(localStorage.getItem("ns_hero_photos_v1") || "null");
-  if (Array.isArray(localHero) && localHero.length >= 2) {
-    applyHeroPhotos(localHero);
-  } else {
-    applyHeroPhotos(DEFAULT_HERO_PHOTOS);
-  }
-  const { data, error } = await sb.from("ns_store_settings").select("*").eq("id", 1).maybeSingle();
-  if (error) { console.warn("Could not load shared NS settings:", error.message); return; }
-  applyLogo(data?.logo_url || "");
-  if (Array.isArray(data?.hero_images) && data.hero_images.length >= 2) {
-    localStorage.setItem("ns_hero_photos_v1", JSON.stringify(data.hero_images));
-    applyHeroPhotos(data.hero_images);
+  applyHeroPhotos(DEFAULT_HERO_PHOTOS);
+  try {
+    const data = await fetchStoreSettingsRow();
+    if (!data) return;
+    applyLogo(data.logo_url || "");
+    if (Array.isArray(data.hero_images) && data.hero_images.length >= 2) {
+      applyHeroPhotos(data.hero_images);
+    }
+  } catch (err) {
+    console.warn("Could not load shared NS settings:", err.message || err);
   }
 }
 
@@ -3189,6 +3209,25 @@ function handleHeroPhotoUrlInput() {
   populateAdminHeroInputs();
 }
 
+async function saveSharedHeroImages(nextPhotos) {
+  const existing = await fetchStoreSettingsRow();
+  if (existing && existing.id !== undefined && existing.id !== null) {
+    const { error } = await sb
+      .from("ns_store_settings")
+      .update({ hero_images: nextPhotos })
+      .eq("id", existing.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb
+      .from("ns_store_settings")
+      .insert([{
+        logo_url: logoValue || "",
+        hero_images: nextPhotos
+      }]);
+    if (error) throw error;
+  }
+}
+
 async function saveHeroPhotosFromAdmin() {
   if (!isAdmin) { alert("Sign in as Admin first."); return; }
   const u1 = document.getElementById("admHeroUrl1").value.trim();
@@ -3197,36 +3236,19 @@ async function saveHeroPhotosFromAdmin() {
   const raw2 = pendingHeroUploads[1] || u2 || heroPhotos[1];
 
   try {
-    showToast("Saving hero photos...");
+    showToast("Saving hero photos for everyone...");
     const uploaded = await uploadProductImagesToStorage([raw1, raw2], "hero-showcase");
     const nextPhotos = [uploaded[0] || DEFAULT_HERO_PHOTOS[0], uploaded[1] || DEFAULT_HERO_PHOTOS[1]];
 
-    const { data: currentRow } = await sb.from("ns_store_settings").select("logo_url").eq("id", 1).maybeSingle();
-    const { error } = await sb.from("ns_store_settings").upsert({
-      id: 1,
-      logo_url: currentRow?.logo_url ?? logoValue ?? "",
-      hero_images: nextPhotos
-    }, { onConflict: "id" });
+    await saveSharedHeroImages(nextPhotos);
 
-    if (error) {
-      // Fallback if hero_images column is not yet added in SQL
-      localStorage.setItem("ns_hero_photos_v1", JSON.stringify(nextPhotos));
-      applyHeroPhotos(nextPhotos);
-      pendingHeroUploads = ["", ""];
-      document.getElementById("admHeroFile1").value = "";
-      document.getElementById("admHeroFile2").value = "";
-      showToast("Hero photos saved locally ✓");
-      return;
-    }
-
-    localStorage.setItem("ns_hero_photos_v1", JSON.stringify(nextPhotos));
     pendingHeroUploads = ["", ""];
     document.getElementById("admHeroFile1").value = "";
     document.getElementById("admHeroFile2").value = "";
     applyHeroPhotos(nextPhotos);
     showToast("Hero photos updated for everyone ✓");
   } catch (err) {
-    alert("Could not save hero photos: " + (err.message || err));
+    alert("Could not save hero photos to database: " + (err.message || err));
   }
 }
 
@@ -3237,15 +3259,12 @@ async function resetHeroPhotosToDefault() {
   if (document.getElementById("admHeroFile2")) document.getElementById("admHeroFile2").value = "";
   localStorage.removeItem("ns_hero_photos_v1");
   try {
-    const { data: currentRow } = await sb.from("ns_store_settings").select("logo_url").eq("id", 1).maybeSingle();
-    await sb.from("ns_store_settings").upsert({
-      id: 1,
-      logo_url: currentRow?.logo_url ?? logoValue ?? "",
-      hero_images: DEFAULT_HERO_PHOTOS
-    }, { onConflict: "id" });
-  } catch (_) {}
-  applyHeroPhotos(DEFAULT_HERO_PHOTOS);
-  showToast("Hero photos reset to default ✓");
+    await saveSharedHeroImages(DEFAULT_HERO_PHOTOS);
+    applyHeroPhotos(DEFAULT_HERO_PHOTOS);
+    showToast("Hero photos reset to default for everyone ✓");
+  } catch (err) {
+    alert("Could not reset hero photos: " + (err.message || err));
+  }
 }
 
 function syncHeroShowcaseImage() {
@@ -4898,13 +4917,8 @@ function subscribeRealtime() {
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_categories" }, () => {
       loadCategoriesFromDatabase();
     })
-    .on("postgres_changes", { event: "*", schema: "public", table: "ns_store_settings" }, payload => {
-      const nextLogo = payload.new?.logo_url ?? "";
-      applyLogo(nextLogo);
-      if (Array.isArray(payload.new?.hero_images) && payload.new.hero_images.length >= 2) {
-        localStorage.setItem("ns_hero_photos_v1", JSON.stringify(payload.new.hero_images));
-        applyHeroPhotos(payload.new.hero_images);
-      }
+    .on("postgres_changes", { event: "*", schema: "public", table: "ns_store_settings" }, () => {
+      loadSharedLogo();
     })
     .on("postgres_changes", { event: "*", schema: "public", table: "ns_konsowah_info" }, () => {
       loadSharedConsoleInfo();

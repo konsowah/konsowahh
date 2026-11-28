@@ -2518,27 +2518,24 @@
       position: fixed;
       inset: 0;
       z-index: 56;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(197, 148, 58, 0.14), transparent 38%),
-        radial-gradient(circle at 88% 8%, rgba(74, 46, 25, 0.08), transparent 42%),
-        var(--bg);
+      background: var(--bg);
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding: 28px 20px 80px;
+      padding: 32px 24px 84px;
     }
     .review-overlay-page.show { display: block; }
     .review-overlay-shell {
-      max-width: 680px;
+      max-width: 620px;
       margin: 0 auto;
     }
     .review-overlay-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
       flex-wrap: wrap;
       padding-bottom: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
       border-bottom: 1px solid var(--line-strong);
     }
     .review-overlay-head h2 {
@@ -2546,55 +2543,74 @@
       font-size: 34px;
       font-weight: 700;
       color: var(--brown-deep);
+      line-height: 1.1;
     }
     .review-overlay-card {
+      position: relative;
       background: var(--paper);
-      border: 1.5px solid rgba(197, 148, 58, 0.5);
-      border-radius: 22px;
-      padding: 26px 24px;
-      box-shadow: var(--shadow-lg);
-      margin-bottom: 20px;
-    }
-    .review-link-banner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      background: var(--gold-pale);
-      border: 1px dashed var(--gold);
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 18px;
-      font-size: 12px;
-    }
-    .review-link-url {
-      font-weight: 800;
-      color: var(--brown-deep);
-      word-break: break-all;
-    }
-    .rev-head-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .rev-copy-page-btn {
-      background: var(--gold-pale);
-      color: var(--brown-deep);
-      border: 1px solid rgba(197, 148, 58, 0.55);
+      border: 1px solid var(--line-strong);
       border-radius: 6px;
-      padding: 9px 14px;
-      font-size: 12px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
+      padding: 28px 26px;
+      box-shadow: var(--shadow);
     }
-    .rev-copy-page-btn:hover {
-      border-color: var(--gold-deep);
-      background: #faeccd;
+    .review-overlay-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright), var(--gold));
+    }
+    .review-overlay-card .rev-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .review-overlay-card .inp-group {
+      margin-bottom: 16px;
+    }
+    .review-overlay-card .rev-form-grid .inp-group {
+      margin-bottom: 0;
+    }
+    .review-overlay-card .inp-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .review-overlay-card .inp-group input,
+    .review-overlay-card .inp-group select,
+    .review-overlay-card .inp-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 13.5px;
+    }
+    .review-overlay-card .inp-group input:focus,
+    .review-overlay-card .inp-group select:focus,
+    .review-overlay-card .inp-group textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: var(--paper);
+    }
+    .review-overlay-card .btn-add {
+      width: 100%;
+      padding: 12px 22px;
+      border-radius: 4px;
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    @media (max-width: 640px) {
+      .review-overlay-page { padding: 20px 14px 80px; }
+      .review-overlay-head h2 { font-size: 28px; }
+      .review-overlay-card { padding: 20px 16px; }
+      .review-overlay-card .rev-form-grid { grid-template-columns: 1fr; gap: 14px; }
     }
 
   </style>
@@ -3083,10 +3099,7 @@
         <h2>Verified Customer Reviews</h2>
         <span class="sec-meta" style="display:block;margin-top:4px">Feedback shared by shoppers across Egypt.</span>
       </div>
-      <div class="rev-head-actions">
-        <a class="rev-add-toggle-btn" href="#add-review" onclick="openAddReviewForm(event)" style="text-decoration:none">+ Add a Review</a>
-        <button type="button" class="rev-copy-page-btn" onclick="copyReviewPageLink()" title="Copy direct link to the Review Page">🔗 Copy Review Link</button>
-      </div>
+      <a class="rev-add-toggle-btn" href="#add-review" onclick="openAddReviewForm(event)" style="text-decoration:none">+ Add a Review</a>
     </div>
     <div class="reviews-grid" id="reviewGrid"></div>
   </section>
@@ -3141,32 +3154,17 @@
   <div class="review-overlay-shell">
     <div class="review-overlay-head">
       <div>
-        <div class="hero-eyebrow" style="margin:0 0 3px">NS ACCESSORIES • CLIENT IMPRESSIONS</div>
+        <span class="sec-kicker">NS ACCESSORIES • CLIENT IMPRESSIONS</span>
         <h2>Write a Customer Review</h2>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button type="button" class="instapay-copy-btn" onclick="copyReviewPageLink()">🔗 Copy Review Link</button>
-        <button type="button" class="checkout-back-btn" onclick="closeAddReviewForm()">← Back to Store</button>
-      </div>
+      <button type="button" class="checkout-back-btn" onclick="closeAddReviewForm()">← Back to Store</button>
     </div>
 
     <div class="review-overlay-card">
-      <div class="review-link-banner">
-        <div>
-          <span style="color:var(--muted);font-weight:700">Direct Review Page Link: </span>
-          <span class="review-link-url" id="reviewPagePermalinkText"></span>
-        </div>
-        <button type="button" class="instapay-copy-btn" onclick="copyReviewPageLink()">Copy</button>
-      </div>
-
       <div class="rev-form-grid">
         <div class="inp-group">
           <label for="reviewName">Your Name *</label>
           <input id="reviewName" placeholder="e.g. Nourhan A.">
-        </div>
-        <div class="inp-group">
-          <label for="reviewDate">Date</label>
-          <input id="reviewDate" type="date">
         </div>
         <div class="inp-group">
           <label for="reviewStars">Rating *</label>
@@ -3181,11 +3179,16 @@
       </div>
 
       <div class="inp-group">
+        <label for="reviewDate">Date</label>
+        <input id="reviewDate" type="date">
+      </div>
+
+      <div class="inp-group">
         <label for="reviewText">Your Comment *</label>
         <textarea id="reviewText" rows="4" placeholder="Share your thoughts on NS Accessories..."></textarea>
       </div>
 
-      <button type="button" class="btn-add" style="width:100%;padding:12px 22px;border-radius:999px" onclick="addReview()">Post Review ✓</button>
+      <button type="button" class="btn-add" onclick="addReview()">Post Review ✓</button>
     </div>
   </div>
 </section>
@@ -3318,6 +3321,7 @@
             <span class="track-link-url" id="confirmedTrackUrl"></span>
             <div class="track-link-actions">
               <a class="track-direct-btn" id="confirmedTrackGoBtn" href="#track-order" onclick="openTrackPage(event)">Open Tracking Page →</a>
+              <button type="button" class="instapay-copy-btn" onclick="openAddReviewForm(event)">⭐ Write a Review</button>
               <button type="button" class="instapay-copy-btn" onclick="copyTrackingLink()">Copy Tracking Link</button>
             </div>
           </div>
@@ -3734,26 +3738,6 @@ const DEFAULT_REVIEWS = [
   {name: "Yasmine T.", stars: 5, date: "2026-11-09", text: "Lightweight earrings that stay comfortable all day without tugging."}
 ];
 let reviews = [...DEFAULT_REVIEWS];
-
-function getReviewPageUrl() {
-  const base = `${window.location.origin}${window.location.pathname}`;
-  return `${base}#add-review`;
-}
-
-function initReviewPageLink() {
-  const url = getReviewPageUrl();
-  const el = document.getElementById("reviewPagePermalinkText");
-  if (el) el.textContent = url;
-}
-
-function copyReviewPageLink() {
-  const url = getReviewPageUrl();
-  navigator.clipboard.writeText(url).then(() => {
-    showToast("Review page link copied ✓");
-  }).catch(() => {
-    alert("Review page link: " + url);
-  });
-}
 
 function mapDbReview(row) {
   return {
@@ -6147,7 +6131,6 @@ function openAddReviewForm(ev) {
   closeContactInfoPage();
   const page = document.getElementById("reviewOverlayPage");
   if (!page) return;
-  initReviewPageLink();
   page.classList.add("show");
   page.scrollTop = 0;
   const dateEl = document.getElementById("reviewDate");
@@ -6626,7 +6609,6 @@ function renderSavedContactSummary() {
 document.getElementById("year").textContent = new Date().getFullYear();
 syncFooterSocialUI();
 initTrackingLinks();
-initReviewPageLink();
 initInstaPayDisplay();
 updateSalePreviewCalc();
 updateCouponFormLabel();

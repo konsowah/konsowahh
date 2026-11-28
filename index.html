@@ -5066,6 +5066,45 @@ async function deleteProduct(id) {
   showToast("Product deleted");
 }
 
+function buildCategoryOptionsForProduct(currentCat) {
+  const cleanCurrent = String(currentCat || "").trim();
+  const names = getAllAvailableCategories().filter(c => c.toUpperCase() !== ALL_CATEGORY);
+  if (cleanCurrent && !names.some(n => n.toLowerCase() === cleanCurrent.toLowerCase())) {
+    names.unshift(cleanCurrent);
+  }
+  if (!names.length) {
+    names.push(cleanCurrent || "Rings");
+  }
+  return names.map(name => {
+    const selected = name.toLowerCase() === cleanCurrent.toLowerCase() ? "selected" : "";
+    return `<option value="${escapeHtml(name)}" ${selected}>${escapeHtml(name)}</option>`;
+  }).join("");
+}
+
+async function adminChangeProductCategory(productId, newCat) {
+  if (!isAdmin) { alert("Sign in as Admin first."); return; }
+  const p = products.find(x => x.id === productId);
+  const cleanCat = String(newCat || "").trim();
+  if (!p || !cleanCat) return;
+  if (p.category.toLowerCase() === cleanCat.toLowerCase()) return;
+
+  const { error } = await sb.from("ns_products").update({ category: cleanCat }).eq("id", p.id);
+  if (error) {
+    alert("تعذر تغيير قسم المنتج: " + error.message);
+    renderAdminManageList();
+    return;
+  }
+
+  p.category = cleanCat;
+  renderAdminManageList();
+  renderCategoryShowcase();
+  renderFooterCollectionLinks();
+  if (document.getElementById("categoryPage").classList.contains("show") && activeCategoryPage) {
+    renderCategoryPageContent(activeCategoryPage);
+  }
+  showToast(`تم نقل "${p.name}" إلى قسم "${cleanCat}" ✓`);
+}
+
 function renderAdminManageList() {
   const list = document.getElementById("admProdList");
   const countEl = document.getElementById("admProdCount");
@@ -5086,6 +5125,9 @@ function renderAdminManageList() {
           </div>
         </div>
         <div class="manage-item-actions">
+          <select class="status-select-order" aria-label="Change product category" title="تغيير قسم المنتج" onchange="adminChangeProductCategory(${p.id}, this.value)">
+            ${buildCategoryOptionsForProduct(p.category)}
+          </select>
           <button type="button" class="sale-edit-btn" onclick="openImgEditModal(${p.id})">Images (${getImgs(p).length})</button>
           <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">${s.hasSale ? "Edit Sale" : "Sale"}</button>
           <button type="button" class="del-btn" onclick="deleteProduct(${p.id})">Delete</button>

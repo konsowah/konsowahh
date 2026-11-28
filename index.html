@@ -2526,7 +2526,7 @@
     <div id="adminTabCategories" style="display:none" dir="rtl">
       <div class="admin-grid">
         <div class="admin-card">
-          <h3 id="catFormHeading">🗂️ إضافة أو تعديل قسم (Category)</h3>
+          <h3 id="catFormHeading">🗂️ إضافة قسم جديد أو تعديل قسم (Category)</h3>
           <p class="note-txt" style="margin:0 0 12px">أضف قسماً جديداً أو اضغط <b>تعديل</b> على أي قسم من القائمة لتغيير اسمه وصورته وترتيبه.</p>
           <div class="inp-row">
             <div class="inp-group">
@@ -2614,7 +2614,10 @@
             </div>
             <div class="inp-row">
               <div class="inp-group">
-                <label for="admCat">Category *</label>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:5px">
+                  <label for="admCat" style="margin:0">Category *</label>
+                  <button type="button" onclick="switchAdminTab('categories')" style="background:none;border:0;padding:0;font-size:11px;font-weight:800;color:var(--gold-deep);text-decoration:underline">+ New Category</button>
+                </div>
                 <select id="admCat"></select>
               </div>
               <div class="inp-group">
@@ -3755,6 +3758,7 @@ function renderAdminCategoriesList() {
   const list = document.getElementById("admCategoriesList");
   const countBadge = document.getElementById("admCatCount");
   if (countBadge) countBadge.textContent = categories.length;
+  populateProductCategorySelect();
   if (!list) return;
   if (!categories.length) {
     list.innerHTML = '<div class="empty-msg">لا توجد أقسام مضافة بعد. أضف قسماً من النموذج المجاور.</div>';

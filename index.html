@@ -413,19 +413,78 @@
     }
     .sale-live-calc b { color: var(--brown); }
 
-    .manage-list { max-height: 430px; overflow: auto; display: flex; flex-direction: column; gap: 8px; }
+    .manage-list { max-height: 480px; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
     .manage-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       background: var(--paper);
       border: 1px solid var(--line);
-      border-radius: var(--r-soft-sm);
-      padding: 10px 12px;
+      border-radius: var(--r-soft-md);
+      padding: 12px 14px;
+      box-shadow: 0 6px 18px -14px rgba(36, 20, 9, 0.25);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .manage-item-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .manage-item-info img { width: 44px; height: 44px; object-fit: cover; border-radius: var(--r-soft-sm); flex-shrink: 0; }
+    .manage-item:hover {
+      border-color: var(--gold);
+      box-shadow: 0 10px 22px -14px rgba(36, 20, 9, 0.32);
+    }
+    .manage-item-info { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 auto; }
+    .manage-item-info img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: var(--r-soft-sm);
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .manage-item-meta { min-width: 0; }
+    .manage-item-title {
+      font-weight: 800;
+      font-size: 13.5px;
+      color: var(--brown-deep);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .manage-item-sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .manage-cat-picker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-soft-sm);
+      padding: 3px 6px 3px 8px;
+      max-width: 100%;
+    }
+    .manage-cat-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .manage-cat-select {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--brown-deep);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 8px;
+      max-width: 170px;
+      cursor: pointer;
+    }
+    .manage-cat-select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
     .manage-item-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
     .sale-edit-btn {
       background: var(--brown-soft);
@@ -2034,21 +2093,47 @@
         flex-direction: column;
         align-items: stretch;
         gap: 10px;
-        padding: 10px;
+        padding: 12px;
       }
       .manage-item-info {
         width: 100%;
-        align-items: flex-start;
+        align-items: center;
+      }
+      .manage-item-title {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        overflow-wrap: anywhere;
+      }
+      .manage-cat-picker {
+        width: 100%;
+        justify-content: space-between;
+        padding: 6px 8px;
+      }
+      .manage-cat-select {
+        flex: 1 1 auto;
+        max-width: none;
+        padding: 7px 8px;
+        font-size: 12.5px;
       }
       .manage-item-actions {
         width: 100%;
-        justify-content: flex-start;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 6px;
       }
       .manage-item-actions button {
-        flex: 1 1 auto;
+        width: 100%;
         text-align: center;
-        padding: 7px 9px;
+        padding: 8px 6px;
+        font-size: 11.5px;
+      }
+      .category-page-head, .checkout-head, .track-page-head {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--bg);
+        padding-top: 4px;
       }
       .order-card {
         padding: 12px;
@@ -5118,16 +5203,19 @@ function renderAdminManageList() {
     return `
       <div class="manage-item">
         <div class="manage-item-info">
-          <img src="${escapeHtml(getImgs(p)[0])}" alt="">
-          <div>
-            <div style="font-weight:800;font-size:13px;color:var(--brown-deep)">${escapeHtml(p.name)}</div>
-            <div style="font-size:11.5px;color:var(--muted)">${escapeHtml(p.category)} • ${priceSummary} • Stock: ${getStock(p)}</div>
+          <img src="${escapeHtml(getImgs(p)[0])}" alt="${escapeHtml(p.name)}">
+          <div class="manage-item-meta">
+            <div class="manage-item-title">${escapeHtml(p.name)}</div>
+            <div class="manage-item-sub">القسم الحالي: <b>${escapeHtml(p.category)}</b> • ${priceSummary} • المخزون: <b>${getStock(p)}</b></div>
           </div>
         </div>
-        <div class="manage-item-actions">
-          <select class="status-select-order" aria-label="Change product category" title="تغيير قسم المنتج" onchange="adminChangeProductCategory(${p.id}, this.value)">
+        <div class="manage-cat-picker">
+          <span class="manage-cat-label">نقل إلى:</span>
+          <select class="manage-cat-select" aria-label="Change product category" title="تغيير قسم المنتج" onchange="adminChangeProductCategory(${p.id}, this.value)">
             ${buildCategoryOptionsForProduct(p.category)}
           </select>
+        </div>
+        <div class="manage-item-actions">
           <button type="button" class="sale-edit-btn" onclick="openImgEditModal(${p.id})">Images (${getImgs(p).length})</button>
           <button type="button" class="sale-edit-btn" onclick="openSaleModal(${p.id})">${s.hasSale ? "Edit Sale" : "Sale"}</button>
           <button type="button" class="del-btn" onclick="deleteProduct(${p.id})">Delete</button>
